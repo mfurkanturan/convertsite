@@ -2,6 +2,7 @@
 import '@fontsource-variable/inter';
 import '@fontsource-variable/sora';
 import AppShell from '../components/app-shell.svelte';
+import { brand } from '../lib/brand';
 import '../styles/global.css';
 ---
 <!doctype html>
@@ -9,10 +10,10 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="PDF, Word, Excel ve görseller için sade bir çalışma alanı. Docly'nin 10 belge aracını keşfedin." />
+    <meta name="description" content={brand.description} />
     <meta name="theme-color" content="#2563eb" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Docly — Belgelerin için, her şey bir arada.</title>
+    <title>{brand.title}</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">İçeriğe geç</a>

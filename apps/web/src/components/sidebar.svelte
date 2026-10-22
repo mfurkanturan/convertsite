@@ -54,6 +54,6 @@
       <a href="#privacy" class="mt-2 inline-flex min-h-8 items-center gap-1.5 text-[13px] font-medium text-accent hover:text-accent-strong" onclick={onclose}>Daha fazla bilgi <Icon name="arrow" size={14} /></a>
     </div>
     <a class="mt-2 flex min-h-11 items-center gap-2 rounded-lg px-3 text-[13px] text-text-soft transition-colors hover:bg-bg hover:text-text" href="#faq" onclick={onclose}><Icon name="help" size={18} /> Yardım ve SSS <span class="ml-auto flex"><Icon name="chevron" size={15} /></span></a>
-    <p class="mt-2 pl-3 text-xs text-text-muted">© {brand.year} {brand.name} · Geliştirme</p>
+    <p class="mt-2 pl-3 text-xs text-text-muted">© {brand.year} DoctorConverter · Geliştirme</p>
   </div>
 </aside>

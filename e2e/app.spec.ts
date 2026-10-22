@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Docly Arayüz & Navigasyon Doğrulamaları', () => {
+test.describe('DoctorConverter Arayüz & Navigasyon Doğrulamaları', () => {
   test('Ana sayfa yüklenmeli, başlık ve 10 araç kartı görünmeli', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/Docly/);
+    await expect(page).toHaveTitle(/DoctorConverter/);
     await expect(page.locator('#hero-title')).toBeVisible();
 
     const toolCards = page.locator('#tools button[aria-label$="aracını aç"]');
@@ -13,8 +13,8 @@ test.describe('Docly Arayüz & Navigasyon Doğrulamaları', () => {
   test('Araç arama filtresi doğru çalışmalı', async ({ page }) => {
     await page.goto('/');
     const searchInput = page.locator('input[aria-label="Araç ara"]');
-    // "Excel" araması yalnızca PDF -> Excel ve Excel -> PDF sonuçlarını döndürmelidir
-    await searchInput.pressSequentially('Excel', { delay: 50 });
+    await searchInput.fill('Excel');
+    await searchInput.dispatchEvent('input');
 
     const toolCards = page.locator('#tools button[aria-label$="aracını aç"]');
     await expect(toolCards).toHaveCount(2);

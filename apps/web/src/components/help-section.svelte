@@ -44,8 +44,8 @@
 </section>
 
 <footer class="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border py-6 text-[13px] text-text-muted">
-  <a class="text-xl font-bold tracking-[-0.04em] text-text-soft" href="/">{brand.name}<span class="text-accent">.</span></a>
+  <a class="text-lg font-bold tracking-[-0.03em] text-text-soft" href="/">Doctor<span class="text-accent">Converter</span></a>
   <span>{brand.footerNote}</span>
   <nav class="flex gap-5" aria-label="Alt bağlantılar"><a class="transition-colors hover:text-accent" href="#privacy">Gizlilik</a><a class="transition-colors hover:text-accent" href="#faq">Sık sorulanlar</a></nav>
-  <span class="ml-auto max-sm:ml-0">© {brand.year} {brand.name}</span>
+  <span class="ml-auto max-sm:ml-0">© {brand.year} DoctorConverter</span>
 </footer>
