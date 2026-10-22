@@ -2,6 +2,19 @@
 @import "./tokens.css";
 
 /*
+ * Inter ölçülerine ayarlanmış yerel yedek. Türkçe karakterler (ğ, ş, ı) Inter'in
+ * latin-ext dosyasında; o dosya geç gelse bile satırlar aynı yerden kırılır.
+ */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+
+/*
  * Temel sıfırlamalar `@layer base` içinde tutulur. Katmansız kurallar Tailwind
  * utility katmanını ezer (ör. `mt-4`, `border`, `text-xs` etkisiz kalır).
  */
