@@ -18,7 +18,7 @@ export function getConfig() {
   if (new URL(origin).origin !== origin) throw new Error('APP_ORIGIN must be an origin');
   return {
     root, origin, production: process.env.NODE_ENV === 'production',
-    port: integer('API_PORT', 3001, 1024, 65535),
+    port: integer(process.env.PORT ? 'PORT' : 'API_PORT', 3001, 1024, 65535),
     databaseUrl: process.env.DATABASE_URL ?? 'postgres://docly:docly-local@127.0.0.1:55432/docly',
     dataDir: resolve(root, process.env.DATA_DIR ?? '.data/files'),
     engineUrl: process.env.ENGINE_URL ?? 'http://127.0.0.1:3002', engineToken,
