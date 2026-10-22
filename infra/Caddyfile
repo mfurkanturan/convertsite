@@ -1,0 +1,10 @@
+{
+  auto_https off
+  admin off
+}
+:3001 {
+  request_body {
+    max_size 11MB
+  }
+  reverse_proxy api:3001
+}

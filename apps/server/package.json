@@ -1,0 +1,21 @@
+{
+  "name":"@convertsite/server","private":true,"type":"module",
+  "scripts":{
+    "dev":"tsx src/entrypoints/api.ts",
+    "worker":"tsx src/entrypoints/worker.ts",
+    "engine":"tsx src/entrypoints/engine.ts",
+    "migrate":"tsx src/entrypoints/migrate.ts",
+    "check":"tsc --noEmit",
+    "build":"tsc --noEmit",
+    "test":"vitest run"
+  },
+  "dependencies":{
+    "@sinclair/typebox":"0.34.52",
+    "@convertsite/contracts":"workspace:*",
+    "@fastify/cookie":"11.1.3","@fastify/helmet":"13.2.0",
+    "@fastify/multipart":"10.1.4","@fastify/rate-limit":"11.2.1",
+    "fastify":"5.12.7","drizzle-orm":"0.45.4","pg":"8.23.1",
+    "pg-boss":"12.38.0","tsx":"4.23.15"
+  },
+  "devDependencies":{"@types/pg":"8.15.6","@types/node":"24.10.1","typescript":"6.0.3","vitest":"5.0.5","pdf-lib":"1.17.1"}
+}

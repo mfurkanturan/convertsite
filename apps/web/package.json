@@ -1,0 +1,26 @@
+{
+  "name": "@convertsite/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4321",
+    "build": "astro build",
+    "check": "astro check && svelte-check --tsconfig ./tsconfig.json",
+    "preview": "astro preview --host 127.0.0.1 --port 4321"
+  },
+  "dependencies": {
+    "@astrojs/svelte": "9.1.1",
+    "@convertsite/contracts": "workspace:*",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "7.4.2",
+    "svelte": "5.57.2",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "svelte-check": "4.7.7",
+    "typescript": "6.0.3"
+  }
+}

@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+*.log
+.qa/
+.playwright-mcp/
+.data/
+output/
+.neon
+
+test-results/
+playwright-report/
+blob-report/

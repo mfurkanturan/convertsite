@@ -1,0 +1,103 @@
+services:
+  postgres:
+    image: postgres:17.7-bookworm
+    environment:
+      POSTGRES_USER: docly
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run setup-local first}
+      POSTGRES_DB: docly
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docly -d docly"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    mem_limit: 256m
+    networks: [database]
+  engine:
+    image: docly-backend:local
+    build:
+      context: .
+      dockerfile: infra/engine.Dockerfile
+    environment:
+      ENGINE_TOKEN: ${ENGINE_TOKEN:?Run setup-local first}
+    volumes: ["./.data/files:/data:ro"]
+    tmpfs: ["/tmp:size=384m,mode=1777,noexec,nosuid"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 1024m
+    cpus: 1.0
+    pids_limit: 96
+    networks: [engine]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3002/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  migrate:
+    image: docly-backend:local
+    command: ["node", "--import", "tsx", "src/entrypoints/migrate.ts"]
+    environment: &backend-environment
+      DATABASE_URL: postgres://docly:${POSTGRES_PASSWORD}@postgres:5432/docly
+      ENGINE_TOKEN: ${ENGINE_TOKEN}
+      ENGINE_URL: http://engine:3002
+      DATA_DIR: /data
+      APP_ORIGIN: http://127.0.0.1:4321
+      API_HOST: 0.0.0.0
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [database]
+  api:
+    stop_grace_period: 110s
+    image: docly-backend:local
+    command: ["node", "--import", "tsx", "src/entrypoints/api.ts"]
+    environment: *backend-environment
+    volumes: ["./.data/files:/data"]
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777,noexec,nosuid"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    pids_limit: 48
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      engine: {condition: service_healthy}
+    networks: [application, database, engine]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/health/live').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  worker:
+    stop_grace_period: 110s
+    image: docly-backend:local
+    command: ["node", "--import", "tsx", "src/entrypoints/worker.ts"]
+    environment: *backend-environment
+    volumes: ["./.data/files:/data"]
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777,noexec,nosuid"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    pids_limit: 48
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      engine: {condition: service_healthy}
+    networks: [database, engine]
+  gateway:
+    image: caddy:2.10.2-alpine
+    ports: ["127.0.0.1:3001:3001"]
+    volumes: ["./infra/Caddyfile:/etc/caddy/Caddyfile:ro"]
+    depends_on:
+      api: {condition: service_healthy}
+    networks: [application, public]
+networks:
+  public:
+  application:
+    internal: true
+  database:
+    internal: true
+  engine:
+    internal: true
+volumes:
+  postgres-data:
