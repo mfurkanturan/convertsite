@@ -29,6 +29,7 @@ export function getConfig() {
     databaseUrl: process.env.DATABASE_URL ?? 'postgres://docly:docly-local@127.0.0.1:55432/docly',
     dataDir: resolve(root, process.env.DATA_DIR ?? '.data/files'),
     engineUrl: process.env.ENGINE_URL ?? 'http://127.0.0.1:3002', engineToken, sessionSecret,
+    adminSecret: process.env.ADMIN_SECRET || sessionSecret,
     // Number of reverse proxies in front of the API; 0 ignores X-Forwarded-For entirely.
     trustProxyHops: integer('TRUST_PROXY_HOPS', 0, 0, 5),
     // Header set by a trusted edge that clients cannot forge (e.g. cf-connecting-ip); empty uses hop counting.

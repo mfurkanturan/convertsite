@@ -14,7 +14,8 @@
     "setup:local": "node scripts/setup-local.mjs",
     "infra:up": "docker compose up -d --build --wait",
     "infra:down": "docker compose down",
-    "preview": "pnpm --filter @convertsite/web preview"
+    "preview": "pnpm --filter @convertsite/web preview",
+    "stats": "node scripts/stats.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",

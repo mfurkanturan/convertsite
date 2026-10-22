@@ -4,6 +4,7 @@ import type { Context } from './context.js';
 import { httpSecurity } from '../platform/http-security.js';
 import { fileRoutes } from '../modules/files/public.js';
 import { jobRoutes } from '../modules/jobs/public.js';
+import { adminRoutes, analyticsRepository } from '../modules/analytics/public.js';
 import { fileDeletion } from '../modules/files/public.js';
 import { toolIds, toolSpecs } from '@convertsite/contracts';
 export async function createHttpApp(ctx: Context, logging = true) {
@@ -31,5 +32,6 @@ export async function createHttpApp(ctx: Context, logging = true) {
     tools: Object.fromEntries(toolIds.map((id) => [id, { inputs: toolSpecs[id].inputs, minFiles: toolSpecs[id].min, maxFiles: toolSpecs[id].max, maxPages: toolSpecs[id].maxPages, note: toolSpecs[id].note }])) }));
   await fileRoutes(app, { ...ctx, deleteFile: fileDeletion(ctx.pool, ctx.config.maxActiveJobs, (id) => ctx.jobs.usesFile(id)) });
   await jobRoutes(app, ctx);
+  await adminRoutes(app, { analytics: analyticsRepository(ctx.pool), config: ctx.config });
   return app;
 }
