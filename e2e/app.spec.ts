@@ -12,6 +12,7 @@ test.describe('DoctorConverter Arayüz & Navigasyon Doğrulamaları', () => {
 
   test('Araç arama filtresi doğru çalışmalı', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
     const searchInput = page.locator('input[aria-label="Araç ara"]');
     await searchInput.fill('Excel');
     await searchInput.dispatchEvent('input');

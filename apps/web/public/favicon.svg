@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="#3564f4"/><path d="M15 12h13l7 7v17H15z" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/><path d="M27 12v9h8M21 27h8M21 32h5" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="dc-fav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="dc-fav-glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-color="#0f172a" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <rect width="48" height="48" rx="13" fill="url(#dc-fav-bg)"/>
+  <rect x="0.75" y="0.75" width="46.5" height="46.5" rx="12.25" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+  <g filter="url(#dc-fav-glow)">
+    <path d="M13 10a2 2 0 0 1 2-2h12.5l8.5 8.5V36a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V10z" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M27.5 8v8.5H36" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M23.5 22.5v9M19 27h9" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+  </g>
+</svg>
