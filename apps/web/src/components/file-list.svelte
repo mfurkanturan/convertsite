@@ -2,6 +2,7 @@
   import { onDestroy } from 'svelte';
   import Icon from './icon.svelte';
   import { formatBytes } from '../lib/file-selection';
+  import { renderPdfPage } from '../lib/pdf-preview';
   import { useUi, useLocale } from '../i18n/context';
 
   export let files: File[];
@@ -25,14 +26,22 @@
   let previewFile: File | null = null;
   let previewUrl: string | null = null;
 
-  // Thumbnail cache for images to avoid re-creating object URLs
+  // Thumbnail cache for images and rendered PDFs
   let imageThumbnails = new Map<File, string>();
+  let pdfThumbnails = new Map<File, string>();
 
   $: {
-    // Generate previews for images
+    // Generate previews for images and PDFs
     for (const file of files) {
       if (file.type.startsWith('image/') && !imageThumbnails.has(file)) {
         imageThumbnails.set(file, URL.createObjectURL(file));
+      } else if (file.name.toLowerCase().endsWith('.pdf') && !pdfThumbnails.has(file)) {
+        renderPdfPage(file, 1, 220).then((url) => {
+          if (url) {
+            pdfThumbnails.set(file, url);
+            pdfThumbnails = pdfThumbnails;
+          }
+        });
       }
     }
   }
@@ -194,8 +203,14 @@
                 alt={file.name}
                 class="h-full w-full object-cover transition-transform group-hover:scale-105"
               />
+            {:else if isPdf && pdfThumbnails.has(file)}
+              <img
+                src={pdfThumbnails.get(file)}
+                alt={file.name}
+                class="h-full w-full object-contain p-1.5 transition-transform group-hover:scale-105 bg-white"
+              />
             {:else if isPdf}
-              <!-- Realistic PDF page mockup -->
+              <!-- Realistic PDF page loading placeholder -->
               <div class="flex flex-col items-center justify-center text-center p-2">
                 <span class="rounded bg-rose-500/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-rose-600 mb-1.5">
                   PDF
@@ -206,7 +221,7 @@
                   <div class="h-1 bg-text rounded-full w-3/4 mx-auto"></div>
                 </div>
                 <span class="mt-2 text-[10px] text-text-muted font-medium">
-                  {locale === 'tr' ? 'İncelemek için tıkla' : 'Click to preview'}
+                  {locale === 'tr' ? 'Yükleniyor...' : 'Loading...'}
                 </span>
               </div>
             {:else}
@@ -252,6 +267,8 @@
           <div class="h-9 w-9 shrink-0 rounded-lg border border-border/60 bg-bg overflow-hidden flex items-center justify-center">
             {#if file.type.startsWith('image/') && imageThumbnails.has(file)}
               <img src={imageThumbnails.get(file)} alt="" class="h-full w-full object-cover" />
+            {:else if file.name.toLowerCase().endsWith('.pdf') && pdfThumbnails.has(file)}
+              <img src={pdfThumbnails.get(file)} alt="" class="h-full w-full object-contain p-0.5 bg-white" />
             {:else}
               <span class="text-accent"><Icon name="file" size={18} /></span>
             {/if}

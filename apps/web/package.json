@@ -16,6 +16,7 @@
     "@lucide/svelte": "^1.61.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "7.4.2",
+    "pdfjs-dist": "^6.4.299",
     "svelte": "5.57.2",
     "tailwindcss": "^4.3.3"
   },

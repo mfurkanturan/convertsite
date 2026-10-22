@@ -2,6 +2,7 @@
   import Icon from './icon.svelte';
   import FileDropzone from './file-dropzone.svelte';
   import FileList from './file-list.svelte';
+  import PdfPageOrganizer from './pdf-page-organizer.svelte';
   import LiveJob from './live-job.svelte';
   import InlineNotice from './inline-notice.svelte';
   import type { Tool } from '../lib/tools';
@@ -62,9 +63,34 @@
 
   <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[auto_1fr] max-[650px]:gap-4">
     <div class="min-w-0">
-      {#if !busy}<FileDropzone {tool} compact={files.length > 0} onfiles={addFiles} />{/if}
+      {#if !busy && (tool.multiple || files.length === 0)}
+        <FileDropzone {tool} compact={files.length > 0} onfiles={addFiles} />
+      {/if}
       {#if error}<div class="mt-4"><InlineNotice variant="danger" role="alert">{error}</InlineNotice></div>{/if}
-      {#if files.length}<FileList {files} disabled={busy} reorder={tool.multiple} onmove={move} onreorder={reorderFiles} onremove={(index) => { files = files.filter((_, position) => position !== index); }} />{/if}
+      {#if files.length}
+        {#if tool.id === 'edit-pdf-pages' && files.length === 1}
+          <PdfPageOrganizer
+            file={files[0]}
+            disabled={busy}
+            onremovefile={() => { files = []; pageRange = ''; }}
+            onchangerange={(range, rotation) => {
+              pageRange = range;
+              if (rotation) {
+                selectedSettings = { ...selectedSettings, rotation: String(rotation) };
+              }
+            }}
+          />
+        {:else}
+          <FileList
+            {files}
+            disabled={busy}
+            reorder={tool.multiple}
+            onmove={move}
+            onreorder={reorderFiles}
+            onremove={(index) => { files = files.filter((_, position) => position !== index); }}
+          />
+        {/if}
+      {/if}
     </div>
 
     <aside class="rounded-panel border border-border bg-surface p-6 max-[650px]:p-5 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1" aria-labelledby="settings-title">
