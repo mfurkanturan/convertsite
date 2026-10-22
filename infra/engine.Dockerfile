@@ -13,6 +13,7 @@ COPY apps/server apps/server
 COPY packages/contracts packages/contracts
 COPY infra/start-production.sh /app/start.sh
 RUN chmod +x /app/start.sh
+USER node
 WORKDIR /app/apps/server
 EXPOSE 3001
 CMD ["/app/start.sh"]

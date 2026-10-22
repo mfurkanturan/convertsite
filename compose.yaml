@@ -18,8 +18,10 @@ services:
     build:
       context: .
       dockerfile: infra/engine.Dockerfile
+    command: ["node", "--import", "tsx", "src/entrypoints/engine.ts"]
     environment:
       ENGINE_TOKEN: ${ENGINE_TOKEN:?Run setup-local first}
+      ENGINE_HOST: 0.0.0.0
     volumes: ["./.data/files:/data:ro"]
     tmpfs: ["/tmp:size=384m,mode=1777,noexec,nosuid"]
     read_only: true

@@ -1,10 +1,13 @@
 import json
+import os
 import re
 import subprocess
 import zipfile
 from pathlib import Path
 
 MAX_OUTPUT = 40 * 1024 * 1024
+# Set by the engine process runner from DATA_DIR; /data is the isolated compose mount.
+DATA_DIR = Path(os.environ.get("DOCLY_DATA_DIR", "/data"))
 
 
 class EngineError(Exception):
@@ -22,7 +25,7 @@ def run(command, arguments, accepted=(0,)):
 def input_path(item):
     if not re.fullmatch(r"[0-9a-fA-F-]{36}", item["id"]):
         raise EngineError("INVALID_DOCUMENT")
-    return Path("/data") / (item["id"] + ".pdf")
+    return DATA_DIR / (item["id"] + ".pdf")
 
 
 def pdf_pages(path):

@@ -14,6 +14,7 @@ Kapatma: `pnpm infra:down`; PostgreSQL volume'ü korunur. Volume silme kurulum/g
 - Engine root olmayan kullanıcı, read-only rootfs/girdi volume'ü, tmpfs, cap_drop ALL ve no-new-privileges kullanır.
 - Engine 1024 MiB / 1 CPU / 96 PID ve 384 MiB geçici alanla sınırlıdır. Child süreç grubu CPU/adres alanı/çıktı/açık dosya limitleriyle çalışır. Zaman aşımı/iptalde Python ve native çocukları aynı süreç grubuyla sonlandırılır.
 - API/worker ayrı 256 MiB container'lardır. Docker socket paylaşılmaz.
+- Motor varsayılan olarak yalnızca loopback'i dinler; compose'daki ayrı engine container'ı private ağında `ENGINE_HOST=0.0.0.0` ile açılır. Motor girdileri `DATA_DIR` (yoksa `/data`) altından okur; mutlak yol olmalıdır.
 - Motor sabit executable/argüman dizisi ve UUID anahtarları kullanır; kullanıcı adı/yolu shell'e girmez. İç çağrılar rastgele secret ister.
 
 ## Politika ve yapılandırma
