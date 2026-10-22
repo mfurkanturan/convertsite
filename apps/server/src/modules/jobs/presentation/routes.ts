@@ -40,6 +40,6 @@ export async function jobRoutes(app: FastifyInstance, deps: { jobs: JobRepositor
     if (!view(job).resultAvailable || !job.output_id) throw new AppError('RESULT_UNAVAILABLE', 'Sonuç henüz hazır değil veya süresi doldu.', 410);
     const file = await deps.files.owned(request.owner, job.output_id);
     const kind = file.kind ?? 'pdf';
-    return reply.type(mimeTypes[kind]).header('content-length', file.size).header('content-disposition', `attachment; filename="docly-${job.tool}.${kind}"`).send(Readable.from(deps.storage.open(file.id)));
+    return reply.type(mimeTypes[kind]).header('content-length', file.size).header('content-disposition', `attachment; filename="doctorconverter-${job.tool}.${kind}"`).send(Readable.from(deps.storage.open(file.id)));
   });
 }

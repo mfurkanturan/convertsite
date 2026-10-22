@@ -7,7 +7,13 @@ import { jobRoutes } from '../modules/jobs/public.js';
 import { fileDeletion } from '../modules/files/public.js';
 import { toolIds, toolSpecs } from '@convertsite/contracts';
 export async function createHttpApp(ctx: Context, logging = true) {
-  const app = Fastify({ logger: logging ? { level: 'info', redact: ['req.headers.cookie', 'req.headers.authorization'] } : false, logController: new LogController({ disableRequestLogging: true }), bodyLimit: 16384, requestTimeout: 60000 });
+  const app = Fastify({
+    logger: logging ? { level: 'info', redact: ['req.headers.cookie', 'req.headers.authorization'] } : false,
+    logController: new LogController({ disableRequestLogging: true }),
+    bodyLimit: 16384,
+    requestTimeout: 60000,
+    trustProxy: true
+  });
   await httpSecurity(app, ctx.config);
   await app.register(multipart, { limits: { files: 1, fields: 0, parts: 1, fileSize: ctx.config.maxFileBytes, fieldNameSize: 50, headerPairs: 32 } });
   app.get('/api/health/live', async () => ({ status: 'ok' }));
