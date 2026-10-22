@@ -12,8 +12,8 @@ const text = ui[locale];
 const tools = getTools(locale);
 const guides = scenarios[locale].slice(0, 8);
 const legal = locale === 'tr'
-  ? [['/guvenlik', text.links.security], ['/gizlilik', text.links.privacy], ['/kullanim-sartlari', text.links.terms], ['/iletisim', text.links.contact]]
-  : [['/en/security', text.links.security], ['/en/privacy', text.links.privacy], ['/en/terms', text.links.terms], ['/en/contact', text.links.contact]];
+  ? [['/hakkimizda', text.links.about], ['/guvenlik', text.links.security], ['/gizlilik', text.links.privacy], ['/kullanim-sartlari', text.links.terms], ['/iletisim', text.links.contact]]
+  : [['/en/about', text.links.about], ['/en/security', text.links.security], ['/en/privacy', text.links.privacy], ['/en/terms', text.links.terms], ['/en/contact', text.links.contact]];
 const hub = localePath(locale, locale === 'tr' ? '/kullanim/' : '/use-cases/');
 ---
 <footer class="mt-20 border-t border-border bg-surface/80 pt-16 pb-12">

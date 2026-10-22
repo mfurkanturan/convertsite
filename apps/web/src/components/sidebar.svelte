@@ -17,8 +17,8 @@
   const tools = getTools(locale);
   const categories = getCategories(locale);
   const legal = locale === 'tr'
-    ? [['/guvenlik', ui.links.security], ['/gizlilik', ui.links.privacy], ['/kullanim-sartlari', ui.links.terms], ['/iletisim', ui.links.contact]]
-    : [['/en/security', ui.links.security], ['/en/privacy', ui.links.privacy], ['/en/terms', ui.links.terms], ['/en/contact', ui.links.contact]];
+    ? [['/hakkimizda', ui.links.about], ['/guvenlik', ui.links.security], ['/gizlilik', ui.links.privacy], ['/kullanim-sartlari', ui.links.terms], ['/iletisim', ui.links.contact]]
+    : [['/en/about', ui.links.about], ['/en/security', ui.links.security], ['/en/privacy', ui.links.privacy], ['/en/terms', ui.links.terms], ['/en/contact', ui.links.contact]];
 </script>
 
 {#if open}

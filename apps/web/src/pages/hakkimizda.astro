@@ -1,0 +1,20 @@
+---
+import LegalLayout from '../layouts/legal-layout.astro';
+import { scenarioBase } from '../lib/seo/scenarios';
+---
+<LegalLayout title="Hakkımızda" description="DoctorConverter kimdir, ne yapar? Ücretsiz, üyeliksiz PDF araçlarının arkasındaki yaklaşım, kullandığımız açık kaynak motorlar ve dosyaları nasıl işlediğimiz.">
+  <p><strong>DoctorConverter</strong>, günlük belge işlerini hızlı ve sade biçimde çözmek için kurulmuş ücretsiz bir online araç setidir. PDF birleştirmekten taranmış belgeden metin çıkarmaya kadar 10 aracı tek bir çalışma alanında, üyelik istemeden sunuyoruz.</p>
+  <h2>Neden yaptık?</h2>
+  <p>Öğrenciler sınav notlarını birleştirmek, avukatlar UYAP’a dosya yüklemek, iş arayanlar CV’lerini küçültmek, vize başvurusu yapanlar evraklarını tek PDF’te toplamak için her gün aynı küçük sorunlarla uğraşıyor. Amacımız bu işleri reklam yağmuru, zorunlu üyelik ve karmaşık menüler olmadan birkaç tıkla bitirmek.</p>
+  <h2>Nasıl çalışıyor?</h2>
+  <ul>
+    <li>Dönüşümler sunucularımızda, sınırlandırılmış ve birbirinden yalıtılmış işlem süreçlerinde yapılır; harici bir belge işleme sağlayıcısına gönderilmez.</li>
+    <li>Kanıtlanmış açık kaynak motorlar kullanılır: QPDF, Poppler, LibreOffice, Tesseract OCR ve Python belge kütüphaneleri.</li>
+    <li>Dosyalar yalnızca yükleyen oturumdan erişilebilir, süre dolunca otomatik silinir ve dilediğinizde hemen silinebilir.</li>
+    <li>Her aracın sayfa, boyut ve destek sınırları işlem panelinde açıkça yazılır; yapamadığımız işi yapabiliyormuş gibi göstermeyiz.</li>
+  </ul>
+  <h2>Kimler için?</h2>
+  <p>Öğrencilerden avukatlara, muhasebecilerden vize başvurusu yapanlara kadar belgeyle çalışan herkes için. Gerçek senaryolara göre hazırladığımız adım adım <a href={scenarioBase.tr} class="text-accent underline font-medium">kullanım rehberlerine</a> göz atabilirsiniz.</p>
+  <h2>İletişim</h2>
+  <p>Öneri, hata bildirimi ve iş birliği için <a href="mailto:destek@doctorconverter.com" class="text-accent underline font-medium">destek@doctorconverter.com</a> adresine yazabilirsiniz.</p>
+</LegalLayout>

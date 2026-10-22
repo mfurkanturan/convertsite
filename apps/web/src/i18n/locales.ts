@@ -26,4 +26,5 @@ export const staticPairs: Alternates[] = [
   { tr: '/kullanim-sartlari', en: '/en/terms' },
   { tr: '/guvenlik', en: '/en/security' },
   { tr: '/iletisim', en: '/en/contact' },
+  { tr: '/hakkimizda', en: '/en/about' },
 ];

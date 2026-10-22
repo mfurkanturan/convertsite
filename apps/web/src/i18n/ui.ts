@@ -85,6 +85,7 @@ const tr = {
     terms: 'Kullanım şartları',
     contact: 'İletişim',
     faq: 'Sık sorulanlar',
+    about: 'Hakkımızda',
   },
   workspace: {
     back: 'Tüm araçlara dön',
@@ -312,6 +313,7 @@ const en: UiDictionary = {
     terms: 'Terms of use',
     contact: 'Contact',
     faq: 'FAQ',
+    about: 'About us',
   },
   workspace: {
     back: 'Back to all tools',
