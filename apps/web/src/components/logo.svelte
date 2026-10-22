@@ -11,5 +11,5 @@
       <path d="M23.5 22.5v9M19 27h9" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
     </svg>
   </span>
-  <span class="truncate font-display font-bold text-text">Doctor<span class="text-accent font-extrabold">Converter</span></span>
+  <span class="truncate font-display font-bold text-text max-[480px]:hidden">Doctor<span class="text-accent font-extrabold">Converter</span></span>
 </a>

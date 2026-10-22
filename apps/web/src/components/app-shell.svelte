@@ -60,8 +60,18 @@
 </script>
 
 <Sidebar {category} open={menuOpen} oncategory={setCategory} ontool={openTool} onclose={() => menuOpen = false} />
-<div class="min-w-0 lg:pl-60"><Topbar {query} {menuOpen} current={activeTool?.name} onsearch={search} onmenu={() => menuOpen = !menuOpen} />
-  <main id="main-content" class="mx-auto max-w-[1200px] px-10 pt-8 max-[1180px]:px-7 max-[540px]:px-4 max-[540px]:pt-5">
+
+<div class="min-h-screen w-full flex flex-col min-w-0 bg-bg">
+  <Topbar
+    {query}
+    {category}
+    {menuOpen}
+    current={activeTool?.name}
+    oncategory={setCategory}
+    onsearch={search}
+    onmenu={() => menuOpen = !menuOpen}
+  />
+  <main id="main-content" class="mx-auto w-full max-w-[1240px] flex-1 px-6 sm:px-8 pt-8 max-[540px]:px-4 max-[540px]:pt-5">
     {#if activeTool}
       {#key activeTool.id}<ToolWorkspace tool={activeTool} onback={() => setCategory('all')} />{/key}
     {:else}

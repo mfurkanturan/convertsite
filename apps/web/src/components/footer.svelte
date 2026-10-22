@@ -61,7 +61,7 @@
     <!-- Bottom Bar -->
     <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-xs text-text-muted sm:flex-row">
       <p>© {new Date().getFullYear()} {brand.name} ({brand.domain}). Tüm hakları saklıdır.</p>
-      <div class="flex items-center gap-6">
+      <div class="flex flex-wrap items-center gap-4 sm:gap-6">
         <a href="/gizlilik" class="transition-colors hover:text-text">Gizlilik</a>
         <a href="/kullanim-sartlari" class="transition-colors hover:text-text">Şartlar</a>
         <a href="/guvenlik" class="transition-colors hover:text-text">Güvenlik</a>
