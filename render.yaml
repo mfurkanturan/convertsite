@@ -20,6 +20,11 @@ services:
         sync: false
       - key: ENGINE_TOKEN
         generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      # Render's load balancer is one hop; use 2 if Cloudflare proxies in front of it.
+      - key: TRUST_PROXY_HOPS
+        value: 1
       - key: DATA_DIR
         value: /tmp/data
 

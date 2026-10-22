@@ -43,4 +43,4 @@ PDF → Excel'de NO_TABLES, metin çıkarılamıyorsa NO_TEXT, belge dışında 
 
 Silme 202 cevabı fiziksel silmenin bittiği anlamına gelmez; `physicalDeletionGraceSeconds=120` döner. Erişim anında kapanır. İptal sonrası worker motor bağlantısını keser; atomik state/attempt kontrolü sonuç yayımlamayı engeller.
 
-Hatalar: 400 şema, 403 origin, 404 sahiplik, 409 çakışma, 410 sonuç hazır değil/süresi doldu, 413 limit, 415 format, 422 bozuk/şifreli PDF, 429 kullanım limiti, 503 motor erişimi. DB ve kuyruk kabulü birlikte commit/rollback olur.
+Hatalar: 400 şema, 403 origin, 404 sahiplik, 409 çakışma, 410 sonuç hazır değil/süresi doldu, 413 limit, 415 format, 422 bozuk/şifreli PDF, 429 kullanım limiti (oturum veya ağ başına), 503 motor erişimi veya küresel depolama kapasitesi (CAPACITY_EXCEEDED). DB ve kuyruk kabulü birlikte commit/rollback olur.

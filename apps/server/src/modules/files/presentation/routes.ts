@@ -6,7 +6,7 @@ import { AppError } from '../../../platform/error.js';
 import type { Config } from '../../../platform/config.js';
 export async function fileRoutes(app: FastifyInstance, deps: {
   config: Config; files: FileRepository; storage: FileStorage;
-  upload: (owner: string, stream: AsyncIterable<Uint8Array>, kind?: InputKind) => Promise<UploadedFile>;
+  upload: (owner: string, client: string, stream: AsyncIterable<Uint8Array>, kind?: InputKind) => Promise<UploadedFile>;
   deleteFile: (owner: string, id: string) => Promise<void>;
 }) {
   app.post('/api/files', { config: { rateLimit: { max: 30, timeWindow: '1 hour' } } }, async (request, reply) => {
@@ -24,7 +24,7 @@ export async function fileRoutes(app: FastifyInstance, deps: {
           for await (const chunk of fileStream) yield chunk as Uint8Array;
           if (fileStream.truncated) throw new AppError('LIMIT_EXCEEDED', 'Dosya boyutu sınırı aşıldı.', 413);
         }
-        uploaded = await deps.upload(request.owner, content(), kind);
+        uploaded = await deps.upload(request.owner, request.client, content(), kind);
         if (part.file.truncated) throw new AppError('LIMIT_EXCEEDED', 'Dosya boyutu sınırı aşıldı.', 413);
       }
       if (!uploaded) throw new AppError('INVALID_REQUEST', 'Dosya seçilmedi.', 400);

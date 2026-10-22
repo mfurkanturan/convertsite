@@ -16,9 +16,27 @@ function signalFor(reply: FastifyReply) {
   reply.raw.once('close', () => { clearTimeout(timer); if (!reply.raw.writableFinished) controller.abort(); });
   return { signal: controller.signal, clear: () => clearTimeout(timer) };
 }
+// Bounded slots with a short wait queue: concurrent uploads wait their turn instead of failing as busy.
+function slots(limit: number, queue: number) {
+  let active = 0; const waiting: (() => void)[] = [];
+  return {
+    async acquire(signal: AbortSignal): Promise<boolean> {
+      if (signal.aborted) throw new EngineFailure('PROCESSING_TIMEOUT');
+      if (active < limit) { active++; return true; }
+      if (waiting.length >= queue) return false;
+      await new Promise<void>((resolve, reject) => {
+        const go = () => { signal.removeEventListener('abort', cancel); resolve(); };
+        const cancel = () => { waiting.splice(waiting.indexOf(go), 1); reject(new EngineFailure('PROCESSING_TIMEOUT')); };
+        waiting.push(go); signal.addEventListener('abort', cancel, { once: true });
+      });
+      return true; // the releasing request handed its slot over
+    },
+    release() { const next = waiting.shift(); if (next) next(); else active--; },
+  };
+}
 export function engineHttpApp(token: string) {
   const app = Fastify({ logger: false, bodyLimit: 16384, requestTimeout: 100000 });
-  let processing = false; let inspections = 0;
+  let processing = false; const inspections = slots(2, 16);
   app.addHook('preHandler', async (request, reply) => {
     if (request.url === '/health') return;
     const given = Buffer.from(request.headers.authorization ?? ''); const expected = Buffer.from(`Bearer ${token}`);
@@ -33,13 +51,14 @@ export function engineHttpApp(token: string) {
   app.post<{ Body: { id: string; kind?: InputKind } }>('/inspect', {
     schema: { body: Type.Object({ id: Type.String({ format: 'uuid' }), kind: Type.Optional(InputKindSchema) }, { additionalProperties: false }) },
   }, async (request, reply) => {
-    if (inspections) return reply.code(503).send({ error: 'ENGINE_BUSY' });
-    inspections++;
     const operation = signalFor(reply);
     try {
-      const output = await runPython({ tool: 'inspect', inputs: [{ id: request.body.id, kind: request.body.kind ?? 'pdf' }] }, operation.signal);
-      return JSON.parse(output) as { pages: number };
-    } finally { inspections--; operation.clear(); }
+      if (!await inspections.acquire(operation.signal)) return reply.code(503).send({ error: 'ENGINE_BUSY' });
+      try {
+        const output = await runPython({ tool: 'inspect', inputs: [{ id: request.body.id, kind: request.body.kind ?? 'pdf' }] }, operation.signal);
+        return JSON.parse(output) as { pages: number };
+      } finally { inspections.release(); }
+    } finally { operation.clear(); }
   });
   for (const tool of toolIds) {
     const spec = toolSpecs[tool];

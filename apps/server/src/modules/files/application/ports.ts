@@ -1,5 +1,5 @@
 import type { FileKind } from '@convertsite/contracts';
-export interface FileRecord { id: string; owner: string; size: number; pages: number; status: string; expiresAt: Date; kind?: FileKind }
+export interface FileRecord { id: string; owner: string; size: number; pages: number; status: string; expiresAt: Date; kind?: FileKind; client?: string | null }
 export interface FileRepository {
   insert(record: FileRecord): Promise<void>;
   ready(id: string, size: number, pages: number): Promise<void>;

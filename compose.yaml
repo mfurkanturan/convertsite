@@ -42,6 +42,9 @@ services:
     environment: &backend-environment
       DATABASE_URL: postgres://docly:${POSTGRES_PASSWORD}@postgres:5432/docly
       ENGINE_TOKEN: ${ENGINE_TOKEN}
+      SESSION_SECRET: ${SESSION_SECRET:?Run setup-local first}
+      # Caddy gateway is the single proxy hop in front of the API.
+      TRUST_PROXY_HOPS: 1
       ENGINE_URL: http://engine:3002
       DATA_DIR: /data
       APP_ORIGIN: http://127.0.0.1:4321

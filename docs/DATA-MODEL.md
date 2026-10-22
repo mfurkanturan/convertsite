@@ -4,7 +4,7 @@ Gerçek şemanın kaynağı `apps/server/migrations` altındaki SQL dosyalarıd�
 
 | Tablo | Sahibi | Veri |
 | --- | --- | --- |
-| files | files | UUID, owner hash, kind, size/pages, pending/ready/deleted, expiry, purged |
+| files | files | UUID, owner hash, client (yüklemede ağın anahtarlı IP özeti), kind, size/pages, pending/ready/deleted, expiry, purged |
 | jobs | jobs | UUID, owner, tool/state, options JSONB, sıralı input_ids, output_id, idempotency key/hash, attempt, error, deleted, tarihler |
 | usage_accounts | usage | Owner başına active_jobs |
 | worker_heartbeats | işletim | Worker adı ve son görülme |

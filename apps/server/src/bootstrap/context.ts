@@ -29,7 +29,7 @@ export async function createContext() {
   const jobs = jobRepository(pool, boss, config, admission, handlers);
   const upload = uploadFile({ repository: files, storage, inspect: engine.inspect, newId: randomUUID, maxBytes: config.maxFileBytes,
     expires: () => new Date(Date.now() + config.retentionMinutes * 60000),
-    reserve: uploadAdmission(pool, config.maxStoredFiles),
+    reserve: uploadAdmission(pool, { owner: config.maxStoredFiles, client: config.maxClientFiles, global: config.maxGlobalFiles }),
   });
   return {
     config, pool, boss, engine, files, storage, jobs, upload,

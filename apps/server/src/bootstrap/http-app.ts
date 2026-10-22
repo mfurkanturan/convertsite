@@ -12,7 +12,8 @@ export async function createHttpApp(ctx: Context, logging = true) {
     logController: new LogController({ disableRequestLogging: true }),
     bodyLimit: 16384,
     requestTimeout: 60000,
-    trustProxy: true
+    // Trust only the configured proxy hops; with 0, X-Forwarded-For is ignored.
+    trustProxy: (_address: string, hop: number) => hop < ctx.config.trustProxyHops
   });
   await httpSecurity(app, ctx.config);
   await app.register(multipart, { limits: { files: 1, fields: 0, parts: 1, fileSize: ctx.config.maxFileBytes, fieldNameSize: 50, headerPairs: 32 } });

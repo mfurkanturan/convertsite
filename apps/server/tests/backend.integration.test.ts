@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { PDFDocument } from 'pdf-lib';
 import { createContext, type Context } from '../src/bootstrap/context.js';
 import { createHttpApp } from '../src/bootstrap/http-app.js';
-import { fileCleanup } from '../src/modules/files/public.js';
+import { fileCleanup, uploadAdmission } from '../src/modules/files/public.js';
 import { pdfFixture, multipart } from './pdf-fixture.js';
 import type { FastifyInstance } from 'fastify';
 import type { JobView, UploadedFile } from '@convertsite/contracts';
@@ -181,5 +181,22 @@ describe('real PostgreSQL + pg-boss + isolated QPDF', () => {
     expect((await create(cookie, third)).statusCode).toBe(429);
     await app.inject({ method: 'POST', url: `/api/jobs/${first.id}/cancel`, headers: { cookie, origin: ctx.config.origin } });
     expect((await create(cookie, third)).statusCode).toBe(202);
+  });
+  it('queues concurrent uploads in the inspector instead of rejecting them as busy', async () => {
+    const part = multipart(await pdfFixture());
+    const cookies = await Promise.all([1, 2, 3].map(() => session()));
+    const responses = await Promise.all(cookies.map((cookie, index) => app.inject({ method: 'POST', url: '/api/files', remoteAddress: `127.2.0.${index + 1}`,
+      headers: { cookie, origin: ctx.config.origin, 'content-type': part.contentType }, payload: part.payload })));
+    for (const response of responses) expect(response.statusCode, response.body).toBe(201);
+  });
+  it('caps stored files per network across fresh sessions and enforces the global budget', async () => {
+    const network = randomUUID(); const expires = new Date(Date.now() + 60000);
+    const sessions = [randomUUID(), randomUUID(), randomUUID()]; sessions.forEach((owner) => ownerIds.add(owner));
+    const reserve = uploadAdmission(ctx.pool, { owner: 40, client: 2, global: 100000 });
+    await reserve(sessions[0], network, randomUUID(), expires);
+    await reserve(sessions[1], network, randomUUID(), expires);
+    await expect(reserve(sessions[2], network, randomUUID(), expires)).rejects.toMatchObject({ code: 'LIMIT_EXCEEDED', status: 429 });
+    await expect(uploadAdmission(ctx.pool, { owner: 40, client: 40, global: 2 })(sessions[2], randomUUID(), randomUUID(), expires))
+      .rejects.toMatchObject({ code: 'CAPACITY_EXCEEDED', status: 503 });
   });
 });
