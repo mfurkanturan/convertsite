@@ -4,6 +4,33 @@ import '@fontsource-variable/sora';
 import AppShell from '../components/app-shell.svelte';
 import { brand } from '../lib/brand';
 import '../styles/global.css';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://doctorconverter.com/#website",
+      "url": "https://doctorconverter.com/",
+      "name": brand.name,
+      "description": brand.description,
+      "inLanguage": "tr-TR"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://doctorconverter.com/#software",
+      "name": brand.name,
+      "operatingSystem": "All",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "TRY"
+      },
+      "description": brand.description
+    }
+  ]
+};
 ---
 <!doctype html>
 <html lang="tr">
@@ -12,8 +39,25 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={brand.description} />
     <meta name="theme-color" content="#2563eb" />
+    <link rel="canonical" href="https://doctorconverter.com/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{brand.title}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://doctorconverter.com/" />
+    <meta property="og:title" content={brand.title} />
+    <meta property="og:description" content={brand.description} />
+    <meta property="og:site_name" content={brand.name} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://doctorconverter.com/" />
+    <meta name="twitter:title" content={brand.title} />
+    <meta name="twitter:description" content={brand.description} />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <a class="skip-link" href="#main-content">İçeriğe geç</a>

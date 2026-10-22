@@ -6,6 +6,7 @@
   import ToolGrid from './tool-grid.svelte';
   import HelpSection from './help-section.svelte';
   import ToolWorkspace from './tool-workspace.svelte';
+  import Footer from './footer.svelte';
   import { tools, type Category, type Tool } from '../lib/tools';
 
   let category: Category = 'all';
@@ -69,4 +70,5 @@
     {/if}
     <HelpSection />
   </main>
+  <Footer />
 </div>

@@ -32,16 +32,16 @@
     ArrowLeft,
     Download,
     Info,
-    Stethoscope,
-    type Icon as IconType
+    Stethoscope
   } from '@lucide/svelte';
+  import type { Component } from 'svelte';
 
   export let name = 'file';
   export let size = 20;
   export let stroke = 2;
   export let className = '';
 
-  const iconMap: Record<string, typeof IconType> = {
+  const iconMap: Record<string, Component<any>> = {
     // Navigation & General
     grid: LayoutGrid,
     arrows: ArrowLeftRight,

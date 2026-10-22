@@ -1,0 +1,45 @@
+---
+import LegalLayout from '../layouts/legal-layout.astro';
+---
+
+<LegalLayout
+  title="Güvenlik Mimarisi ve Veri İmhası"
+  description="DoctorConverter teknik güvenlik standartları: TLS 1.3 şifreleme, Linux prlimit sanallaştırma, katı UUID izolasyonu ve otomatik imha prosedürleri."
+>
+  <p>
+    DoctorConverter altyapısı, kurumsal düzeyde veri güvenliği, katı süreç izolasyonu ve gizlilik öncelikli ("privacy-by-design") prensipleriyle tasarlanmıştır. Bu sayfada sistemimizin teknik güvenlik katmanları detaylandırılmıştır.
+  </p>
+
+  <h2>1. Uçtan Uca Şifreleme (In-Transit Encryption)</h2>
+  <p>
+    Kullanıcı tarayıcısı ile sunucu arasındaki tüm veri iletişimi <strong>TLS 1.3</strong> ve güçlü şifreleme algoritmaları ile korunmaktadır. İletim esnasında verilerinizin araya girilerek (Man-in-the-Middle) okunması veya tahrif edilmesi engellenir.
+  </p>
+
+  <h2>2. Çok Katmanlı Dosya İzolasyonu</h2>
+  <p>
+    Yüklediğiniz dosyalar sistemimizde şu güvenlik adımlarından geçer:
+  </p>
+  <ul>
+    <li><strong>Rastgele Kimliklendirme:</strong> Yüklenen hiçbir dosya orijinal adıyla saklanmaz. Her dosyaya kriptografik rastgelelikte 128-bit <code>UUID v4</code> atanır. Dizin atlama (Path Traversal) saldırıları mimari olarak imkansızdır.</li>
+    <li><strong>Fiziksel İmza Doğrulaması (Magic Bytes):</strong> Yalnızca dosya uzantısına güvenilmez; dosyanın ilk baytları okunarak gerçek bir PDF, Word, Excel veya görsel olup olmadığı denetlenir. Sahte uzantılı zararlı dosyalar diske kaydedilmeden reddedilir.</li>
+    <li><strong>Sıkı Dosya İzinleri:</strong> Diske yazılan dosyalar yalnızca sistemin izole worker sürecinin okuyabileceği <code>0600</code> dosya izinleriyle kilitlenir.</li>
+  </ul>
+
+  <h2>3. İzole İşlem Motoru (Process Sandboxing)</h2>
+  <p>
+    Dönüştürme süreçleri Linux çekirdeği seviyesinde kaynak kısıtlamalarına tabi tutulur:
+  </p>
+  <ul>
+    <li>Her işlem sanal bellek (RAM), CPU süresi ve dosya boyutu tavanlarıyla (<code>prlimit</code>) sınırlandırılmıştır.</li>
+    <li>Komut satırı kabuğu (shell) kullanılmaz; olası komut enjeksiyonu (RCE) açıkları tamamen ortadan kaldırılmıştır.</li>
+    <li>Dönüştürme motoru yalnızca sunucu içi yerel döngüde (<code>127.0.0.1</code>) çalışır ve dış internet trafiğine kapalıdır.</li>
+  </ul>
+
+  <h2>4. Veritabanı ve Belge İmhası (Retention Policy)</h2>
+  <p>
+    Veritabanımızda (PostgreSQL) <strong>hiçbir zaman dosya içeriği tutulmaz</strong>. Yalnızca dosyanın boyutu ve geçerlilik süresi saklanır.
+  </p>
+  <p>
+    Her dosyanın azami yaşam süresi <strong>60 dakikadır</strong>. Arka planda çalışan temizlik işçileri süresi dolan her belgeyi diskten kalıcı olarak imha eder ve sistemden tamamen temizler.
+  </p>
+</LegalLayout>
