@@ -41,14 +41,17 @@ export async function httpSecurity(app: FastifyInstance, config: Config) {
   app.decorateRequest('owner', '');
   app.decorateRequest('client', '');
 
-  // Once per process, record the proxy chain shape (counts only, never addresses) to configure IP trust.
-  let proxyShapeLogged = false;
+  // Record each distinct proxy chain shape once (counts and header names, never addresses) to configure IP trust.
+  const proxyShapes = new Set<string>();
   app.addHook('onRequest', async (request) => {
-    if (proxyShapeLogged) return;
-    proxyShapeLogged = true;
+    if (proxyShapes.size >= 5) return;
     const forwarded = request.headers['x-forwarded-for'];
-    request.log.info({ event: 'proxy-headers', forwardedEntries: typeof forwarded === 'string' ? forwarded.split(',').length : 0,
-      edgeHeaders: ['cf-connecting-ip', 'true-client-ip', 'x-real-ip'].filter((name) => request.headers[name]) }, 'Proxy header shape');
+    const shape = { forwardedEntries: typeof forwarded === 'string' ? forwarded.split(',').length : 0,
+      edgeHeaders: ['cf-connecting-ip', 'true-client-ip', 'x-real-ip'].filter((name) => request.headers[name]) };
+    const key = JSON.stringify(shape);
+    if (proxyShapes.has(key)) return;
+    proxyShapes.add(key);
+    request.log.info({ event: 'proxy-headers', ...shape }, 'Proxy header shape');
   });
 
   app.addHook('onRequest', async (request, reply) => {
