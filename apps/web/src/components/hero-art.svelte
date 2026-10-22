@@ -1,3 +1,8 @@
+<script lang="ts">
+  import { useLocale } from '../i18n/context';
+  const labels = useLocale() === 'tr' ? { privacy: '%100 Gizlilik', speed: 'Hızlı Dönüşüm' } : { privacy: 'Private files', speed: 'Fast conversion' };
+</script>
+
 <svg viewBox="0 0 460 340" class="h-auto w-full select-none" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <!-- Card drop shadow -->
@@ -77,7 +82,7 @@
     <rect x="0" y="0" width="124" height="34" rx="17" fill="#ffffff" stroke="var(--color-border)" stroke-width="1" />
     <circle cx="18" cy="17" r="9" fill="#f0fdf4" />
     <path d="M14 17l2.5 2.5 5-5" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    <text x="34" y="22" font-size="11.5" font-weight="700" fill="#0f172a" font-family="var(--font-sans)">%100 Gizlilik</text>
+    <text x="34" y="22" font-size="11.5" font-weight="700" fill="#0f172a" font-family="var(--font-sans)">{labels.privacy}</text>
   </g>
 
   <!-- Floating Feature Pill 2: Bottom Left (Lightning Speed) -->
@@ -85,7 +90,7 @@
     <rect x="0" y="0" width="138" height="34" rx="17" fill="#ffffff" stroke="var(--color-border)" stroke-width="1" />
     <circle cx="18" cy="17" r="9" fill="#fef9c3" />
     <path d="M18 10l-4 8h5l-1 6 6-9h-5l1-5z" fill="#ca8a04" stroke="#ca8a04" stroke-width="0.8" stroke-linejoin="round" />
-    <text x="35" y="22" font-size="11.5" font-weight="700" fill="#0f172a" font-family="var(--font-sans)">Hızlı Dönüşüm</text>
+    <text x="35" y="22" font-size="11.5" font-weight="700" fill="#0f172a" font-family="var(--font-sans)">{labels.speed}</text>
   </g>
 
   <!-- Floating Chip: Bottom Right (XLSX / Excel) -->
