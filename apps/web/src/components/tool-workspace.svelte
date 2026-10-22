@@ -80,6 +80,9 @@
           {tool.id === 'protect-pdf' ? (locale === 'tr' ? 'Parola belirleyin' : 'Set password') : (locale === 'tr' ? 'Mevcut parola' : 'Current password')}
         </label>
         <input id="pdf-password" type="password" disabled={busy} placeholder={locale === 'tr' ? 'Şifrenizi yazın...' : 'Enter password...'} bind:value={customInput} class="field" />
+        {#if tool.id === 'protect-pdf' && !customInput.trim()}
+          <small class="mt-1.5 block text-xs text-text-muted">{locale === 'tr' ? 'Kilitlemek için lütfen bir parola belirleyin.' : 'Please enter a password to lock.'}</small>
+        {/if}
       {/if}
       {#if tool.id === 'watermark-pdf'}
         <label for="pdf-watermark" class="mt-5 mb-1.5 block text-sm font-medium text-text">
@@ -91,7 +94,7 @@
     </aside>
 
     <div class="min-w-0 lg:col-start-1 lg:row-start-2">
-      <LiveJob {files} {tool} {options} startDisabled={invalidPageRange} bind:busy onclear={() => { files = []; }} />
+      <LiveJob {files} {tool} {options} startDisabled={invalidPageRange || (tool.id === 'protect-pdf' && !customInput.trim())} bind:busy onclear={() => { files = []; }} />
       <div class="mt-4 flex gap-3 rounded-card border border-border bg-surface p-4 text-text-soft">
         <span class="mt-0.5 shrink-0 text-accent"><Icon name="info" size={18} /></span>
         <p class="text-sm leading-relaxed"><strong class="font-semibold text-text">{text.know}</strong><br />{tip}</p>

@@ -57,7 +57,7 @@ def unlock_pdf(inputs, options, directory):
     arguments = []
     if password:
         arguments.append(f"--password={password}")
-    arguments.extend(["--decrypt", source, output])
+    arguments.extend([source, "--decrypt", output])
     run("/usr/bin/qpdf", arguments)
     return output, "pdf"
 
