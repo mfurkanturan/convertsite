@@ -1,25 +1,65 @@
 import cookie from '@fastify/cookie';
+import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import { randomUUID, createHash } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import type { Config } from './config.js';
 import { AppError, publicError } from './error.js';
+
 declare module 'fastify' { interface FastifyRequest { owner: string } }
+
 export async function httpSecurity(app: FastifyInstance, config: Config) {
+  await app.register(cors, {
+    origin: (origin, cb) => {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin) return cb(null, true);
+      // Allow matching origin
+      if (origin === config.origin) return cb(null, true);
+      // Allow localhost in non-production environments
+      if (!config.production && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+        return cb(null, true);
+      }
+      cb(null, false);
+    },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'X-Requested-With'],
+    exposedHeaders: ['Set-Cookie'],
+    maxAge: 86400,
+  });
+
   await app.register(cookie, { secret: createHash('sha256').update(`docly-session:${config.engineToken}`).digest('hex') });
   await app.register(helmet, { contentSecurityPolicy: false });
   await app.register(rateLimit, { max: 180, timeWindow: '1 minute' });
   app.decorateRequest('owner', '');
+
   app.addHook('onRequest', async (request, reply) => {
     reply.header('cache-control', 'private, no-store');
-    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method) && request.headers.origin !== config.origin) throw new AppError('FORBIDDEN', 'İstek kaynağı doğrulanamadı.', 403);
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+      const origin = request.headers.origin;
+      if (origin && origin !== config.origin) {
+        if (config.production || (!origin.includes('localhost') && !origin.includes('127.0.0.1'))) {
+          throw new AppError('FORBIDDEN', 'İstek kaynağı doğrulanamadı.', 403);
+        }
+      }
+    }
     const raw = request.cookies.docly_session;
     const verified = raw ? request.unsignCookie(raw) : null;
     const sid = verified?.valid && verified.value ? verified.value : randomUUID();
-    if (!verified?.valid) reply.setCookie('docly_session', sid, { path: '/api', httpOnly: true, secure: config.production, sameSite: 'strict', signed: true, maxAge: 86400 });
+    if (!verified?.valid) {
+      reply.setCookie('docly_session', sid, {
+        path: '/api',
+        httpOnly: true,
+        secure: config.production,
+        sameSite: config.production ? 'none' : 'lax',
+        signed: true,
+        maxAge: 86400
+      });
+    }
     request.owner = createHash('sha256').update(sid).digest('hex');
   });
+
   app.setErrorHandler((error, request, reply) => {
     const input = error as { validation?: unknown; statusCode?: number; code?: string; message?: string };
     const safe = input.validation ? new AppError('INVALID_REQUEST', 'İstek alanlarını kontrol et.', 400)

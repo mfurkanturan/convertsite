@@ -14,7 +14,7 @@ function integer(name: string, fallback: number, min = 1, max = 1_000_000_000): 
 export function getConfig() {
   const engineToken = process.env.ENGINE_TOKEN;
   if (!engineToken || engineToken.length < 32) throw new Error('ENGINE_TOKEN must contain at least 32 characters');
-  const origin = process.env.APP_ORIGIN ?? 'http://127.0.0.1:4321';
+  const origin = (process.env.APP_ORIGIN ?? 'http://127.0.0.1:4321').trim().replace(/\/$/, '');
   if (new URL(origin).origin !== origin) throw new Error('APP_ORIGIN must be an origin');
   return {
     root, origin, production: process.env.NODE_ENV === 'production',
