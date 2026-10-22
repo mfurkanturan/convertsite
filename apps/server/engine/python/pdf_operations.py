@@ -66,18 +66,16 @@ def watermark_pdf(inputs, options, directory):
     import fitz
     source = input_path(inputs[0])
     output = directory / "watermarked.pdf"
-    text = options.get("watermarkText") or "CONFIDENTIAL"
+    text = (options.get("watermarkText") or "CONFIDENTIAL").strip()
     doc = fitz.open(source)
     for page in doc:
         rect = page.rect
-        page.insert_text(
-            fitz.Point(rect.width * 0.15, rect.height * 0.5),
-            text,
-            fontsize=36,
-            rotate=-35,
-            color=(0.7, 0.2, 0.2),
-            fill_opacity=0.35,
-        )
+        p = fitz.Point(rect.width * 0.15, rect.height * 0.5)
+        try:
+            m = fitz.Matrix(-35)
+            page.insert_text(p, text, fontsize=38, fontname="helv", color=(0.75, 0.2, 0.2), fill_opacity=0.35, morph=(p, m))
+        except Exception:
+            page.insert_textbox(rect, f"\n\n\n{text}", fontsize=44, fontname="helv", color=(0.75, 0.2, 0.2), fill_opacity=0.35, align=fitz.TEXT_ALIGN_CENTER)
     doc.save(output)
     doc.close()
     return output, "pdf"
@@ -99,7 +97,7 @@ def add_page_numbers(inputs, options, directory):
             point = fitz.Point(rect.width - 80, 30)
         else:
             point = fitz.Point(rect.width / 2 - 20, rect.height - 25)
-        page.insert_text(point, text, fontsize=10, color=(0.3, 0.3, 0.3))
+        page.insert_text(point, text, fontsize=10, fontname="helv", color=(0.3, 0.3, 0.3))
     doc.save(output)
     doc.close()
     return output, "pdf"
