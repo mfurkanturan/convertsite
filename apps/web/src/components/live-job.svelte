@@ -3,7 +3,8 @@
   import type { Capabilities, JobView, ToolOptions } from '@convertsite/contracts';
   import type { Tool } from '../lib/tools';
   import { apiFor } from '../lib/api-client';
-  import { formatBytes } from '../lib/file-selection';
+  import { toolLimits as toolSpecs } from '@convertsite/contracts/limits';
+  import { formatBytes, selectionMaxBytes, selectionMaxFiles } from '../lib/file-selection';
   import { useLocale, useUi } from '../i18n/context';
   import Icon from './icon.svelte';
   import Button from './button.svelte';
@@ -28,7 +29,9 @@
   let disposed = false;
   $: key = `docly.job.${tool.id}`;
   $: minimum = tool.id === 'merge-pdf' ? 2 : 1;
-  $: limits = policy?.tools?.[tool.id];
+  // Contract defaults render immediately so the panel does not grow (layout shift) when the API answers.
+  $: limits = policy?.tools?.[tool.id] ?? { maxFiles: toolSpecs[tool.id].max, maxPages: toolSpecs[tool.id].maxPages, note: toolSpecs[tool.id].note };
+  $: shown = policy ?? { maxFileBytes: selectionMaxBytes, maxFiles: selectionMaxFiles, maxTotalPages: 300, retentionMinutes: 60 };
 
   async function capabilities() {
     try { policy = await api.capabilities(); error = ''; }
@@ -90,15 +93,13 @@
 
 <section class="rounded-panel border border-border bg-surface p-6 shadow-card max-[650px]:p-5" aria-labelledby="job-title" aria-busy={busy}>
   <h2 id="job-title" class="text-lg font-semibold text-text">{text.title}</h2>
-  {#if policy}
-    <ul class="mt-3 flex flex-wrap gap-2 text-[13px] text-text-soft" aria-label={text.limits}>
-      <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.perFile(formatBytes(policy.maxFileBytes))}</li>
-      <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.maxFiles(limits?.maxFiles ?? policy.maxFiles)}</li>
-      <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.pages(limits?.maxPages ?? policy.maxTotalPages)}</li>
-      <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.retention(policy.retentionMinutes)}</li>
-    </ul>
-  {/if}
-  {#if limits?.note && locale === 'tr'}<p class="mt-3 text-sm leading-relaxed text-text-soft"><strong class="font-semibold text-text">{text.support}</strong> {limits.note}</p>{/if}
+  <ul class="mt-3 flex flex-wrap gap-2 text-[13px] text-text-soft" aria-label={text.limits}>
+    <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.perFile(formatBytes(shown.maxFileBytes))}</li>
+    <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.maxFiles(limits.maxFiles ?? shown.maxFiles)}</li>
+    <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.pages(limits.maxPages ?? shown.maxTotalPages)}</li>
+    <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.retention(shown.retentionMinutes)}</li>
+  </ul>
+  {#if limits.note && locale === 'tr'}<p class="mt-3 text-sm leading-relaxed text-text-soft"><strong class="font-semibold text-text">{text.support}</strong> {limits.note}</p>{/if}
   {#if error}<div class="mt-4"><InlineNotice variant="danger" role="alert">{error}</InlineNotice></div>{/if}
   {#if phase}
     <div class="mt-4 flex items-center gap-3 text-[15px] text-text-soft" role="status"><span class="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-border border-t-accent" aria-hidden="true"></span><span>{phase}</span></div>
