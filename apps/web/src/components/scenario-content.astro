@@ -2,7 +2,7 @@
 import { getTools } from '../lib/tools';
 import { ui } from '../i18n/ui';
 import { localePath, type Locale } from '../i18n/locales';
-import { groupLabels, relatedScenarios, scenarioBase, scenarioPath, type Scenario } from '../lib/seo/scenarios';
+import { figureSize, groupLabels, relatedScenarios, scenarioBase, scenarioPath, type Scenario } from '../lib/seo/scenarios';
 
 interface Props { scenario: Scenario; locale: Locale }
 const { scenario, locale } = Astro.props;
@@ -25,11 +25,40 @@ const related = relatedScenarios(locale, scenario);
     </ul>
   </section>
 
-  {scenario.sections.map((section) => (
-    <section class="max-w-3xl">
-      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-text">{section.heading}</h2>
-      {section.body.map((paragraph) => <p class="mt-3 text-[15px] leading-relaxed text-text-soft">{paragraph}</p>)}
-    </section>
+  {scenario.sections.map((section, index) => (
+    <>
+      <section class="max-w-3xl">
+        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-text">{section.heading}</h2>
+        {section.body.map((paragraph) => <p class="mt-3 text-[15px] leading-relaxed text-text-soft">{paragraph}</p>)}
+      </section>
+      {index === 0 && scenario.figures && scenario.figures.length > 0 && (
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {scenario.figures.map((figure) => {
+            const [width, height] = figureSize[figure.src] ?? [1176, 900];
+            return (
+              <figure class="overflow-hidden rounded-panel border border-border bg-surface">
+                <img src={`/guides/${figure.src}.jpg`} alt={figure.alt} width={width} height={height} loading="lazy" decoding="async" class="h-auto w-full" />
+                <figcaption class="border-t border-border px-4 py-3 text-sm text-text-soft">{figure.caption}</figcaption>
+              </figure>
+            );
+          })}
+        </div>
+      )}
+      {index === 1 && scenario.comparison && (
+        <section class="overflow-x-auto rounded-panel border border-border bg-surface p-6 sm:p-8">
+          <h2 class="text-xl font-bold tracking-tight text-text">{scenario.comparison.title}</h2>
+          <table class="mt-4 w-full min-w-[560px] border-collapse text-left text-sm">
+            <thead><tr>{scenario.comparison.head.map((cell) => <th scope="col" class="border-b border-border-strong px-3 py-2.5 font-semibold text-text">{cell}</th>)}</tr></thead>
+            <tbody>
+              {scenario.comparison.rows.map((row) => (
+                <tr class="border-b border-border last:border-0">{row.map((cell, i) => i === 0 ? <th scope="row" class="px-3 py-2.5 font-medium text-text">{cell}</th> : <td class="px-3 py-2.5 text-text-soft">{cell}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+          {scenario.comparison.note && <p class="mt-3 text-xs text-text-muted">{scenario.comparison.note}</p>}
+        </section>
+      )}
+    </>
   ))}
 
   <section class="rounded-panel border border-border bg-surface p-6 sm:p-8">

@@ -37,6 +37,17 @@ services:
     runtime: static
     buildCommand: pnpm --filter @convertsite/web build
     staticPublishPath: ./apps/web/dist
+    headers:
+      # Content-hashed build assets never change; images change rarely.
+      - path: /_astro/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /og/*
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /guides/*
+        name: Cache-Control
+        value: public, max-age=604800
     envVars:
       - key: PUBLIC_API_URL
         sync: false # https://api.doctorconverter.com (Cloudflare'de DNS only CNAME; frontend ile aynı site, cookie birinci taraf)
