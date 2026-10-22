@@ -3,8 +3,8 @@ import ScenarioPage from '../../layouts/scenario-page.astro';
 import { scenarios, type Scenario } from '../../lib/seo/scenarios';
 
 export function getStaticPaths() {
-  return scenarios.tr.map((scenario) => ({ params: { slug: scenario.slug }, props: { scenario } }));
+  return scenarios.en.map((scenario) => ({ params: { slug: scenario.slug }, props: { scenario } }));
 }
 const { scenario } = Astro.props as { scenario: Scenario };
 ---
-<ScenarioPage locale="tr" {scenario} />
+<ScenarioPage locale="en" {scenario} />

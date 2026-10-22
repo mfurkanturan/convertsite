@@ -1,0 +1,12 @@
+---
+import AppLayout from '../../layouts/app-layout.astro';
+import HomeGuides from '../../components/home-guides.astro';
+import { brand } from '../../lib/brand';
+import { homeGraph } from '../../lib/seo/structured-data';
+---
+<AppLayout locale="tr" title="PDF Dönüştürücü – Birleştir, Sıkıştır, Word’e Çevir | DoctorConverter"
+  description="Ücretsiz online PDF araçları: PDF birleştirme, PDF küçültme, PDF Word ve Excel dönüştürme, JPG’yi PDF yapma ve OCR. Üyeliksiz, tarayıcıdan, dosyalar otomatik silinir."
+  alternates={{ en: '/', tr: '/tr/' }} keywords={['pdf dönüştürücü', 'pdf birleştirme', 'pdf küçültme', 'pdf word çevirme', 'pdf excel çevirme', 'jpg pdf yapma', 'ocr', brand.name]}
+  jsonLd={homeGraph('tr')}>
+  <HomeGuides slot="home" locale="tr" />
+</AppLayout>

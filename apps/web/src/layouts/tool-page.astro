@@ -11,7 +11,7 @@ interface Props { locale: Locale; toolId: ToolId }
 const { locale, toolId } = Astro.props;
 const data = (locale === 'tr' ? toolSeoMap : toolSeoMapEn)[toolId];
 const path = localePath(locale, `/${toolId}`);
-const alternates = { tr: `/${toolId}`, en: `/en/${toolId}` };
+const alternates = { en: `/${toolId}`, tr: `/tr/${toolId}` };
 ---
 <AppLayout {locale} title={data.metaTitle} description={data.metaDescription} {alternates} keywords={data.keywords}
   jsonLd={toolGraph(locale, data, path)} toolId={toolId} heading={{ title: data.h1, lead: data.lead }}>

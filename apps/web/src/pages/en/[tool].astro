@@ -1,10 +1,9 @@
 ---
-import ToolPage from '../../layouts/tool-page.astro';
-import { toolIds, type ToolId } from '@convertsite/contracts';
+import { toolIds } from '@convertsite/contracts';
 
 export function getStaticPaths() {
   return toolIds.map((tool) => ({ params: { tool } }));
 }
-const toolId = Astro.params.tool as ToolId;
+const tool = Astro.params.tool;
+return Astro.redirect(`/${tool}`, 301);
 ---
-<ToolPage locale="en" {toolId} />

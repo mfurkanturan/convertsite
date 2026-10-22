@@ -6,7 +6,7 @@ import { scenarios, scenarioAlternates } from '../lib/seo/scenarios';
 // Built from the same route data as the pages, so every URL carries its hreflang alternates.
 const entries: { alternates: Alternates; priority: string }[] = [
   ...staticPairs.map((pair, index) => ({ alternates: pair, priority: index === 0 ? '1.0' : index === 1 ? '0.8' : '0.4' })),
-  ...toolIds.map((id) => ({ alternates: { tr: `/${id}`, en: `/en/${id}` }, priority: '0.9' })),
+  ...toolIds.map((id) => ({ alternates: { en: `/${id}`, tr: `/tr/${id}` }, priority: '0.9' })),
   ...(['tr', 'en'] as Locale[]).flatMap((locale) => scenarios[locale].map((scenario) => ({ alternates: scenarioAlternates(locale, scenario), priority: '0.8' }))),
 ];
 
