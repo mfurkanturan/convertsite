@@ -1,6 +1,17 @@
 import type { Capabilities, CreateJob, JobView, UploadedFile } from '@convertsite/contracts';
+
+const API_BASE = (import.meta.env.PUBLIC_API_URL || '').replace(/\/$/, '');
+
+function getUrl(path: string): string {
+  return `${API_BASE}/api${path}`;
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`/api${path}`, { ...options, credentials: 'same-origin', headers: { ...(options.body ? { 'content-type': 'application/json' } : {}), ...options.headers } });
+  const response = await fetch(getUrl(path), {
+    ...options,
+    credentials: 'include',
+    headers: { ...(options.body ? { 'content-type': 'application/json' } : {}), ...options.headers }
+  });
   if (!response.ok) {
     const body = await response.json().catch(() => null);
     throw new Error(body?.message ?? 'Sunucuya ulaşılamadı. Backend bağlantısını kontrol et.');
@@ -8,6 +19,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
 }
+
 export const api = {
   capabilities: () => request<Capabilities>('/capabilities'),
   createJob: (body: CreateJob) => request<JobView>('/jobs', { method: 'POST', body: JSON.stringify(body) }),
@@ -15,13 +27,16 @@ export const api = {
   cancel: (id: string) => request<JobView>(`/jobs/${id}/cancel`, { method: 'POST' }),
   deleteJob: (id: string) => request<{ status: string }>(`/jobs/${id}`, { method: 'DELETE' }),
   deleteFile: (id: string) => request<void>(`/files/${id}`, { method: 'DELETE' }),
+  downloadUrl: (jobId: string) => getUrl(`/jobs/${jobId}/download`),
 };
+
 export function uploadFile(file: File, signal: AbortSignal, progress: (value: number) => void): Promise<UploadedFile> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const abort = () => xhr.abort();
-    xhr.open('POST', '/api/files');
-    xhr.withCredentials = true; xhr.timeout = 60000;
+    xhr.open('POST', getUrl('/files'));
+    xhr.withCredentials = true;
+    xhr.timeout = 60000;
     xhr.upload.onprogress = (event) => { if (event.lengthComputable) progress(event.loaded / event.total); };
     xhr.onload = () => {
       signal.removeEventListener('abort', abort);

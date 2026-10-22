@@ -1,5 +1,5 @@
 services:
-  # DoctorConverter All-in-One API + Engine + Worker (Docker)
+  # 1. DoctorConverter All-in-One API + Engine + Worker (Docker)
   - type: web
     name: doctorconverter-api
     runtime: docker
@@ -22,3 +22,13 @@ services:
         generateValue: true
       - key: DATA_DIR
         value: /tmp/data
+
+  # 2. DoctorConverter Frontend (Astro Static Site)
+  - type: web
+    name: doctorconverter-web
+    runtime: static
+    buildCommand: pnpm --filter @convertsite/web build
+    staticPublishPath: ./apps/web/dist
+    envVars:
+      - key: PUBLIC_API_URL
+        sync: false # Buraya doctorconverter-api servisinin Render URL'si yazılacak
