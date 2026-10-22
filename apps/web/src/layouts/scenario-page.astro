@@ -1,0 +1,16 @@
+---
+import AppLayout from './app-layout.astro';
+import ScenarioContent from '../components/scenario-content.astro';
+import { scenarioAlternates, scenarioBase, scenarioPath, type Scenario } from '../lib/seo/scenarios';
+import { scenarioGraph } from '../lib/seo/structured-data';
+import { localePath, type Locale } from '../i18n/locales';
+
+interface Props { locale: Locale; scenario: Scenario }
+const { locale, scenario } = Astro.props;
+const path = scenarioPath(locale, scenario.slug);
+---
+<AppLayout {locale} title={scenario.metaTitle} description={scenario.metaDescription} alternates={scenarioAlternates(locale, scenario)}
+  keywords={scenario.queries} jsonLd={scenarioGraph(locale, scenario, path, localePath(locale, scenarioBase[locale]))}
+  toolId={scenario.tool} heading={{ title: scenario.title, lead: scenario.lead }}>
+  <ScenarioContent {scenario} {locale} />
+</AppLayout>

@@ -1,0 +1,69 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/sora';
+import SeoHead from '../components/seo-head.astro';
+import SiteFooter from '../components/site-footer.astro';
+import Logo from '../components/logo.svelte';
+import LanguageSwitch from '../components/language-switch.svelte';
+import { ui } from '../i18n/ui';
+import { htmlLang, localePath, type Locale } from '../i18n/locales';
+import { brand } from '../lib/brand';
+import { getTools } from '../lib/tools';
+import { groupLabels, groupOrder, scenarios, scenarioBase, scenarioPath } from '../lib/seo/scenarios';
+import { hubGraph } from '../lib/seo/structured-data';
+import '../styles/global.css';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const text = ui[locale].seo;
+const path = localePath(locale, scenarioBase[locale]);
+const list = scenarios[locale];
+const tools = getTools(locale);
+const alternates = { tr: '/kullanim/', en: '/en/use-cases/' };
+const title = locale === 'tr'
+  ? `PDF ve Belge Kullanım Rehberleri – UYAP, Vize, CV, Ödev | ${brand.name}`
+  : `PDF Guides – Resumes, Visas, Court Filing, Homework | ${brand.name}`;
+---
+<!doctype html>
+<html lang={htmlLang[locale]}>
+  <head>
+    <SeoHead {locale} {title} description={text.hubLead} {alternates}
+      jsonLd={hubGraph(locale, path, list.map((item) => ({ name: item.title, path: scenarioPath(locale, item.slug) })))} />
+  </head>
+  <body class="bg-bg text-text">
+    <header class="sticky top-0 z-30 flex h-[72px] items-center justify-between border-b border-border bg-surface/95 px-8 backdrop-blur-md max-sm:px-4">
+      <Logo href={localePath(locale, '/')} {locale} />
+      <LanguageSwitch href={alternates[locale === 'tr' ? 'en' : 'tr']} {locale} />
+    </header>
+    <main id="main-content" class="mx-auto max-w-[1200px] px-6 py-12 max-sm:px-4 max-sm:py-8">
+      <nav aria-label="Breadcrumb" class="mb-6 flex items-center gap-2 text-xs text-text-muted">
+        <a href={localePath(locale, '/')} class="hover:text-accent">{text.home}</a><span>/</span><span class="font-medium text-text">{text.hubTitle}</span>
+      </nav>
+      <h1 class="font-display text-[clamp(28px,3.4vw,40px)] font-bold tracking-tight text-text">{text.hubTitle}</h1>
+      <p class="mt-3 max-w-2xl text-base leading-relaxed text-text-soft">{text.hubLead}</p>
+
+      {groupOrder.map((group) => {
+        const items = list.filter((item) => item.group === group);
+        return items.length > 0 && (
+          <section class="mt-12" aria-labelledby={`group-${group}`}>
+            <h2 id={`group-${group}`} class="text-xl font-bold tracking-tight text-text">{groupLabels[locale][group]}</h2>
+            <ul class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {items.map((item) => (
+                <li>
+                  <a href={scenarioPath(locale, item.slug)} class="group flex h-full flex-col rounded-card border border-border bg-surface p-5 transition-colors hover:border-accent/50">
+                    <span class="text-base font-semibold text-text group-hover:text-accent">{item.title}</span>
+                    <span class="mt-2 text-sm leading-relaxed text-text-soft line-clamp-3">{item.lead}</span>
+                    <span class="mt-auto flex flex-wrap gap-1.5 pt-4">
+                      {item.tools.map((id) => <span class="rounded bg-bg px-1.5 py-0.5 text-[11px] font-medium text-text-muted ring-1 ring-border">{tools.find((tool) => tool.id === id)?.name}</span>)}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </main>
+    <SiteFooter {locale} />
+  </body>
+</html>

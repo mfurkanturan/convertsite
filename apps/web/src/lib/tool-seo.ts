@@ -10,6 +10,14 @@ export interface SeoFaq {
   answer: string;
 }
 
+export interface SeoUseCase {
+  title: string;
+  tag: string;
+  target: string;
+  description: string;
+  benefit: string;
+}
+
 export interface ToolSeoData {
   id: ToolId;
   title: string;
@@ -22,6 +30,7 @@ export interface ToolSeoData {
   features: { title: string; desc: string; icon: string }[];
   faqs: SeoFaq[];
   relatedTools: ToolId[];
+  useCases?: SeoUseCase[];
 }
 
 export const toolSeoMap: Record<ToolId, ToolSeoData> = {
@@ -32,7 +41,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'Ücretsiz ve güvenli online PDF Word dönüştürücü. Paragraf yapısını, tabloları ve yazı tiplerini bozmadan saniyeler içinde düzenlenebilir DOCX elde edin.',
     h1: 'Online PDF to Word Dönüştürücü',
     lead: 'PDF belgelerinizi düzenlenebilir Microsoft Word (DOCX) dosyalarına anında dönüştürün. Yazı tipleri, tablolar ve sayfa düzeni maksimum hassasiyetle korunur.',
-    keywords: ['pdf word dönüştürme', 'pdf to docx', 'ücretsiz pdf word çevirme', 'online pdf düzenleme'],
+    keywords: ['pdf word dönüştürme', 'pdf to docx', 'ücretsiz pdf word çevirme', 'online pdf düzenleme', 'cv worde çevirme', 'tez pdf word yapma'],
     steps: [
       { title: '1. PDF Dosyanızı Seçin', description: 'Cihazınızdaki PDF belgesini sürükleyip bırakın veya "Dosya Seç" butonuna tıklayarak yükleyin.' },
       { title: '2. Dönüştürmeyi Başlatın', description: 'Sistem belgenizin metin ve tablo yapısını otomatik olarak analiz eder ve DOCX formatına hazırlar.' },
@@ -40,7 +49,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     ],
     features: [
       { title: 'Orijinal Düzen Koruması', desc: 'Paragraflar, başlıklar ve sütunlar bozulmadan Microsoft Word ortamına aktarılır.', icon: 'layout' },
-      { title: '%100 Ücretsiz & Kurulumsun', desc: 'Herhangi bir program indirmenize veya hesap açmanıza gerek yoktur.', icon: 'zap' },
+      { title: '%100 Ücretsiz & Kurulumsuz', desc: 'Herhangi bir program indirmenize veya hesap açmanıza gerek yoktur.', icon: 'zap' },
       { title: 'Gizlilik ve Güvenlik', desc: 'Tüm iletim TLS 1.3 ile korunur; dosyalarınız 1 saat sonra otomatik imha edilir.', icon: 'shield' }
     ],
     faqs: [
@@ -48,7 +57,30 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       { question: 'Dönüştürülen Word dosyasında yazı tipleri bozulur mu?', answer: 'Gelişmiş dönüştürme motorumuz belge yapısını, stilleri ve tabloları mümkün olan en yüksek sadakatle korur.' },
       { question: 'Yüklediğim dosyalar güvende mi?', answer: 'Belgeleriniz güvenli sunucularımızda şifrelenmiş olarak işlenir ve dönüştürmeden 60 dakika sonra kalıcı olarak silinir. Kimseyle paylaşılmaz.' }
     ],
-    relatedTools: ['word-to-pdf', 'pdf-to-excel', 'compress-pdf', 'ocr']
+    relatedTools: ['word-to-pdf', 'pdf-to-excel', 'compress-pdf', 'ocr'],
+    useCases: [
+      {
+        title: 'Akademik Paper, Makale & Tez Düzenleme',
+        tag: 'Akademi & Üniversite',
+        target: 'Öğrenci & Araştırmacı',
+        description: 'İki sütunlu akademik makaleleri ve araştırma raporlarını kaynakları ve dipnotları koruyarak Word ortamına taşıyın.',
+        benefit: 'Tez ve ödevlerinizi sıfırdan yazmak yerine doğrudan düzenlemeye başlayın.'
+      },
+      {
+        title: 'Özgeçmiş (CV) Güncelleme',
+        tag: 'Kariyer & İK',
+        target: 'İş Arayanlar',
+        description: 'Eski PDF formatında kalmış özgeçmişinizi Word belgesine çevirerek yeni iş deneyimlerinizi kolayca ekleyin.',
+        benefit: 'Tasarımı ve hizalaması kaymadan hızlıca güncel CV elde edin.'
+      },
+      {
+        title: 'Sözleşme ve Hukuki Metin Revizyonu',
+        tag: 'Hukuk & Kurumsal',
+        target: 'Avukat & Şirketler',
+        description: 'PDF formatında gelen sözleşme taslaklarını Word formatına çevirerek değişiklikleri takip modunda inceleyin.',
+        benefit: 'Maddeler ve paragraflar üzerinde zahmetsizce düzenleme yapın.'
+      }
+    ]
   },
   'word-to-pdf': {
     id: 'word-to-pdf',
@@ -57,7 +89,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'Microsoft Word (DOCX) belgelerinizi profesyonel ve her cihazda kusursuz görünen PDF formatına dönüştürün. Hızlı, kayıpsız ve ücretsiz.',
     h1: 'Online Word to PDF Dönüştürücü',
     lead: 'Word (DOCX) belgelerinizi tüm cihazlarda birebir aynı görünen, taşınabilir ve yazdırılabilir yüksek kaliteli PDF dosyalarına çevirin.',
-    keywords: ['word pdf dönüştürme', 'docx to pdf', 'word pdf yapma', 'ücretsiz word pdf çevirici'],
+    keywords: ['word pdf dönüştürme', 'docx to pdf', 'word pdf yapma', 'ücretsiz word pdf çevirici', 'cv pdf yapma'],
     steps: [
       { title: '1. Word Belgenizi Yükleyin', description: 'DOCX dosyanızı sürükleyip bırakın veya cihazınızdan seçin.' },
       { title: '2. Otomatik Dönüştürün', description: 'Yazı tipleri, sayfa kenar boşlukları ve resimler optimize edilerek PDF motoruna aktarılır.' },
@@ -72,7 +104,23 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       { question: 'Word belgesindeki resimlerin kalitesi düşer mi?', answer: 'Hayır, görsel netliği korunarak yüksek çözünürlüklü vektör ve raster formatında PDF içine gömülür.' },
       { question: 'Mobil cihazlardan Word PDF dönüştürme yapabilir miyim?', answer: 'Evet, akıllı telefonunuz veya tabletinizin tarayıcısından hiçbir uygulama indirmeden dönüştürme yapabilirsiniz.' }
     ],
-    relatedTools: ['pdf-to-word', 'merge-pdf', 'compress-pdf']
+    relatedTools: ['pdf-to-word', 'merge-pdf', 'compress-pdf'],
+    useCases: [
+      {
+        title: 'İş Başvuruları İçin Kusursuz CV Hazırlığı',
+        tag: 'Kariyer & İK',
+        target: 'İş Arayanlar',
+        description: 'Word’de hazırladığınız CV’yi PDF yaparak karşı tarafın bilgisayarında yazı tiplerinin kaymasını önleyin.',
+        benefit: 'Her cihazda profesyonel ve kurumsal görünüm garantisi.'
+      },
+      {
+        title: 'Ödev, Tez ve Proje Teslimi',
+        tag: 'Eğitim & Üniversite',
+        target: 'Öğrenciler',
+        description: 'Dönem ödevlerinizi ve bitirme tezlerinizi baskıya ve dijital teslim sistemlerine tam uyumlu PDF yapın.',
+        benefit: 'Baskı merkezinde sayfa kayması ve font eksikliği sürprizi yaşamayın.'
+      }
+    ]
   },
   'merge-pdf': {
     id: 'merge-pdf',
@@ -81,7 +129,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'Birden çok PDF dosyasını dilediğiniz sırada tek bir PDF belgesinde birleştirin. Kolay sürükle-bırak, hızlı ve tamamen ücretsiz.',
     h1: 'Online PDF Birleştirme Aracı',
     lead: 'Ayrı ayrı taranmış evrakları, raporları veya sunumları tek bir derli toplu PDF belgesinde birleştirin. Sıralamayı istediğiniz gibi belirleyin.',
-    keywords: ['pdf birleştirme', 'pdf birleştir', 'pdf merge', 'iki pdfyi birleştirme', 'pdf dosyalarını birleştir'],
+    keywords: ['pdf birleştirme', 'pdf birleştir', 'vize evrakları birleştirme', 'uyap pdf birleştir', 'ders slaytları tek pdf', 'fatura birleştirme'],
     steps: [
       { title: '1. PDF Dosyalarını Ekleyin', description: 'Birleştirmek istediğiniz 2 veya daha fazla PDF dosyasını seçin veya çalışma alanına sürükleyin.' },
       { title: '2. Sıralamayı Ayarlayın', description: 'Dosyaların belgedeki sırasını belirlemek için önizleme kartlarını dilediğiniz gibi düzenleyin.' },
@@ -96,7 +144,37 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       { question: 'Kaç adet PDF dosyasını aynı anda birleştirebilirim?', answer: 'Tek seferde onlarca PDF dosyasını seçip dilediğiniz sırada tek belgede birleştirebilirsiniz.' },
       { question: 'Birleştirilen dosyalardaki yer imleri (bookmarks) korunur mu?', answer: 'Evet, standart PDF yapısı korunarak tüm sayfalar düzenli biçimde bağlanır.' }
     ],
-    relatedTools: ['compress-pdf', 'edit-pdf-pages', 'pdf-to-word']
+    relatedTools: ['compress-pdf', 'edit-pdf-pages', 'pdf-to-word'],
+    useCases: [
+      {
+        title: 'Vize & Final Ders Slaytlarını Tek Belge Yapma',
+        tag: 'Öğrenci & Akademi',
+        target: 'Üniversite Öğrencileri',
+        description: 'Haftalık 14 haftalık dağınık ders sunumlarını tek bir çalışma PDF’inde birleştirin.',
+        benefit: 'Tek arama ile tüm sınav konularını tek dosyada hızla bulun.'
+      },
+      {
+        title: 'Schengen & Konsolosluk Vize Başvuru Evrakları',
+        tag: 'Vize & Yurt Dışı',
+        target: 'Seyahat Edenler & Vize Başvurusu',
+        description: 'Pasaport fotokopisi, uçak bileti, otel rezervasyonu ve banka hesap özetini tek bir PDF dosyasında toplayın.',
+        benefit: 'VFS Global ve konsolosluk portallarına eksiksiz ve tek parça dosya yükleyin.'
+      },
+      {
+        title: 'UYAP Dava ve Ek Delil Dosyaları',
+        tag: 'Hukuk & Adliye',
+        target: 'Avukatlar & Hukuk Büroları',
+        description: 'Dava dilekçesi, vekaletname, dekontlar ve delil listesini adli standartlara uygun tek bir dosyada birleştirin.',
+        benefit: 'UYAP Avukat Portal’a tek seferde derli toplu evrak yükleyin.'
+      },
+      {
+        title: 'Aylık e-Arşiv / e-Fatura Muhasebe Paketleme',
+        tag: 'Maliye & Muhasebe',
+        target: 'İşletmeler & Muhasebeciler',
+        description: 'Ay boyunca kesilen onlarca e-Fatura PDF’ini mali müşavirinize tek bir dosya halinde iletin.',
+        benefit: 'E-postada dosya kalabalığını ve kaybolan evrak sorununu bitirin.'
+      }
+    ]
   },
   'compress-pdf': {
     id: 'compress-pdf',
@@ -105,7 +183,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'Büyük PDF dosyalarının boyutunu kalite kaybı yaşamadan küçültün. E-posta ile gönderilebilir, web için optimize edilmiş hafif PDF\'ler oluşturun.',
     h1: 'Online PDF Boyutu Küçültme ve Sıkıştırma',
     lead: 'E-posta ek sınırlarına takılan veya web sitenizi yavaşlatan ağır PDF dosyalarınızı, okunabilirlikten ödün vermeden maksimum oranda sıkıştırın.',
-    keywords: ['pdf sıkıştırma', 'pdf boyut küçültme', 'pdf boyutu düşürme', 'pdf compress', 'pdf mb küçültme'],
+    keywords: ['pdf sıkıştırma', 'pdf boyut küçültme', 'uyap pdf boyutu küçültme', 'vfs vize dosya boyutu', 'cv dosya boyutu küçültme', 'yök tez sıkıştırma'],
     steps: [
       { title: '1. Sıkıştırılacak PDF’yi Yükleyin', description: 'Boyutunu düşürmek istediğiniz PDF dosyasını araca yükleyin.' },
       { title: '2. Sıkıştırma Düzeyini Seçin', description: 'Önerilen akıllı sıkıştırma algoritması dosyanızı otomatik olarak optimize eder.' },
@@ -120,7 +198,37 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       { question: 'Sıkıştırma işlemi metin kalitesini bozar mı?', answer: 'Hayır, akıllı vektör optimizasyonumuz yalnızca gereksiz gömülü verileri ve aşırı çözünürlüklü fotoğrafları dengeler; metinler keskin kalır.' },
       { question: 'PDF sıkıştırma ne kadar sürer?', answer: 'Çoğu dosya 2-5 saniye içinde optimize edilir.' }
     ],
-    relatedTools: ['merge-pdf', 'pdf-to-word', 'pdf-to-images']
+    relatedTools: ['merge-pdf', 'pdf-to-word', 'pdf-to-images'],
+    useCases: [
+      {
+        title: 'UYAP Avukat Portal Dosya Boyutu Sınırı Aşma',
+        tag: 'Hukuk & Adliye',
+        target: 'Avukatlar',
+        description: 'UYAP sisteminin kabul ettiği MB tavanına (10 MB vb.) takılan ağır dava dosyalarını metin netliğini bozmadan sıkıştırın.',
+        benefit: 'Sistem hatası almadan evraklarınızı adliyeye saniyeler içinde gönderin.'
+      },
+      {
+        title: 'Vize Başvurusu (VFS / TLSContact) Kota Uyumu',
+        tag: 'Vize & Seyahat',
+        target: 'Vize Başvurusu Yapanlar',
+        description: 'Vize başvuru sitelerindeki 2 MB - 4 MB gibi katı yükleme kotalarına evraklarınızı kolayca sığdırın.',
+        benefit: 'Randevu günü dosya boyutu yüzünden başvuru iptali riski yaşamayın.'
+      },
+      {
+        title: 'Kariyer & İK CV / Portfolyo Yükleme',
+        tag: 'Kariyer & İK',
+        target: 'İş Arayanlar',
+        description: 'Görsellerle ağırlaşmış 20 MB’lık portfolyo ve CV’nizi 2 MB altına düşürerek iş portallarına sorunsuz yükleyin.',
+        benefit: 'Başvurunuz hızlı yüklensin, İK uzmanı belgenizi beklemeden açsın.'
+      },
+      {
+        title: 'YÖK ve Üniversite Tez Yükleme Kotası',
+        tag: 'Akademi & Enstitü',
+        target: 'Yüksek Lisans & Doktora',
+        description: 'Yüksek lisans ve doktora enstitülerinin tez yükleme MB sınırına uygun, hafifletilmiş PDF elde edin.',
+        benefit: 'Teziniz yüksek kalitede arşivlensin, kota aşımı uyarısı almayın.'
+      }
+    ]
   },
   'pdf-to-excel': {
     id: 'pdf-to-excel',
@@ -129,7 +237,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'PDF tablolarını, faturaları ve finansal raporları düzenlenebilir Microsoft Excel (XLSX) tablolarına dönüştürün. Hızlı, hatasız ve ücretsiz.',
     h1: 'Online PDF to Excel Dönüştürücü',
     lead: 'PDF belgelerinizdeki sayısal verileri, bilançoları ve karmaşık tabloları tek tek elle yazmak yerine doğrudan Excel tablosuna aktarın.',
-    keywords: ['pdf excel dönüştürme', 'pdf to xlsx', 'pdf tablo aktarma', 'pdf excel yapma', 'online pdf excel çevirici'],
+    keywords: ['pdf excel dönüştürme', 'pdf to xlsx', 'banka ekstresi excel aktarma', 'fatura excel çevir', 'bilanço excel yap'],
     steps: [
       { title: '1. PDF Dosyanızı Yükleyin', description: 'İçinde tablo veya liste bulunan PDF belgenizi yükleyin.' },
       { title: '2. Tablolar Algılansın', description: 'Akıllı motorumuz hücre sınırlarını, satırları ve sütunları tespit eder.' },
@@ -144,7 +252,23 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       { question: 'Çok sayfalı PDF belgelerindeki tablolar ayrı sayfalara mı aktarılır?', answer: 'Evet, sayfalar Excel çalışma kitabında düzenli ve ardışık şekilde listelenir.' },
       { question: 'Türkçe karakter desteği var mı?', answer: 'Evet, UTF-8 tam uyumludur; Türkçe karakterler ve para birimi sembolleri eksiksiz aktarılır.' }
     ],
-    relatedTools: ['excel-to-pdf', 'pdf-to-word', 'ocr']
+    relatedTools: ['excel-to-pdf', 'pdf-to-word', 'ocr'],
+    useCases: [
+      {
+        title: 'Banka Hesap Ekstresi ve Kredi Kartı Analizi',
+        tag: 'Finans & Muhasebe',
+        target: 'Bireysel & İşletmeler',
+        description: 'Banka hesap özetlerinizi Excel tablosuna aktararak harcamalarınızı kategorize edin veya pivot tablo oluşturun.',
+        benefit: 'Saatlerce süren manuel veri girişini 3 saniyeye indirin.'
+      },
+      {
+        title: 'Bilanço ve Mali Rapor Tabloları',
+        tag: 'Muhasebe & Denetim',
+        target: 'Mali Müşavirler & Denetçiler',
+        description: 'PDF formatında sunulan gelir tablosu, mizan ve mali tabloları hesaplama yapılabilir hücrelere dökün.',
+        benefit: 'Formüllerle anında analiz yapmaya başlayın.'
+      }
+    ]
   },
   'excel-to-pdf': {
     id: 'excel-to-pdf',
@@ -167,7 +291,16 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     faqs: [
       { question: 'Gizli veya kilitli sütunlar PDF’e yansır mı?', answer: 'Görünür çalışma alanı standart sayfa görünümü olarak PDF’e işlenir.' }
     ],
-    relatedTools: ['pdf-to-excel', 'word-to-pdf', 'compress-pdf']
+    relatedTools: ['pdf-to-excel', 'word-to-pdf', 'compress-pdf'],
+    useCases: [
+      {
+        title: 'Yönetim Sunumu ve Mali Cetvel Baskısı',
+        tag: 'Kurumsal & Yönetim',
+        target: 'Yöneticiler & Raporlayanlar',
+        description: 'Excel’deki geniş bütçe ve satış tablolarını sayfa taşması olmadan şık A4 PDF formatında sunun.',
+        benefit: 'Baskıda veya tablette mükemmel görünen profesyonel raporlama.'
+      }
+    ]
   },
   'pdf-to-images': {
     id: 'pdf-to-images',
@@ -176,7 +309,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'PDF sayfalarını yüksek çözünürlüklü JPG veya PNG görsellerine dönüştürün. İster tek tek sayfalar, ister toplu ZIP indirme.',
     h1: 'Online PDF JPG / PNG Görsel Dönüştürücü',
     lead: 'PDF belgelerinizin sayfalarını yüksek çözünürlüklü görsel dosyalarına (JPG veya PNG) çevirin ve sosyal medyada veya sunumlarda kolayca paylaşın.',
-    keywords: ['pdf jpg dönüştürme', 'pdf png çevirme', 'pdf fotoğrafa çevir', 'pdf resim yapma', 'pdf to image'],
+    keywords: ['pdf jpg dönüştürme', 'pdf png çevirme', 'pdf fotoğrafa çevir', 'sosyal medya pdf paylaşımı'],
     steps: [
       { title: '1. PDF Belgenizi Yükleyin', description: 'Resme dönüştürmek istediğiniz PDF dosyasını seçin.' },
       { title: '2. Sayfalar İşlensin', description: 'Her sayfa yüksek DPI ile bağımsız görsel formatına dönüştürülür.' },
@@ -190,7 +323,16 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     faqs: [
       { question: 'Görseller hangi formatta indirilir?', answer: 'Sayfalar standart yüksek uyumlu JPG veya şeffaflık destekli PNG olarak hazırlanır.' }
     ],
-    relatedTools: ['images-to-pdf', 'compress-pdf', 'edit-pdf-pages']
+    relatedTools: ['images-to-pdf', 'compress-pdf', 'edit-pdf-pages'],
+    useCases: [
+      {
+        title: 'LinkedIn, Instagram & Web Sunum Görselleri',
+        tag: 'Pazarlama & Sosyal Medya',
+        target: 'İçerik Üreticileri & Ajanslar',
+        description: 'PDF broşür veya infografik sayfalarını sosyal medyada doğrudan paylaşılabilir yüksek çözünürlüklü JPG/PNG yapın.',
+        benefit: 'Takipçilerinizin belge indirmeden görsel olarak incelemesini sağlayın.'
+      }
+    ]
   },
   'images-to-pdf': {
     id: 'images-to-pdf',
@@ -199,7 +341,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'Fotoğraflarınızı, taranmış fişleri ve görselleri tek bir düzenli PDF dosyasında birleştirin. Hızlı, kaliteli ve ücretsiz.',
     h1: 'Online Görselleri PDF’ye Dönüştürme',
     lead: 'Telefonunuzdaki veya bilgisayarınızdaki JPG, PNG veya WebP görsellerini saniyeler içinde şık, tek bir PDF albümü veya dokümanı haline getirin.',
-    keywords: ['jpg pdf dönüştürme', 'resimleri pdf yapma', 'png to pdf', 'fotoğrafı pdf yap', 'image to pdf'],
+    keywords: ['jpg pdf dönüştürme', 'resimleri pdf yapma', 'ödev fotoğraflarını pdf yap', 'fiş fotoğrafı pdf yap'],
     steps: [
       { title: '1. Resimleri Seçin', description: 'Birden fazla fotoğrafı veya görseli sürükleyip bırakarak yükleyin.' },
       { title: '2. Sıralamayı Belirleyin', description: 'Fotoğrafların PDF içindeki sayfa sırasını dilediğiniz gibi düzenleyin.' },
@@ -213,16 +355,32 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     faqs: [
       { question: 'Hangi görsel formatları destekleniyor?', answer: 'JPG, JPEG ve PNG formatındaki tüm popüler görseller desteklenmektedir.' }
     ],
-    relatedTools: ['pdf-to-images', 'merge-pdf', 'compress-pdf']
+    relatedTools: ['pdf-to-images', 'merge-pdf', 'compress-pdf'],
+    useCases: [
+      {
+        title: 'Telefonla Çekilen Ödev & Soru Fotoğraflarını PDF Yapma',
+        tag: 'Eğitim & Öğrenci',
+        target: 'Öğrenciler & Veliler',
+        description: 'Kamerayla parça parça çekilmiş defter sayfalarını ve ödev fotoğraflarını sıralı tek bir teslim PDF’i yapın.',
+        benefit: 'Öğretmene onlarca fotoğraf yerine tek bir derli toplu evrak gönderin.'
+      },
+      {
+        title: 'Masraf Fişi ve Harcama Makbuzları Dosyası',
+        tag: 'Şirket & Muhasebe',
+        target: 'Çalışanlar & Saha Ekipleri',
+        description: 'İş seyahatinde çekilen taksi fişleri, yemek faturaları ve makbuz fotoğraflarını tek bir masraf formu PDF’inde toplayın.',
+        benefit: 'Şirket muhasebesine onaylanabilir tek dosya iletin.'
+      }
+    ]
   },
   'edit-pdf-pages': {
     id: 'edit-pdf-pages',
     title: 'PDF Sayfalarını Düzenle ve Ayır',
-    metaTitle: 'PDF Sayfalarını Düzenle & Ayır - Sayfa Silme, Döndürme | DoctorConverter',
+    metaTitle: 'PDF Sayfa Ayırma, Silme, Döndürme | DoctorConverter',
     metaDescription: 'PDF dosyanızdaki istenmeyen sayfaları silin, ters sayfaları döndürün veya sayfaları ayrı ayrı dosyalara bölün. Ücretsiz ve güvenli.',
     h1: 'Online PDF Sayfalarını Düzenleme ve Ayırma',
     lead: 'PDF belgelerinizdeki sayfaları tek tek kontrol edin. Sayfaları döndürün, gereksiz sayfaları silin veya dilediğiniz sayfaları yeni bir PDF olarak kaydedin.',
-    keywords: ['pdf sayfa silme', 'pdf sayfa ayırma', 'pdf split', 'pdf döndürme', 'pdf düzenleme'],
+    keywords: ['pdf sayfa silme', 'pdf sayfa ayırma', 'pdf split', 'pdf döndürme', 'ters taranmış pdf düzeltme'],
     steps: [
       { title: '1. PDF Dosyanızı Ekleyin', description: 'Düzenlemek istediğiniz PDF belgesini yükleyin.' },
       { title: '2. Sayfaları Yönetin', description: 'Görsel sayfa önizlemeleri üzerinden sayfaları döndürün, silin veya ayırın.' },
@@ -236,7 +394,23 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     faqs: [
       { question: 'Belirli bir sayfa aralığını ayırabilir miyim?', answer: 'Evet, ayırmak istediğiniz sayfaları seçerek bağımsız bir PDF olarak dışa aktarabilirsiniz.' }
     ],
-    relatedTools: ['merge-pdf', 'compress-pdf', 'pdf-to-word']
+    relatedTools: ['merge-pdf', 'compress-pdf', 'pdf-to-word'],
+    useCases: [
+      {
+        title: 'Ters Taranmış Resmi Evrakları Döndürme',
+        tag: 'Ofis & Resmi İşler',
+        target: 'Herkes',
+        description: 'Tarayıcıdan yan veya baş aşağı çıkmış sayfaları tek tıkla 90° veya 180° çevirip doğru yöne getirin.',
+        benefit: 'Yazdırırken veya ekranda okurken boyun bükme derdine son.'
+      },
+      {
+        title: 'Kitap veya Sözleşmeden Sadece Gerekli Sayfaları Alma',
+        tag: 'Eğitim & Hukuk',
+        target: 'Öğrenci & Avukat',
+        description: '200 sayfalık mevzuattan veya kitaptan yalnızca sınavda ya da davada gereken 5 sayfayı çekip yeni dosya yapın.',
+        benefit: 'Gereksiz sayfalarla dosya boyutunu şişirmeyin.'
+      }
+    ]
   },
   'ocr': {
     id: 'ocr',
@@ -245,7 +419,7 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     metaDescription: 'Taranmış belgelerden, fotoğraflardan ve kilitli PDF\'lerden metinleri (OCR) çıkarın. Düzenlenebilir ve kopyalanabilir TXT veya Word elde edin.',
     h1: 'Online PDF ve Görsel Metin Çıkarma (OCR)',
     lead: 'Taranmış evraklar, kitap sayfaları veya resimlerdeki metinleri gelişmiş optik karakter tanıma (OCR) teknolojisiyle anında kopyalanabilir metne dönüştürün.',
-    keywords: ['pdf ocr', 'resimden yazı kopyalama', 'fotoğraftan metin çıkarma', 'taranmış pdf metne çevirme', 'online ocr'],
+    keywords: ['pdf ocr', 'resimden yazı kopyalama', 'fotoğraftan metin çıkarma', 'taranmış pdf metne çevirme', 'kitaptan yazı kopyalama'],
     steps: [
       { title: '1. Belgenizi veya Görselinizi Yükleyin', description: 'Metin çıkarmak istediğiniz taranmış PDF veya resim dosyasını yükleyin.' },
       { title: '2. OCR Motoru Analiz Etsin', description: 'Optik karakter tanıma algoritması karakterleri ve satırları okur.' },
@@ -260,6 +434,22 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       { question: 'Hangi dillerdeki metinler tanınabilir?', answer: 'Başta Türkçe ve İngilizce olmak üzere standart Latin alfabesini kullanan belgelerde yüksek doğruluk sağlar.' },
       { question: 'El yazısı destekleniyor mu?', answer: 'Basılı ve daktilo edilmiş belgelerde en yüksek başarıyı sağlar; net el yazılarında da kısmi sonuç verebilir.' }
     ],
-    relatedTools: ['pdf-to-word', 'pdf-to-excel', 'pdf-to-images']
+    relatedTools: ['pdf-to-word', 'pdf-to-excel', 'pdf-to-images'],
+    useCases: [
+      {
+        title: 'Taranmış Kitap, Quiz & Test Sorularından Metin Kopyalama',
+        tag: 'Eğitim & Öğretmenler',
+        target: 'Öğretmenler & Öğrenciler',
+        description: 'Basılı test kitapları veya ders notlarındaki soruları OCR ile dijital metne çevirip dijital sınav hazırlayın.',
+        benefit: 'Soruları tek tek klavyeyle yazma zahmetine son verin.'
+      },
+      {
+        title: 'Eski Mahkeme İlamları & Tensip Zabıtları',
+        tag: 'Hukuk & Adliye',
+        target: 'Avukat & Katip',
+        description: 'Taranmış eski mahkeme kararlarından ve noter evraklarından paragrafları doğrudan kopyalayıp dilekçenize aktarın.',
+        benefit: 'Hukuki emsal kararları saniyeler içinde dilekçenize ekleyin.'
+      }
+    ]
   }
 };

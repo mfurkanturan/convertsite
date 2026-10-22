@@ -1,0 +1,95 @@
+---
+import { getTools } from '../lib/tools';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/locales';
+import { groupLabels, relatedScenarios, scenarioBase, scenarioPath, type Scenario } from '../lib/seo/scenarios';
+
+interface Props { scenario: Scenario; locale: Locale }
+const { scenario, locale } = Astro.props;
+const text = ui[locale].seo;
+const tools = getTools(locale).filter((tool) => scenario.tools.includes(tool.id));
+const related = relatedScenarios(locale, scenario);
+---
+
+<article class="mt-12 space-y-10 border-t border-border/70 pt-10 text-text">
+  <nav aria-label="Breadcrumb" class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+    <a href={localePath(locale, '/')} class="hover:text-accent">{text.home}</a><span>/</span>
+    <a href={localePath(locale, scenarioBase[locale])} class="hover:text-accent">{text.hubTitle}</a><span>/</span>
+    <span class="font-medium text-text">{scenario.title}</span>
+  </nav>
+
+  <section class="rounded-panel border border-border bg-surface p-6 sm:p-8">
+    <h2 class="text-sm font-semibold text-text-muted">{text.searchedAs}</h2>
+    <ul class="mt-3 flex flex-wrap gap-2">
+      {scenario.queries.map((query) => <li class="rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent-strong">{query}</li>)}
+    </ul>
+  </section>
+
+  {scenario.sections.map((section) => (
+    <section class="max-w-3xl">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-text">{section.heading}</h2>
+      {section.body.map((paragraph) => <p class="mt-3 text-[15px] leading-relaxed text-text-soft">{paragraph}</p>)}
+    </section>
+  ))}
+
+  <section class="rounded-panel border border-border bg-surface p-6 sm:p-8">
+    <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-text">{text.howTo(scenario.title)}</h2>
+    <ol class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+      {scenario.steps.map((step, index) => (
+        <li class="rounded-card border border-border/60 bg-bg/50 p-5">
+          <span class="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-sm font-bold text-white">{index + 1}</span>
+          <h3 class="text-base font-semibold text-text">{step.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-text-soft">{step.text}</p>
+        </li>
+      ))}
+    </ol>
+    <a href="#workspace-title" class="mt-6 inline-flex min-h-11 items-center rounded-control bg-accent px-5 text-sm font-semibold text-white hover:bg-accent-strong">{text.startNow} ↑</a>
+  </section>
+
+  {scenario.tips.length > 0 && (
+    <section class="max-w-3xl">
+      <h2 class="text-xl font-bold tracking-tight text-text">{text.tips}</h2>
+      <ul class="mt-4 space-y-3">
+        {scenario.tips.map((tip) => <li class="flex gap-3 text-[15px] leading-relaxed text-text-soft"><span class="mt-1 text-success" aria-hidden="true">✓</span><span>{tip}</span></li>)}
+      </ul>
+    </section>
+  )}
+
+  <section>
+    <h2 class="text-lg font-bold text-text">{text.toolsUsed}</h2>
+    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {tools.map((tool) => (
+        <a href={localePath(locale, `/${tool.id}`)} class="group rounded-card border border-border bg-surface p-4 transition-colors hover:border-accent">
+          <span class="block text-sm font-semibold text-text group-hover:text-accent">{tool.name}</span>
+          <span class="mt-1 block text-xs text-text-muted">{tool.description}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="rounded-panel border border-border bg-surface p-6 sm:p-8">
+    <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-text">{text.faq}</h2>
+    <div class="mt-5 space-y-4">
+      {scenario.faqs.map((faq) => (
+        <details class="group rounded-card border border-border/60 bg-bg/40 p-4 open:bg-bg">
+          <summary class="flex cursor-pointer items-center justify-between font-medium text-sm sm:text-base text-text"><span>{faq.q}</span><span class="ml-4 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true">▼</span></summary>
+          <p class="mt-3 border-t border-border/40 pt-3 text-sm leading-relaxed text-text-soft">{faq.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section>
+      <h2 class="text-lg font-bold text-text">{text.relatedGuides}</h2>
+      <ul class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {related.map((item) => (
+          <li><a href={scenarioPath(locale, item.slug)} class="group block h-full rounded-card border border-border bg-surface p-4 transition-colors hover:border-accent">
+            <span class="text-xs font-semibold text-accent">{groupLabels[locale][item.group]}</span>
+            <span class="mt-1 block text-sm font-semibold text-text group-hover:text-accent">{item.title}</span>
+          </a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</article>
