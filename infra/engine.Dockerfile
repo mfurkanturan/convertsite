@@ -11,7 +11,8 @@ COPY packages/contracts/package.json packages/contracts/package.json
 RUN corepack enable && pnpm install --frozen-lockfile --filter @convertsite/server...
 COPY apps/server apps/server
 COPY packages/contracts packages/contracts
-USER node
-EXPOSE 3002
-CMD ["node", "--import", "tsx", "src/entrypoints/engine.ts"]
+COPY infra/start-production.sh /app/start.sh
+RUN chmod +x /app/start.sh
 WORKDIR /app/apps/server
+EXPOSE 3001
+CMD ["/app/start.sh"]

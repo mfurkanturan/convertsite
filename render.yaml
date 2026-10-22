@@ -1,7 +1,7 @@
 services:
-  # Fastify API + Engine (Docker)
+  # DoctorConverter All-in-One API + Engine + Worker (Docker)
   - type: web
-    name: docly-api
+    name: doctorconverter-api
     runtime: docker
     dockerfilePath: ./infra/engine.Dockerfile
     dockerContext: .
@@ -12,11 +12,13 @@ services:
         value: 3001
       - key: API_HOST
         value: 0.0.0.0
+      - key: ENGINE_URL
+        value: http://127.0.0.1:3002
       - key: APP_ORIGIN
-        sync: false # Canlı frontend domaininiz geldiğinde güncellenecek
+        sync: false
       - key: DATABASE_URL
-        sync: false # Neon PostgreSQL bağlantı adresi buraya girilecek
+        sync: false
       - key: ENGINE_TOKEN
-        generateValue: true # Render otomatik güçlü bir token üretecek
+        generateValue: true
       - key: DATA_DIR
         value: /tmp/data
