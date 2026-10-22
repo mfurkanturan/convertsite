@@ -189,6 +189,21 @@ describe('real PostgreSQL + pg-boss + isolated QPDF', () => {
       headers: { cookie, origin: ctx.config.origin, 'content-type': part.contentType }, payload: part.payload })));
     for (const response of responses) expect(response.statusCode, response.body).toBe(201);
   });
+  it('keys clients on the configured edge header and ignores forwarded headers by default', async () => {
+    const edge = await createHttpApp({ ...ctx, config: { ...ctx.config, clientIpHeader: 'cf-connecting-ip' } }, false);
+    const remaining = async (target: FastifyInstance, headers: Record<string, string>) =>
+      Number((await target.inject({ url: '/api/capabilities', headers })).headers['x-ratelimit-remaining']);
+    try {
+      expect(await remaining(edge, { 'cf-connecting-ip': '198.51.100.7' })).toBe(179);
+      expect(await remaining(edge, { 'cf-connecting-ip': '198.51.100.7' })).toBe(178);
+      expect(await remaining(edge, { 'cf-connecting-ip': '198.51.100.8' })).toBe(179);
+    } finally { await edge.close(); }
+    const plain = await createHttpApp({ ...ctx, config: { ...ctx.config, trustProxyHops: 0 } }, false);
+    try {
+      expect(await remaining(plain, { 'x-forwarded-for': '203.0.113.1' })).toBe(179);
+      expect(await remaining(plain, { 'x-forwarded-for': '203.0.113.2' })).toBe(178);
+    } finally { await plain.close(); }
+  });
   it('caps stored files per network across fresh sessions and enforces the global budget', async () => {
     const network = randomUUID(); const expires = new Date(Date.now() + 60000);
     const sessions = [randomUUID(), randomUUID(), randomUUID()]; sessions.forEach((owner) => ownerIds.add(owner));

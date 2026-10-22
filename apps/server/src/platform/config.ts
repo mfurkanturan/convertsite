@@ -11,6 +11,11 @@ function integer(name: string, fallback: number, min = 1, max = 1_000_000_000): 
   if (!Number.isSafeInteger(value) || value < min || value > max) throw new Error(`Invalid configuration: ${name}`);
   return value;
 }
+function clientIpHeader(): string {
+  const value = (process.env.CLIENT_IP_HEADER ?? '').trim().toLowerCase();
+  if (value && !/^[a-z0-9-]{1,64}$/.test(value)) throw new Error('Invalid configuration: CLIENT_IP_HEADER');
+  return value;
+}
 export function getConfig() {
   const engineToken = process.env.ENGINE_TOKEN;
   if (!engineToken || engineToken.length < 32) throw new Error('ENGINE_TOKEN must contain at least 32 characters');
@@ -26,6 +31,8 @@ export function getConfig() {
     engineUrl: process.env.ENGINE_URL ?? 'http://127.0.0.1:3002', engineToken, sessionSecret,
     // Number of reverse proxies in front of the API; 0 ignores X-Forwarded-For entirely.
     trustProxyHops: integer('TRUST_PROXY_HOPS', 0, 0, 5),
+    // Header set by a trusted edge that clients cannot forge (e.g. cf-connecting-ip); empty uses hop counting.
+    clientIpHeader: clientIpHeader(),
     maxFileBytes: integer('MAX_FILE_BYTES', 10 * 1024 * 1024, 1, 10 * 1024 * 1024),
     maxTotalBytes: integer('MAX_TOTAL_BYTES', 40 * 1024 * 1024, 1, 40 * 1024 * 1024),
     maxFiles: integer('MAX_FILES', 20, 2, 20), maxTotalPages: integer('MAX_TOTAL_PAGES', 300, 1, 300),

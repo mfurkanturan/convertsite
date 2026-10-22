@@ -3,7 +3,8 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import { randomUUID, createHash, createHmac } from 'node:crypto';
-import type { FastifyInstance } from 'fastify';
+import { isIP } from 'node:net';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { Config } from './config.js';
 import { AppError, publicError } from './error.js';
 
@@ -31,9 +32,24 @@ export async function httpSecurity(app: FastifyInstance, config: Config) {
 
   await app.register(cookie, { secret: config.sessionSecret });
   await app.register(helmet, { contentSecurityPolicy: false });
-  await app.register(rateLimit, { max: 180, timeWindow: '1 minute' });
+  // An edge-set header (e.g. cf-connecting-ip) overrides X-Forwarded-For hop counting when configured.
+  const clientIp = (request: FastifyRequest) => {
+    const value = config.clientIpHeader ? request.headers[config.clientIpHeader] : undefined;
+    return typeof value === 'string' && isIP(value.trim()) ? value.trim() : request.ip;
+  };
+  await app.register(rateLimit, { max: 180, timeWindow: '1 minute', keyGenerator: clientIp });
   app.decorateRequest('owner', '');
   app.decorateRequest('client', '');
+
+  // Once per process, record the proxy chain shape (counts only, never addresses) to configure IP trust.
+  let proxyShapeLogged = false;
+  app.addHook('onRequest', async (request) => {
+    if (proxyShapeLogged) return;
+    proxyShapeLogged = true;
+    const forwarded = request.headers['x-forwarded-for'];
+    request.log.info({ event: 'proxy-headers', forwardedEntries: typeof forwarded === 'string' ? forwarded.split(',').length : 0,
+      edgeHeaders: ['cf-connecting-ip', 'true-client-ip', 'x-real-ip'].filter((name) => request.headers[name]) }, 'Proxy header shape');
+  });
 
   app.addHook('onRequest', async (request, reply) => {
     reply.header('cache-control', 'private, no-store');
@@ -60,7 +76,7 @@ export async function httpSecurity(app: FastifyInstance, config: Config) {
     }
     request.owner = createHash('sha256').update(sid).digest('hex');
     // Keyed hash: limits per network without storing raw IP addresses.
-    request.client = createHmac('sha256', config.sessionSecret).update(`client:${request.ip}`).digest('hex');
+    request.client = createHmac('sha256', config.sessionSecret).update(`client:${clientIp(request)}`).digest('hex');
   });
 
   app.setErrorHandler((error, request, reply) => {
