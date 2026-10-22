@@ -40,6 +40,14 @@
     [next[index], next[index + direction]] = [next[index + direction], next[index]];
     files = next;
   }
+
+  function reorderFiles(from: number, to: number) {
+    if (from === to) return;
+    const next = [...files];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    files = next;
+  }
 </script>
 
 <section aria-labelledby="workspace-title">
@@ -56,7 +64,7 @@
     <div class="min-w-0">
       {#if !busy}<FileDropzone {tool} compact={files.length > 0} onfiles={addFiles} />{/if}
       {#if error}<div class="mt-4"><InlineNotice variant="danger" role="alert">{error}</InlineNotice></div>{/if}
-      {#if files.length}<FileList {files} disabled={busy} reorder={tool.multiple} onmove={move} onremove={(index) => { files = files.filter((_, position) => position !== index); }} />{/if}
+      {#if files.length}<FileList {files} disabled={busy} reorder={tool.multiple} onmove={move} onreorder={reorderFiles} onremove={(index) => { files = files.filter((_, position) => position !== index); }} />{/if}
     </div>
 
     <aside class="rounded-panel border border-border bg-surface p-6 max-[650px]:p-5 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1" aria-labelledby="settings-title">
