@@ -1,0 +1,22 @@
+services:
+  # Fastify API + Engine (Docker)
+  - type: web
+    name: docly-api
+    runtime: docker
+    dockerfilePath: ./infra/engine.Dockerfile
+    dockerContext: .
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: APP_ORIGIN
+        sync: false # Canlı frontend domaininiz geldiğinde güncellenecek
+      - key: DATABASE_URL
+        sync: false # Neon PostgreSQL bağlantı adresi buraya girilecek
+      - key: ENGINE_TOKEN
+        generateValue: true # Render otomatik güçlü bir token üretecek
+      - key: DATA_DIR
+        value: /tmp/data
