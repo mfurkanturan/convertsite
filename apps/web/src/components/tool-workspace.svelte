@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Icon from './icon.svelte';
   import FileDropzone from './file-dropzone.svelte';
   import FileList from './file-list.svelte';
@@ -13,6 +14,7 @@
   export let onback: () => void;
   // Landing pages put their own search-focused H1 above the tool.
   export let heading: { title: string; lead: string } | undefined = undefined;
+  export let initialFile: File | undefined = undefined;
   const locale = useLocale();
   const ui = useUi();
   const text = ui.workspace;
@@ -22,6 +24,12 @@
   let customInput = '';
   let selectedSettings: Record<string, string> = {};
   let busy = false;
+
+  onMount(() => {
+    if (initialFile) {
+      addFiles([initialFile]);
+    }
+  });
   $: settings = getSettings(tool.id, locale);
   $: options = requestOptions(tool.id, selectedSettings, pageRange, locale, customInput);
   $: invalidPageRange = !!pageRange && !/^\d+(?:-\d+)?(?:\s*,\s*\d+(?:-\d+)?)*$/.test(pageRange);

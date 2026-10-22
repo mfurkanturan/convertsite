@@ -22,6 +22,7 @@
   let category: Category = 'all';
   let query = '';
   let menuOpen = false;
+  let stagedFile: File | undefined = undefined;
   let activeTool: Tool | undefined = initialToolId ? tools.find((t) => t.id === initialToolId) : undefined;
   const onHome = () => window.location.pathname === home || window.location.pathname === home.replace(/\/$/, '') || window.location.pathname === '';
 
@@ -32,12 +33,14 @@
     }
     category = value;
     activeTool = undefined;
+    stagedFile = undefined;
     menuOpen = false;
     history.replaceState(null, '', '#tools');
     requestAnimationFrame(() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   }
 
   function handleBack() {
+    stagedFile = undefined;
     if (!onHome()) {
       window.location.href = home;
       return;
@@ -53,6 +56,11 @@
     history.pushState(null, '', `#tool/${id}`);
     readLocation();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openToolWithFile(id: string, file?: File) {
+    stagedFile = file;
+    openTool(id);
   }
 
   function readLocation() {
@@ -108,10 +116,10 @@
   />
   <main id="main-content" class="mx-auto w-full max-w-[1240px] flex-1 px-6 sm:px-8 pt-8 max-[540px]:px-4 max-[540px]:pt-5">
     {#if activeTool}
-      {#key activeTool.id}<ToolWorkspace tool={activeTool} onback={handleBack} heading={activeTool.id === initialToolId ? heading : undefined} />{/key}
+      {#key activeTool.id}<ToolWorkspace tool={activeTool} initialFile={stagedFile} onback={handleBack} heading={activeTool.id === initialToolId ? heading : undefined} />{/key}
       <slot />
     {:else}
-      <Hero />
+      <Hero onselecttool={openToolWithFile} />
       <ToolGrid bind:query {category} oncategory={setCategory} ontool={openTool} />
       <slot name="home" />
     {/if}
