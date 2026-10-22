@@ -3,7 +3,10 @@ import sys
 from pathlib import Path
 from common import EngineError, MAX_OUTPUT, pdf_pages
 from validation import inspect_input, inspect_office
-from pdf_operations import merge_pdf, edit_pdf, compress_pdf
+from pdf_operations import (
+    merge_pdf, edit_pdf, compress_pdf,
+    protect_pdf, unlock_pdf, watermark_pdf, add_page_numbers
+)
 from image_conversions import pdf_to_images, images_to_pdf
 from text_conversions import pdf_to_excel
 from word_conversion import pdf_to_word
@@ -11,10 +14,21 @@ from office_conversions import office_to_pdf
 from ocr_operation import extract_text
 
 OPERATIONS = {
-    "merge-pdf": merge_pdf, "edit-pdf-pages": edit_pdf, "compress-pdf": compress_pdf,
-    "pdf-to-images": pdf_to_images, "images-to-pdf": images_to_pdf,
-    "pdf-to-word": pdf_to_word, "pdf-to-excel": pdf_to_excel,
-    "word-to-pdf": office_to_pdf, "excel-to-pdf": office_to_pdf, "ocr": extract_text,
+    "merge-pdf": merge_pdf,
+    "edit-pdf-pages": edit_pdf,
+    "compress-pdf": compress_pdf,
+    "pdf-to-images": pdf_to_images,
+    "images-to-pdf": images_to_pdf,
+    "pdf-to-word": pdf_to_word,
+    "pdf-to-excel": pdf_to_excel,
+    "word-to-pdf": office_to_pdf,
+    "excel-to-pdf": office_to_pdf,
+    "pptx-to-pdf": office_to_pdf,
+    "protect-pdf": protect_pdf,
+    "unlock-pdf": unlock_pdf,
+    "page-numbers": add_page_numbers,
+    "watermark-pdf": watermark_pdf,
+    "ocr": extract_text,
 }
 
 

@@ -451,5 +451,120 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
         benefit: 'Hukuki emsal kararları saniyeler içinde dilekçenize ekleyin.'
       }
     ]
+  },
+  'pptx-to-pdf': {
+    id: 'pptx-to-pdf',
+    title: 'PowerPoint to PDF Dönüştürücü',
+    metaTitle: 'PowerPoint PDF Dönüştürücü - Ücretsiz PPTX to PDF | DoctorConverter',
+    metaDescription: 'PowerPoint (PPTX) slaytlarınızı yazı tiplerini ve animasyon düzenini koruyarak evrensel PDF formatına dönüştürün. Hızlı ve ücretsiz.',
+    h1: 'Online PowerPoint to PDF Dönüştürücü',
+    lead: 'PowerPoint sunumlarınızı tüm telefon, tablet ve bilgisayarlarda tasarımı bozulmadan açılan profesyonel PDF dokümanlarına çevirin.',
+    keywords: ['powerpoint pdf dönüştürme', 'pptx to pdf', 'slayt pdf yapma', 'sunumu pdf yap'],
+    steps: [
+      { title: '1. PPTX Sunumunu Yükleyin', description: 'Dönüştürmek istediğiniz PowerPoint slayt dosyasını seçin veya sürükleyin.' },
+      { title: '2. Otomatik Dönüştürülsün', description: 'Sunum sayfaları LibreOffice motorumuz ile vektörel kalitede PDF’ye işlenir.' },
+      { title: '3. PDF Dosyanızı İndirin', description: 'Tüm cihazlarda hatasız açılan PDF belgenizi tek tıkla indirin.' }
+    ],
+    features: [
+      { title: 'Birebir Tasarım Uyumu', desc: 'Slayt düzeniniz, renkleriniz ve yazı tipleriniz tam isabetle korunur.', icon: 'layout' },
+      { title: 'Mobil Uyumlu', desc: 'Sunumunuz telefon veya tablette PowerPoint yüklü olmasa bile açılır.', icon: 'device' },
+      { title: 'Hızlı & Kurulumsun', desc: 'Saniyeler içinde tarayıcı üzerinden ücretsiz dönüştürün.', icon: 'zap' }
+    ],
+    faqs: [
+      { question: 'Sunumdaki animasyonlar ne olur?', answer: 'PDF durağan bir belge formatı olduğu için slaytlar son halleriyle yüksek kaliteli sayfalara aktarılır.' }
+    ],
+    relatedTools: ['word-to-pdf', 'excel-to-pdf', 'pdf-to-word']
+  },
+  'protect-pdf': {
+    id: 'protect-pdf',
+    title: 'PDF Şifreleme (Parola Koyma)',
+    metaTitle: 'PDF Şifreleme - Ücretsiz PDF Parola Koyma | DoctorConverter',
+    metaDescription: 'Hassas PDF belgelerinizi güçlü 256-bit AES parola ile şifreleyin ve yetkisiz erişimlere karşı kilitleyin. Ücretsiz ve güvenli.',
+    h1: 'Online PDF Şifreleme ve Güvenlik',
+    lead: 'Maaş bordroları, sözleşmeler ve kişisel belgelerinizi güçlü şifreleme ile koruyun. Belgeyi yalnızca parolasını bilenler açabilir.',
+    keywords: ['pdf şifreleme', 'pdf parola koyma', 'pdf kilitleme', 'pdf şifre koy'],
+    steps: [
+      { title: '1. PDF Dosyanızı Yükleyin', description: 'Şifrelemek istediğiniz PDF belgesini seçin.' },
+      { title: '2. Parolanızı Belirleyin', description: 'Belgeyi korumak için güçlü bir şifre girin.' },
+      { title: '3. Şifreli PDF’yi İndirin', description: 'Artık belgeniz 256-bit AES askeri düzeyde koruma altındadır.' }
+    ],
+    features: [
+      { title: '256-bit AES Standart', desc: 'Uluslararası bankacılık ve güvenlik standartlarında en güçlü koruma.', icon: 'shield' },
+      { title: 'Yetkisiz Erişime Son', desc: 'Parola olmadan belgenin içi hiçbir okuyucuda açılamaz.', icon: 'lock' },
+      { title: 'Anında İşlem', desc: 'Belgeniz saniyeler içinde şifrelenir.', icon: 'zap' }
+    ],
+    faqs: [
+      { question: 'Şifreyi unutursam kurtarabilir miyim?', answer: 'Güçlü şifreleme nedeniyle parolanızı bir yere not etmenizi öneririz; sunucularımız parolanızı asla kaydetmez.' }
+    ],
+    relatedTools: ['unlock-pdf', 'compress-pdf', 'merge-pdf']
+  },
+  'unlock-pdf': {
+    id: 'unlock-pdf',
+    title: 'PDF Şifresi Kaldırma',
+    metaTitle: 'PDF Şifre Kaldırma - Korumalı PDF Kilidi Açma | DoctorConverter',
+    metaDescription: 'Şifresini bildiğiniz PDF dosyalarından parolayı kalıcı olarak kaldırın ve kilitleri açın. Hızlı ve güvenli.',
+    h1: 'Online PDF Şifresi Kaldırma ve Kilit Açma',
+    lead: 'Her açılışta şifre soran belgelerinizin parolasını kalıcı olarak kaldırın ve rahatça paylaşın.',
+    keywords: ['pdf şifre kaldırma', 'pdf kilit açma', 'pdf şifresi silme'],
+    steps: [
+      { title: '1. Kilitli PDF’yi Seçin', description: 'Parolasını kaldırmak istediğiniz PDF dosyasını yükleyin.' },
+      { title: '2. Mevcut Şifreyi Girin', description: 'Belgenin mevcut şifresini onaylayın.' },
+      { title: '3. Kilitsiz PDF’yi İndirin', description: 'Artık dosyanız şifresiz olarak açılacaktır.' }
+    ],
+    features: [
+      { title: 'Kalıcı Kilit Açma', desc: 'Bir daha şifre girmek zorunda kalmadan belgenizi arşivleyin.', icon: 'unlock' },
+      { title: 'Gizlilik Garantisi', desc: 'Parolanız ve belgeniz işlem biter bitmez sunucudan silinir.', icon: 'shield' },
+      { title: 'Hızlı & Pratik', desc: 'Tek tıkla kilitsiz kopya elde edin.', icon: 'zap' }
+    ],
+    faqs: [
+      { question: 'Bilmediğim bir şifreyi kırabilir mi?', answer: 'DoctorConverter yasal bir araçtır; yalnızca parolasını bildiğiniz dosyaların şifresini kaldırabilirsiniz.' }
+    ],
+    relatedTools: ['protect-pdf', 'merge-pdf', 'compress-pdf']
+  },
+  'page-numbers': {
+    id: 'page-numbers',
+    title: 'PDF Sayfa Numarası Ekleme',
+    metaTitle: 'PDF Sayfa Numarası Ekleme - Ücretsiz & Hızlı | DoctorConverter',
+    metaDescription: 'PDF sayfalarının altına veya üstüne otomatik sayfa numarası ekleyin. Tez, resmi evrak ve dava dosyaları için idealdir.',
+    h1: 'Online PDF Sayfa Numarası Ekleme',
+    lead: 'Raporlarınıza, sözleşmelerinize ve tezlerinize tek tıkla şık ve sıralı sayfa numaraları yerleştirin.',
+    keywords: ['pdf sayfa numarası ekleme', 'pdf numaralandırma', 'pdf sayfa no koy'],
+    steps: [
+      { title: '1. PDF Dosyanızı Ekleyin', description: 'Numaralandırmak istediğiniz belgeyi yükleyin.' },
+      { title: '2. Numaralandırma Başlasın', description: 'Sayfaların alt orta veya sağ köşesine numaralar işlensin.' },
+      { title: '3. Numaralı PDF’yi İndirin', description: 'Baskıya ve teslime hazır belgenizi hemen indirin.' }
+    ],
+    features: [
+      { title: 'Düzenli Numaralandırma', desc: 'Sayfa 1 / Toplam Sayfa formatında temiz görünüm.', icon: 'layers' },
+      { title: 'Tez ve Adliye Uyumlu', desc: 'Akademik ve hukuki evrak teslim standartlarına tam uyum.', icon: 'check' },
+      { title: 'Orijinal Düzen Korunur', desc: 'Mevcut yazılarınız veya grafikleriniz etkilenmez.', icon: 'layout' }
+    ],
+    faqs: [
+      { question: 'Sayfa numarası nerede görünür?', answer: 'Varsayılan olarak sayfanın en alt orta kısmına okunabilir net bir formatta yerleştirilir.' }
+    ],
+    relatedTools: ['edit-pdf-pages', 'merge-pdf', 'watermark-pdf']
+  },
+  'watermark-pdf': {
+    id: 'watermark-pdf',
+    title: 'PDF Filigran Ekleme',
+    metaTitle: 'PDF Filigran Ekleme - Metin Damgası Basma | DoctorConverter',
+    metaDescription: 'PDF belgelerinizin üzerine GİZLİDİR, TASLAK veya dilediğiniz metin filigranını çapraz damga olarak basın. Hızlı ve ücretsiz.',
+    h1: 'Online PDF Filigran ve Damga Ekleme',
+    lead: 'Belgelerinizin izinsiz kullanımını önlemek için sayfaların üzerine yarı saydam metin filigranı ekleyin.',
+    keywords: ['pdf filigran ekleme', 'pdf damga basma', 'pdf gizlidir yazısı', 'pdf watermark'],
+    steps: [
+      { title: '1. PDF Belgenizi Yükleyin', description: 'Filigran basmak istediğiniz PDF dosyasını seçin.' },
+      { title: '2. Filigran Metnini Belirleyin', description: 'GİZLİDİR, TASLAK veya dilediğiniz bir metin girin.' },
+      { title: '3. Filigranlı PDF’yi İndirin', description: 'Damgalanmış güvenli belgenizi tek tıkla indirin.' }
+    ],
+    features: [
+      { title: 'Okunabilirliği Bozmaz', desc: 'Yarı saydam tasarımı sayesinde alttaki metinler rahatça okunmaya devam eder.', icon: 'eye' },
+      { title: 'Telif ve Gizlilik Koruması', desc: 'Belgenizin taslak veya gizli olduğunu net biçimde belirtin.', icon: 'shield' },
+      { title: 'Tüm Sayfalara Otomatik', desc: 'Yüzlerce sayfa bile olsa tek seferde uygulanır.', icon: 'zap' }
+    ],
+    faqs: [
+      { question: 'Filigran sonradan kaldırılabilir mi?', answer: 'Filigran sayfanın grafik katmanına kalıcı olarak işlendiği için kolayca silinemez, güçlü koruma sağlar.' }
+    ],
+    relatedTools: ['page-numbers', 'protect-pdf', 'compress-pdf']
   }
 };

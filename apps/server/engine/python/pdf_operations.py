@@ -1,5 +1,5 @@
 import shutil
-from common import input_path, pdf_pages, run, page_plan, pack_outputs
+from common import input_path, pdf_pages, run, page_plan, pack_outputs, EngineError
 
 
 def merge_pdf(inputs, options, directory):
@@ -38,3 +38,68 @@ def edit_pdf(inputs, options, directory):
         run("/usr/bin/qpdf", [selected, "--pages", selected, index, "--", output])
         paths.append(output)
     return pack_outputs(paths, directory, force_zip=True)
+
+
+def protect_pdf(inputs, options, directory):
+    source = input_path(inputs[0])
+    output = directory / "protected.pdf"
+    password = options.get("password")
+    if not password:
+        raise EngineError("INVALID_OPTIONS")
+    run("/usr/bin/qpdf", [source, "--encrypt", password, password, "256", "--", output])
+    return output, "pdf"
+
+
+def unlock_pdf(inputs, options, directory):
+    source = input_path(inputs[0])
+    output = directory / "unlocked.pdf"
+    password = options.get("password")
+    arguments = []
+    if password:
+        arguments.append(f"--password={password}")
+    arguments.extend(["--decrypt", source, output])
+    run("/usr/bin/qpdf", arguments)
+    return output, "pdf"
+
+
+def watermark_pdf(inputs, options, directory):
+    import fitz
+    source = input_path(inputs[0])
+    output = directory / "watermarked.pdf"
+    text = options.get("watermarkText") or "CONFIDENTIAL"
+    doc = fitz.open(source)
+    for page in doc:
+        rect = page.rect
+        page.insert_text(
+            fitz.Point(rect.width * 0.15, rect.height * 0.5),
+            text,
+            fontsize=36,
+            rotate=-35,
+            color=(0.7, 0.2, 0.2),
+            fill_opacity=0.35,
+        )
+    doc.save(output)
+    doc.close()
+    return output, "pdf"
+
+
+def add_page_numbers(inputs, options, directory):
+    import fitz
+    source = input_path(inputs[0])
+    output = directory / "numbered.pdf"
+    position = options.get("pageNumberPosition", "bottom-center")
+    doc = fitz.open(source)
+    total = len(doc)
+    for idx, page in enumerate(doc, 1):
+        rect = page.rect
+        text = f"{idx} / {total}"
+        if position == "bottom-right":
+            point = fitz.Point(rect.width - 80, rect.height - 25)
+        elif position == "top-right":
+            point = fitz.Point(rect.width - 80, 30)
+        else:
+            point = fitz.Point(rect.width / 2 - 20, rect.height - 25)
+        page.insert_text(point, text, fontsize=10, color=(0.3, 0.3, 0.3))
+    doc.save(output)
+    doc.close()
+    return output, "pdf"

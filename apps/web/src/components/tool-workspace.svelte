@@ -18,14 +18,16 @@
   let files: File[] = [];
   let error = '';
   let pageRange = '';
+  let customInput = '';
   let selectedSettings: Record<string, string> = {};
   let busy = false;
   $: settings = getSettings(tool.id, locale);
-  $: options = requestOptions(tool.id, selectedSettings, pageRange, locale);
+  $: options = requestOptions(tool.id, selectedSettings, pageRange, locale, customInput);
   $: invalidPageRange = !!pageRange && !/^\d+(?:-\d+)?(?:\s*,\s*\d+(?:-\d+)?)*$/.test(pageRange);
   $: tip = text.tips[tool.id] ?? text.tips.default;
   $: hasPageRange = tool.id === 'edit-pdf-pages' || tool.id === 'pdf-to-images';
-  $: hasSettings = settings.length > 0 || hasPageRange;
+  $: hasCustom = tool.id === 'protect-pdf' || tool.id === 'unlock-pdf' || tool.id === 'watermark-pdf';
+  $: hasSettings = settings.length > 0 || hasPageRange || hasCustom;
 
   function addFiles(incoming: File[]) {
     if (!incoming.length || busy) return;
@@ -72,6 +74,18 @@
         <input id="page-range" disabled={busy} placeholder={text.pagesPlaceholder} bind:value={pageRange} aria-describedby={invalidPageRange ? 'page-range-error' : 'page-range-help'} aria-invalid={invalidPageRange} class="field" />
         {#if invalidPageRange}<small id="page-range-error" class="mt-2 block text-[13px] text-danger" role="alert">{text.pagesError}</small>
         {:else}<small id="page-range-help" class="mt-2 block text-[13px] leading-relaxed text-text-muted">{text.pagesHelp}</small>{/if}
+      {/if}
+      {#if tool.id === 'protect-pdf' || tool.id === 'unlock-pdf'}
+        <label for="pdf-password" class="mt-5 mb-1.5 block text-sm font-medium text-text">
+          {tool.id === 'protect-pdf' ? (locale === 'tr' ? 'Parola belirleyin' : 'Set password') : (locale === 'tr' ? 'Mevcut parola' : 'Current password')}
+        </label>
+        <input id="pdf-password" type="password" disabled={busy} placeholder={locale === 'tr' ? 'Şifrenizi yazın...' : 'Enter password...'} bind:value={customInput} class="field" />
+      {/if}
+      {#if tool.id === 'watermark-pdf'}
+        <label for="pdf-watermark" class="mt-5 mb-1.5 block text-sm font-medium text-text">
+          {locale === 'tr' ? 'Filigran metni' : 'Watermark text'}
+        </label>
+        <input id="pdf-watermark" type="text" disabled={busy} placeholder={locale === 'tr' ? 'Örn: GİZLİDİR veya TASLAK' : 'e.g. CONFIDENTIAL'} bind:value={customInput} class="field" />
       {/if}
       <div class="flex items-center justify-between text-sm text-text-soft {hasSettings ? 'mt-6 border-t border-border pt-5' : 'mt-3'}"><span>{text.outputFormat}</span><strong class="rounded-md bg-accent-soft px-2 py-1 text-[13px] font-semibold text-accent-strong">{tool.output}</strong></div>
     </aside>

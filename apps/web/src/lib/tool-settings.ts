@@ -17,6 +17,9 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
       { key: 'mode', label: 'Çıktı', options: [choice('pdf','Seçilen sayfalar tek PDF'), choice('zip','Sayfa başına PDF (ZIP)')] },
       { key: 'rotation', label: 'Seçilen sayfaları döndür', options: [choice('0','Döndürme'), choice('90','90° sağa'), choice('180','180°'), choice('270','90° sola')] },
     ],
+    'page-numbers': [
+      { key: 'pageNumberPosition', label: 'Numara konumu', options: [choice('bottom-center','Alt orta'), choice('bottom-right','Alt sağ'), choice('top-right','Üst sağ')] },
+    ],
     ocr: [{ key: 'language', label: 'Belge dili', options: [choice('tur','Türkçe'), choice('eng','İngilizce'), choice('tur+eng','Türkçe + İngilizce')] }],
   },
   en: {
@@ -33,17 +36,21 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
       { key: 'mode', label: 'Output', options: [choice('pdf','Selected pages as one PDF'), choice('zip','One PDF per page (ZIP)')] },
       { key: 'rotation', label: 'Rotate selected pages', options: [choice('0','No rotation'), choice('90','90° clockwise'), choice('180','180°'), choice('270','90° counter-clockwise')] },
     ],
-    // English visitors mostly scan English documents, so English is the default here.
+    'page-numbers': [
+      { key: 'pageNumberPosition', label: 'Number position', options: [choice('bottom-center','Bottom center'), choice('bottom-right','Bottom right'), choice('top-right','Top right')] },
+    ],
     ocr: [{ key: 'language', label: 'Document language', options: [choice('eng','English'), choice('tur','Turkish'), choice('tur+eng','Turkish + English')] }],
   },
 };
 export function getSettings(id: ToolId, locale: Locale = 'tr'): Setting[] { return settings[locale][id] ?? []; }
-export function requestOptions(id: ToolId, selected: Record<string,string>, pages: string, locale: Locale = 'tr'): ToolOptions {
+export function requestOptions(id: ToolId, selected: Record<string,string>, pages: string, locale: Locale = 'tr', customText?: string): ToolOptions {
   const entries = getSettings(id, locale).map((setting) => {
     const value = selected[setting.key] ?? setting.options[0].value;
     return [setting.key, setting.key === 'dpi' || setting.key === 'rotation' ? Number(value) : value];
   });
   const result = Object.fromEntries(entries) as ToolOptions;
   if (id === 'edit-pdf-pages' || id === 'pdf-to-images') result.pages = pages.trim();
+  if (id === 'protect-pdf' || id === 'unlock-pdf') result.password = (customText || '').trim();
+  if (id === 'watermark-pdf') result.watermarkText = (customText || 'CONFIDENTIAL').trim();
   return result;
 }

@@ -30,7 +30,12 @@ def inspect_office(path, kind):
         names = [entry.filename for entry in entries]
         if len(entries) > 2000 or len(set(names)) != len(names) or sum(entry.file_size for entry in entries) > 40 * 1024 * 1024:
             raise EngineError("LIMIT_EXCEEDED")
-        required = "word/document.xml" if kind == "docx" else "xl/workbook.xml"
+        if kind == "docx":
+            required = "word/document.xml"
+        elif kind == "xlsx":
+            required = "xl/workbook.xml"
+        else:
+            required = "ppt/presentation.xml"
         if required not in names or "[Content_Types].xml" not in names:
             raise EngineError("INVALID_DOCUMENT")
         cells = 0
@@ -64,7 +69,7 @@ def inspect_input(item):
     kind = item["kind"]
     inspectors = {"pdf": lambda: pdf_pages(path), "jpg": lambda: inspect_image(path, kind),
                   "png": lambda: inspect_image(path, kind), "docx": lambda: inspect_office(path, kind),
-                  "xlsx": lambda: inspect_office(path, kind)}
+                  "xlsx": lambda: inspect_office(path, kind), "pptx": lambda: inspect_office(path, kind)}
     if kind not in inspectors:
         raise EngineError("UNSUPPORTED_FORMAT")
     return inspectors[kind]()

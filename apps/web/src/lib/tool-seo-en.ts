@@ -176,4 +176,79 @@ export const toolSeoMapEn: Record<ToolId, ToolSeoData> = {
     ],
     relatedTools: ['pdf-to-word', 'pdf-to-excel', 'pdf-to-images'],
   },
+  'pptx-to-pdf': {
+    id: 'pptx-to-pdf',
+    title: 'PowerPoint to PDF Converter',
+    metaTitle: 'PowerPoint to PDF – Free Online PPTX to PDF Converter | DoctorConverter',
+    metaDescription: 'Convert PowerPoint (PPTX) presentations into PDF online. Keeps fonts, layouts, and formatting intact. Fast, free, and secure.',
+    h1: 'Online PowerPoint to PDF Converter',
+    lead: 'Turn PowerPoint slides into universally viewable PDF documents that open reliably on any phone, tablet, or PC.',
+    keywords: ['powerpoint to pdf', 'convert pptx to pdf', 'pptx to pdf online free', 'slides to pdf'],
+    steps: steps('Upload your PPTX presentation file.', 'Our engine converts your slides to crisp vector PDF.', 'Download your clean, printable PDF in seconds.'),
+    features: [{ title: 'Precise slide layout', desc: 'Preserves fonts, colors, shapes and alignment across devices.', icon: 'layout' }, free, privacy],
+    faqs: [
+      { question: 'What happens to slide animations?', answer: 'PDF is a static format; each slide is captured in its final presented state.' }
+    ],
+    relatedTools: ['word-to-pdf', 'excel-to-pdf', 'pdf-to-word']
+  },
+  'protect-pdf': {
+    id: 'protect-pdf',
+    title: 'Password Protect PDF',
+    metaTitle: 'Protect PDF – Password Protect PDF Files Online Free | DoctorConverter',
+    metaDescription: 'Encrypt your PDF with strong 256-bit AES password protection. Prevent unauthorized opening, copying, or printing. Free and secure.',
+    h1: 'Password Protect and Encrypt PDF Files',
+    lead: 'Secure confidential documents, payrolls, and contracts with strong password encryption. Only those with the password can open them.',
+    keywords: ['protect pdf', 'encrypt pdf', 'password protect pdf online', 'lock pdf'],
+    steps: steps('Select the PDF you want to protect.', 'Enter a strong password to lock the document.', 'Download your secure 256-bit AES encrypted PDF.'),
+    features: [{ title: '256-bit AES encryption', desc: 'Military-grade encryption protects your files from unauthorized access.', icon: 'shield' }, free, privacy],
+    faqs: [
+      { question: 'Can I recover the password if forgotten?', answer: 'No. For your security, we never store your passwords or keys.' }
+    ],
+    relatedTools: ['unlock-pdf', 'compress-pdf', 'merge-pdf']
+  },
+  'unlock-pdf': {
+    id: 'unlock-pdf',
+    title: 'Unlock Protected PDF',
+    metaTitle: 'Unlock PDF – Remove Password from PDF Online Free | DoctorConverter',
+    metaDescription: 'Remove passwords and permissions from secured PDF files if you know the password. Free, fast, and browser-based.',
+    h1: 'Unlock and Remove Password from PDF',
+    lead: 'Remove the annoying password prompt from files you have the right to open, making them easy to share and archive.',
+    keywords: ['unlock pdf', 'remove pdf password', 'pdf password remover', 'decrypt pdf'],
+    steps: steps('Upload your locked PDF document.', 'Type the current password to authorize decryption.', 'Download your unlocked PDF file with no password prompt.'),
+    features: [{ title: 'Permanent removal', desc: 'Open, print, and share your PDF without repeatedly entering passwords.', icon: 'layout' }, free, privacy],
+    faqs: [
+      { question: 'Does this crack unknown passwords?', answer: 'No. This tool removes protection from files where you know the current password.' }
+    ],
+    relatedTools: ['protect-pdf', 'merge-pdf', 'compress-pdf']
+  },
+  'page-numbers': {
+    id: 'page-numbers',
+    title: 'Add Page Numbers to PDF',
+    metaTitle: 'Add Page Numbers to PDF Online Free | DoctorConverter',
+    metaDescription: 'Insert automated page numbers onto your PDF document pages. Perfect for legal exhibits, university theses, and contracts.',
+    h1: 'Add Page Numbers to PDF Documents',
+    lead: 'Stamp clean, sequential page numbers across all pages of your PDF document in seconds.',
+    keywords: ['add page numbers to pdf', 'number pdf pages', 'pdf page numbering', 'bates numbering'],
+    steps: steps('Upload the PDF you want to number.', 'Choose page number alignment (bottom center, bottom right, top right).', 'Download your newly numbered PDF document.'),
+    features: [{ title: 'Clean numbering', desc: 'Applies "Page X of Y" formatting without distorting underlying content.', icon: 'layout' }, free, privacy],
+    faqs: [
+      { question: 'Where will the numbers appear?', answer: 'By default, numbers are placed neatly at the bottom center of each page.' }
+    ],
+    relatedTools: ['edit-pdf-pages', 'merge-pdf', 'watermark-pdf']
+  },
+  'watermark-pdf': {
+    id: 'watermark-pdf',
+    title: 'Add Watermark to PDF',
+    metaTitle: 'Add Watermark to PDF Online Free | DoctorConverter',
+    metaDescription: 'Stamp custom text watermarks like CONFIDENTIAL, DRAFT, or sample text across your PDF pages. Fast, free, and secure.',
+    h1: 'Stamp Custom Text Watermark on PDF',
+    lead: 'Protect intellectual property and mark document status with diagonal, semi-transparent text watermarks.',
+    keywords: ['add watermark to pdf', 'pdf watermark online', 'stamp pdf confidential', 'draft watermark pdf'],
+    steps: steps('Choose your PDF document.', 'Type your watermark text (e.g. CONFIDENTIAL, DRAFT).', 'Download your watermarked PDF document.'),
+    features: [{ title: 'Semi-transparent', desc: 'Diagonal stamp that remains clear and legible over existing content.', icon: 'layout' }, free, privacy],
+    faqs: [
+      { question: 'Can the watermark be easily removed?', answer: 'The watermark is permanently rendered into the page layer for maximum protection.' }
+    ],
+    relatedTools: ['page-numbers', 'protect-pdf', 'compress-pdf']
+  }
 };

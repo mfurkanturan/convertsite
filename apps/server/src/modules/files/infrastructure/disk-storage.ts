@@ -51,6 +51,7 @@ export function diskStorage(directory: string): FileStorage {
           jpg: () => bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255,
           docx: () => bytes.subarray(0, 4).toString('hex') === '504b0304',
           xlsx: () => bytes.subarray(0, 4).toString('hex') === '504b0304',
+          pptx: () => bytes.subarray(0, 4).toString('hex') === '504b0304',
           zip: () => bytes.subarray(0, 4).toString('hex') === '504b0304',
           txt: () => bytesRead > 0 && !bytes.subarray(0, bytesRead).includes(0),
         };
