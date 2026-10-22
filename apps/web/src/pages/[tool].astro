@@ -1,0 +1,137 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/sora';
+import AppShell from '../components/app-shell.svelte';
+import ToolSeoSection from '../components/tool-seo-section.astro';
+import { brand } from '../lib/brand';
+import { tools } from '../lib/tools';
+import { toolSeoMap } from '../lib/tool-seo';
+import '../styles/global.css';
+
+export function getStaticPaths() {
+  return tools.map((tool) => ({
+    params: { tool: tool.id },
+    props: { toolId: tool.id }
+  }));
+}
+
+const { toolId } = Astro.props;
+const tool = tools.find((t) => t.id === toolId);
+
+if (!tool) {
+  return Astro.redirect('/');
+}
+
+const seoData = toolSeoMap[tool.id];
+const canonicalUrl = `https://doctorconverter.com/${tool.id}`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      "url": canonicalUrl,
+      "name": seoData.metaTitle,
+      "description": seoData.metaDescription,
+      "inLanguage": "tr-TR",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://doctorconverter.com/#website",
+        "name": brand.name,
+        "url": "https://doctorconverter.com/"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonicalUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Ana Sayfa",
+          "item": "https://doctorconverter.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": seoData.title,
+          "item": canonicalUrl
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${canonicalUrl}#software`,
+      "name": `${brand.name} - ${seoData.title}`,
+      "operatingSystem": "All",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "TRY"
+      },
+      "description": seoData.metaDescription
+    },
+    {
+      "@type": "HowTo",
+      "@id": `${canonicalUrl}#howto`,
+      "name": `${seoData.title} Nasıl Yapılır?`,
+      "description": seoData.lead,
+      "step": seoData.steps.map((s, idx) => ({
+        "@type": "HowToStep",
+        "position": idx + 1,
+        "name": s.title,
+        "text": s.description
+      }))
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalUrl}#faq`,
+      "mainEntity": seoData.faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.answer
+        }
+      }))
+    }
+  ]
+};
+---
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={seoData.metaDescription} />
+    <meta name="keywords" content={seoData.keywords.join(', ')} />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{seoData.metaTitle}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={seoData.metaTitle} />
+    <meta property="og:description" content={seoData.metaDescription} />
+    <meta property="og:site_name" content={brand.name} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={seoData.metaTitle} />
+    <meta name="twitter:description" content={seoData.metaDescription} />
+
+    <!-- Google Rich Snippets JSON-LD -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">İçeriğe geç</a>
+    <AppShell client:load initialToolId={tool.id}>
+      <ToolSeoSection data={seoData} />
+    </AppShell>
+  </body>
+</html>

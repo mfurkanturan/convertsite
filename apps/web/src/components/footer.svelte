@@ -25,12 +25,12 @@
       <div class="md:col-span-3 lg:col-span-3 lg:col-start-6">
         <h3 class="text-xs font-bold uppercase tracking-wider text-text">Popüler Araçlar</h3>
         <ul class="mt-4 space-y-2.5 text-sm">
-          <li><a href="/#tool/pdf-to-word" class="text-text-soft transition-colors hover:text-accent">PDF → Word Dönüştürücü</a></li>
-          <li><a href="/#tool/word-to-pdf" class="text-text-soft transition-colors hover:text-accent">Word → PDF Dönüştürücü</a></li>
-          <li><a href="/#tool/merge-pdf" class="text-text-soft transition-colors hover:text-accent">PDF Birleştirme</a></li>
-          <li><a href="/#tool/compress-pdf" class="text-text-soft transition-colors hover:text-accent">PDF Boyutu Küçültme</a></li>
-          <li><a href="/#tool/pdf-to-excel" class="text-text-soft transition-colors hover:text-accent">PDF → Excel Aktarma</a></li>
-          <li><a href="/#tool/ocr" class="text-text-soft transition-colors hover:text-accent">Metin Çıkarma (OCR)</a></li>
+          <li><a href="/pdf-to-word" class="text-text-soft transition-colors hover:text-accent">PDF → Word Dönüştürücü</a></li>
+          <li><a href="/word-to-pdf" class="text-text-soft transition-colors hover:text-accent">Word → PDF Dönüştürücü</a></li>
+          <li><a href="/merge-pdf" class="text-text-soft transition-colors hover:text-accent">PDF Birleştirme</a></li>
+          <li><a href="/compress-pdf" class="text-text-soft transition-colors hover:text-accent">PDF Boyutu Küçültme</a></li>
+          <li><a href="/pdf-to-excel" class="text-text-soft transition-colors hover:text-accent">PDF → Excel Aktarma</a></li>
+          <li><a href="/ocr" class="text-text-soft transition-colors hover:text-accent">Metin Çıkarma (OCR)</a></li>
         </ul>
       </div>
 

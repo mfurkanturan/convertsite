@@ -9,12 +9,18 @@
   import Footer from './footer.svelte';
   import { tools, type Category, type Tool } from '../lib/tools';
 
+  export let initialToolId: string | undefined = undefined;
+
   let category: Category = 'all';
   let query = '';
   let menuOpen = false;
-  let activeTool: Tool | undefined;
+  let activeTool: Tool | undefined = initialToolId ? tools.find((t) => t.id === initialToolId) : undefined;
 
   function setCategory(value: Category) {
+    if (window.location.pathname !== '/' && window.location.pathname !== '') {
+      window.location.href = '/#tools';
+      return;
+    }
     category = value;
     activeTool = undefined;
     menuOpen = false;
@@ -22,14 +28,30 @@
     requestAnimationFrame(() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   }
 
+  function handleBack() {
+    if (window.location.pathname !== '/' && window.location.pathname !== '') {
+      window.location.href = '/';
+      return;
+    }
+    setCategory('all');
+  }
+
   function openTool(id: string) {
+    if (window.location.pathname !== '/' && window.location.pathname !== '') {
+      window.location.href = `/${id}`;
+      return;
+    }
     history.pushState(null, '', `#tool/${id}`);
     readLocation();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function readLocation() {
-    activeTool = tools.find((tool) => `#tool/${tool.id}` === window.location.hash);
+    if (window.location.hash) {
+      activeTool = tools.find((tool) => `#tool/${tool.id}` === window.location.hash);
+    } else if (initialToolId) {
+      activeTool = tools.find((tool) => tool.id === initialToolId);
+    }
     menuOpen = false;
   }
 
@@ -73,7 +95,8 @@
   />
   <main id="main-content" class="mx-auto w-full max-w-[1240px] flex-1 px-6 sm:px-8 pt-8 max-[540px]:px-4 max-[540px]:pt-5">
     {#if activeTool}
-      {#key activeTool.id}<ToolWorkspace tool={activeTool} onback={() => setCategory('all')} />{/key}
+      {#key activeTool.id}<ToolWorkspace tool={activeTool} onback={handleBack} />{/key}
+      <slot />
     {:else}
       <Hero />
       <ToolGrid bind:query {category} oncategory={setCategory} ontool={openTool} />
