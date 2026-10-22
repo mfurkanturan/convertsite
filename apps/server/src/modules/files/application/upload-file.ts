@@ -13,6 +13,8 @@ export function uploadFile(deps: UploadDependencies) {
     try {
       const size = await deps.storage.write(id, input, deps.maxBytes);
       if (!await deps.storage.signature(id, kind)) throw new Error('INVALID_SIGNATURE');
+      const scan = await deps.storage.scanPayload(id, kind);
+      if (!scan.clean) throw new Error('MALICIOUS_PAYLOAD');
       const pages = await deps.inspect(id, kind);
       await deps.repository.ready(id, size, pages);
       return { id, size, pages, expiresAt: expiresAt.toISOString(), kind };

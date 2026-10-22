@@ -65,6 +65,7 @@ export async function httpSecurity(app: FastifyInstance, config: Config) {
     const safe = input.validation ? new AppError('INVALID_REQUEST', 'İstek alanlarını kontrol et.', 400)
       : input.code?.startsWith('FST_REQ_FILE') || input.code === 'FST_FILES_LIMIT' || input.code === 'FST_PARTS_LIMIT' ? new AppError('LIMIT_EXCEEDED', 'Yükleme sınırı aşıldı.', 413)
       : input.message === 'INVALID_SIGNATURE' ? new AppError('INVALID_DOCUMENT', 'Dosyanın türü ve içeriği uyuşmuyor.', 422)
+      : input.message === 'MALICIOUS_PAYLOAD' ? new AppError('MALICIOUS_PAYLOAD', 'Güvenlik taraması: Dosyada şüpheli veya zararlı içerik tespit edildi.', 422)
       : input.statusCode === 429 ? new AppError('RATE_LIMITED', 'Çok fazla istek. Biraz sonra yeniden dene.', 429)
       : input.statusCode === 413 ? new AppError('LIMIT_EXCEEDED', 'Yükleme sınırı aşıldı.', 413)
       : input.statusCode === 415 || input.code === 'FST_INVALID_MULTIPART_CONTENT_TYPE' ? new AppError('UNSUPPORTED_FORMAT', 'Desteklenen dosya multipart olarak gönderilmeli.', 415)

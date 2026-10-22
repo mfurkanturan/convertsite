@@ -14,4 +14,5 @@ export interface FileStorage {
   remove(id: string): Promise<void>;
   open(id: string): AsyncIterable<Uint8Array>;
   signature(id: string, kind?: FileKind): Promise<boolean>;
+  scanPayload(id: string, kind?: FileKind): Promise<{ clean: boolean; threat?: string }>;
 }
