@@ -51,5 +51,9 @@ services:
     envVars:
       - key: PUBLIC_API_URL
         sync: false # https://api.doctorconverter.com (Cloudflare'de DNS only CNAME; frontend ile aynı site, cookie birinci taraf)
+      - key: PUBLIC_ADSENSE_CLIENT
+        value: ca-pub-1185594059702325
+      - key: PUBLIC_ADSENSE_SLOT_HOME_AFTER_TOOLS
+        value: '1455397835'
       - key: NODE_VERSION
         value: 22.23.4
