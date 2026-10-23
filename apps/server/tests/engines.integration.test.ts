@@ -171,6 +171,11 @@ describe('all ten real engines', () => {
     expect(result.job.resultKind).toBe('txt');
     expect(result.download.rawPayload.toString('utf8')).toContain('MERHABA');
   });
+  it('adds a searchable text layer to a scanned PDF', async () => {
+    const result = await execute('pdf-to-pdf-ocr', ['scanned.pdf'], { language: 'tur' });
+    expect(result.job.resultKind).toBe('pdf');
+    expect(await pdfText(result.download.rawPayload)).toContain('MERHABA');
+  });
   it('does not invent tables or text for unsupported PDF content', async () => {
     expect((await execute('pdf-to-excel', ['pages.pdf'], {}, 'failed')).job.error).toBe('NO_TABLES');
     expect((await execute('pdf-to-word', ['scanned.pdf'], {}, 'failed')).job.error).toBe('NO_TEXT');

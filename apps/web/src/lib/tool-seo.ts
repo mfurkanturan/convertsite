@@ -452,6 +452,46 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
       }
     ]
   },
+  'pdf-to-pdf-ocr': {
+    id: 'pdf-to-pdf-ocr',
+    title: 'PDF’yi Aranabilir Yapma (OCR)',
+    metaTitle: 'PDF Aranabilir Yapma - Taranmış PDF’e OCR Metin Katmanı Ekleme | DoctorConverter',
+    metaDescription: 'Taranmış PDF’e aranabilir ve kopyalanabilir görünmez metin katmanı ekleyin. Sayfa düzeni korunur, PDF içinde arama yapılabilir.',
+    h1: 'Taranmış PDF’i Aranabilir PDF’e Dönüştür (OCR)',
+    lead: 'Taranmış evraklarınıza görünmez bir metin katmanı ekleyin; metni seçin, kopyalayın ve PDF içinde arayın. Görünüm ve sayfa düzeni aynen korunur.',
+    keywords: ['pdf aranabilir yapma', 'taranmış pdf ocr', 'pdf metin katmanı ekleme', 'pdf arama yapılabilir hale getirme', 'taranmış pdf aranabilir pdf'],
+    steps: [
+      { title: '1. Taranmış PDF’inizi Yükleyin', description: 'Aranabilir yapmak istediğiniz taranmış PDF dosyasını yükleyin.' },
+      { title: '2. OCR Metin Katmanı Eklesin', description: 'Motor her sayfayı okuyup görünmez, seçilebilir metin katmanını sayfa üzerine işler.' },
+      { title: '3. Aranabilir PDF’i İndirin', description: 'Görünümü aynı kalan, artık içinde arama ve kopyalama yapılabilen PDF’i indirin.' }
+    ],
+    features: [
+      { title: 'Yerleşim Korunur', desc: 'Görünmez metin katmanı eklenir; görüntü ve sayfa düzeni değişmez.', icon: 'layout' },
+      { title: 'Arama & Kopyalama', desc: 'PDF içinde kelime arayın ve metni doğrudan seçip kopyalayın.', icon: 'scan' },
+      { title: 'Türkçe Karakter Desteği', desc: 'Ç, Ğ, İ, Ö, Ş, Ü karakterleri yüksek doğrulukla tanınır.', icon: 'check' }
+    ],
+    faqs: [
+      { question: 'Çıktıdaki görüntü değişir mi?', answer: 'Hayır. Eklenen metin katmanı görünmezdir; sayfa görünümü ve düzeni aynen korunur.' },
+      { question: 'Hangi diller desteklenir?', answer: 'Türkçe, İngilizce veya ikisi birlikte seçilebilir.' }
+    ],
+    relatedTools: ['ocr', 'pdf-to-word', 'pdf-to-images'],
+    useCases: [
+      {
+        title: 'Taranmış Arşiv Belgelerini Aranabilir Yapma',
+        tag: 'Arşiv & Dijitalleştirme',
+        target: 'Arşiv Sorumluları',
+        description: 'Fiziksel olarak taranmış eski evrakları görünümü bozulmadan, PDF içinde arama yapılabilir hale getirin.',
+        benefit: 'Yüzlerce sayfalık taranmış dosyada saniyeler içinde arama yapın.'
+      },
+      {
+        title: 'Hukuk ve Mali Evrakta Hızlı Kelime Arama',
+        tag: 'Hukuk & Finans',
+        target: 'Avukat & Muhasebeci',
+        description: 'Taranmış sözleşme ve belgeleri aranabilir PDF’e çevirip madde ve tutarları doğrudan bulun.',
+        benefit: 'Elle sayfa çevirmek yerine belge içinde arama yaparak zaman kazanın.'
+      }
+    ]
+  },
   'pptx-to-pdf': {
     id: 'pptx-to-pdf',
     title: 'PowerPoint to PDF Dönüştürücü',

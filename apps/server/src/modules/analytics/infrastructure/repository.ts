@@ -52,6 +52,7 @@ export const toolEngineMap: Record<string, string> = {
   'excel-to-pdf': 'libreoffice',
   'pptx-to-pdf': 'libreoffice',
   'ocr': 'tesseract',
+  'pdf-to-pdf-ocr': 'tesseract',
 };
 
 export function analyticsRepository(pool: pg.Pool) {

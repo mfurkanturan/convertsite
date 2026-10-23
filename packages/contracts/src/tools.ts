@@ -28,6 +28,7 @@ const options: Record<ToolId, TObject> = {
   'pdf-to-images': object({ pages, format: Type.Optional(Type.Union([Type.Literal('jpg'), Type.Literal('png')])), dpi: Type.Optional(Type.Union([Type.Literal(100), Type.Literal(150)])) }),
   'images-to-pdf': object({ size: Type.Optional(Type.Union([Type.Literal('a4'), Type.Literal('image')])), orientation: Type.Optional(Type.Union([Type.Literal('portrait'), Type.Literal('landscape')])) }),
   ocr: object({ language: Type.Optional(Type.Union([Type.Literal('tur'), Type.Literal('eng'), Type.Literal('tur+eng')])) }),
+  'pdf-to-pdf-ocr': object({ language: Type.Optional(Type.Union([Type.Literal('tur'), Type.Literal('eng'), Type.Literal('tur+eng')])) }),
   'pptx-to-pdf': object(),
   'protect-pdf': object({ password: Type.String({ minLength: 1, maxLength: 64 }) }),
   'unlock-pdf': object({ password: Type.Optional(Type.String({ maxLength: 64 })) }),

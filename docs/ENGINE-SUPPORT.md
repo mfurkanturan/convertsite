@@ -1,6 +1,6 @@
 # Yerel motor desteği
 
-Durum: Kodda 15 araç kaydı vardır; kayıtlı olması aracın uçtan uca kullanılabilir veya kaliteli olduğunu kanıtlamaz. Tekrarlanabilir 120 senaryolu inceleme ve araç bazlı bulgular [ENGINE-AUDIT](ENGINE-AUDIT.md) içindedir. Geniş belge corpus'u, üretim kapasite testi ve tüm bozuk dosya çeşitleri için garanti verilmez. Harici API/AI dönüşüm servisi kullanılmaz.
+Durum: Kodda 16 araç kaydı vardır; kayıtlı olması aracın uçtan uca kullanılabilir veya kaliteli olduğunu kanıtlamaz. Tekrarlanabilir 120 senaryolu inceleme ve araç bazlı bulgular [ENGINE-AUDIT](ENGINE-AUDIT.md) içindedir. Geniş belge corpus'u, üretim kapasite testi ve tüm bozuk dosya çeşitleri için garanti verilmez. Harici API/AI dönüşüm servisi kullanılmaz.
 
 | Araç | Motor | Destek / sınır |
 | --- | --- | --- |
@@ -14,6 +14,7 @@ Durum: Kodda 15 araç kaydı vardır; kayıtlı olması aracın uçtan uca kulla
 | PDF sayfa düzenle | QPDF | Sayfa sırası/aralık, seçilmeyeni çıkarma, döndürme; tek PDF veya sayfa başına ZIP. Görsel editör/küçük resimler henüz yok. |
 | PDF sıkıştır | QPDF | Kayıpsız stream/object optimizasyonu. Boyut büyürse özgün baytlar döner; küçülme garantisi verilmez. |
 | OCR | Tesseract + Poppler/Pillow | Türkçe/İngilizce/ikisi, TXT. PDF en fazla 20 sayfa. Görsel kalite/yön sonucu etkiler; yerleşim korunmaz. |
+| PDF → Aranabilir PDF (OCR) | Tesseract + PyMuPDF | Görünmez, seçilebilir/aranabilir metin katmanı ekler; en fazla 20 sayfa. Yerleşim ve görüntü korunur; doğruluk görüntü kalitesine bağlı. Metinli sayfalarda çift metin katmanı oluşabilir. |
 | PowerPoint → PDF | LibreOffice | Handler kayıtlı; API yükleme izin listesi PPTX'i reddediyor. İmajda Impress açıkça kurulmamış. Uçtan uca destek doğrulanmış değildir. |
 | PDF şifrele | QPDF | Handler AES-256 çıktısı üretmeye çalışır; ortak çıktı PDF kontrolü şifreli PDF reddettiği için mevcut akış başarısız olabilir. |
 | PDF parola kaldır | QPDF | Parola seçeneği var; ortak girdi kontrolü şifreli PDF reddettiğinden işlem handler'a ulaşamıyor. |

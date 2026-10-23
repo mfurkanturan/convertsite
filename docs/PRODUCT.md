@@ -23,11 +23,11 @@ Temel vaat: Aracını seç, dosyanı yükle, işlemi tamamla ve sonucu indir. D�
 | compress-pdf | PDF sıkıştır | Kayıpsız optimizasyon; kayıplı profil yalnızca doğrulanmış motorla | PDF |
 | ocr | OCR / metin çıkar | PDF, JPG veya PNG; Türkçe ve İngilizce; düz metin çıkarma | UTF-8 TXT |
 
-OCR ilk sürümde özgün yerleşimi koruyan Word veya aranabilir PDF üretme sözü vermez. PDF → Word ve PDF → Excel araçları, kalite kapısını geçmeden halka açık olarak etkinleştirilmez. Kullanılamayan araç işlem kabul etmez ve çalışıyormuş gibi gösterilmez.
+OCR (metin çıkar) aracı yalnızca düz metin üretir; aranabilir PDF için ayrı `pdf-to-pdf-ocr` aracı kullanılır. Özgün yerleşimi koruyan Word üretimi ilk sürümde söz verilmez. PDF → Word ve PDF → Excel araçları, kalite kapısını geçmeden halka açık olarak etkinleştirilmez. Kullanılamayan araç işlem kabul etmez ve çalışıyormuş gibi gösterilmez.
 
 ## Güncel kayıtlı envanter
 
-Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `page-numbers` ve `watermark-pdf` handler'ları ve arayüz kayıtları eklenmiştir; toplam 15 araç kaydı vardır. Bu kayıtlar destek veya kalite onayı değildir. PPTX yükleme, şifreli girdi/çıktı doğrulaması ve Türkçe filigran gibi mevcut engeller [ENGINE-SUPPORT](ENGINE-SUPPORT.md) ve ölçüm sonuçları [ENGINE-AUDIT](ENGINE-AUDIT.md) içinde izlenir. İlk sürüm varsayımları geçmiş kapsamı anlatır; uygulanmış destek için API davranışı ve bu kanıtlar esas alınır.
+Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `page-numbers`, `watermark-pdf` ve `pdf-to-pdf-ocr` handler'ları ve arayüz kayıtları eklenmiştir; toplam 16 araç kaydı vardır. Bu kayıtlar destek veya kalite onayı değildir. PPTX yükleme, şifreli girdi/çıktı doğrulaması ve Türkçe filigran gibi mevcut engeller [ENGINE-SUPPORT](ENGINE-SUPPORT.md) ve ölçüm sonuçları [ENGINE-AUDIT](ENGINE-AUDIT.md) içinde izlenir. İlk sürüm varsayımları geçmiş kapsamı anlatır; uygulanmış destek için API davranışı ve bu kanıtlar esas alınır.
 
 ## İlk sürüm için çalışma varsayımları
 

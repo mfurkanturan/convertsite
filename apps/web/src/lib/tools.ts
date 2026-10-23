@@ -39,6 +39,7 @@ export const tools: Tool[] = [
   { id: 'protect-pdf', name: 'PDF Şifrele', description: 'Hassas PDF belgelerini güçlü 256-bit parola ile kilitle.', category: 'optimize', icon: 'shield', color: 'violet', accept: '.pdf', inputLabel: 'PDF', output: 'PDF' },
   { id: 'unlock-pdf', name: 'PDF Şifresi Kaldır', description: 'Parolasını bildiğin PDF belgesinin kilitlerini kaldırıp serbest bırak.', category: 'optimize', icon: 'sparkles', color: 'mint', accept: '.pdf', inputLabel: 'PDF', output: 'PDF' },
   { id: 'ocr', name: 'Metin çıkar (OCR)', description: 'Taranmış belgeler ve görsellerdeki metni kullanılabilir hale getir.', category: 'optimize', icon: 'scan', color: 'indigo', accept: '.pdf,.jpg,.jpeg,.png', inputLabel: 'PDF, JPG, PNG', output: 'TXT' },
+  { id: 'pdf-to-pdf-ocr', name: 'PDF’yi aranabilir yap (OCR)', description: 'Taranmış PDF’e aranabilir ve kopyalanabilir görünmez metin katmanı ekle.', category: 'optimize', icon: 'scan', color: 'indigo', accept: '.pdf', inputLabel: 'PDF', output: 'PDF' },
 ];
 
 const english: Record<ToolId, Pick<Tool, 'name' | 'description'>> = {
@@ -57,6 +58,7 @@ const english: Record<ToolId, Pick<Tool, 'name' | 'description'>> = {
   'protect-pdf': { name: 'Protect PDF', description: 'Encrypt and password-protect your sensitive PDF files.' },
   'unlock-pdf': { name: 'Unlock PDF', description: 'Remove passwords from protected PDFs if you know the password.' },
   ocr: { name: 'Extract text (OCR)', description: 'Make text in scanned documents and images usable.' },
+  'pdf-to-pdf-ocr': { name: 'Make PDF searchable (OCR)', description: 'Add a searchable, copyable text layer to scanned PDFs.' },
 };
 
 export function localizedTools(locale: Locale): Tool[] {

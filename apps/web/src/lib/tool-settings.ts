@@ -21,6 +21,7 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
       { key: 'pageNumberPosition', label: 'Numara konumu', options: [choice('bottom-center','Alt orta'), choice('bottom-right','Alt sağ'), choice('top-right','Üst sağ')] },
     ],
     ocr: [{ key: 'language', label: 'Belge dili', options: [choice('tur','Türkçe'), choice('eng','İngilizce'), choice('tur+eng','Türkçe + İngilizce')] }],
+    'pdf-to-pdf-ocr': [{ key: 'language', label: 'Belge dili', options: [choice('tur','Türkçe'), choice('eng','İngilizce'), choice('tur+eng','Türkçe + İngilizce')] }],
   },
   en: {
     'excel-to-pdf': [{ key: 'sheets', label: 'Worksheets', options: [choice('all','All worksheets'), choice('first','First worksheet only')] }],
@@ -40,6 +41,7 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
       { key: 'pageNumberPosition', label: 'Number position', options: [choice('bottom-center','Bottom center'), choice('bottom-right','Bottom right'), choice('top-right','Top right')] },
     ],
     ocr: [{ key: 'language', label: 'Document language', options: [choice('eng','English'), choice('tur','Turkish'), choice('tur+eng','Turkish + English')] }],
+    'pdf-to-pdf-ocr': [{ key: 'language', label: 'Document language', options: [choice('eng','English'), choice('tur','Turkish'), choice('tur+eng','Turkish + English')] }],
   },
 };
 export function getSettings(id: ToolId, locale: Locale = 'tr'): Setting[] { return settings[locale][id] ?? []; }

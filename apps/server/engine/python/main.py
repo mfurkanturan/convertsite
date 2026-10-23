@@ -11,7 +11,7 @@ from image_conversions import pdf_to_images, images_to_pdf
 from text_conversions import pdf_to_excel
 from word_conversion import pdf_to_word
 from office_conversions import office_to_pdf
-from ocr_operation import extract_text
+from ocr_operation import extract_text, make_searchable_pdf
 
 OPERATIONS = {
     "merge-pdf": merge_pdf,
@@ -29,6 +29,7 @@ OPERATIONS = {
     "page-numbers": add_page_numbers,
     "watermark-pdf": watermark_pdf,
     "ocr": extract_text,
+    "pdf-to-pdf-ocr": make_searchable_pdf,
 }
 
 

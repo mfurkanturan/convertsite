@@ -176,6 +176,22 @@ export const toolSeoMapEn: Record<ToolId, ToolSeoData> = {
     ],
     relatedTools: ['pdf-to-word', 'pdf-to-excel', 'pdf-to-images'],
   },
+  'pdf-to-pdf-ocr': {
+    id: 'pdf-to-pdf-ocr',
+    title: 'Make PDF Searchable (OCR)',
+    metaTitle: 'Make PDF Searchable – Add OCR Text Layer to Scanned PDF | DoctorConverter',
+    metaDescription: 'Add a searchable, copyable text layer to scanned PDFs. Layout stays the same while you can search and copy text inside the PDF.',
+    h1: 'Make Scanned PDFs Searchable (OCR)',
+    lead: 'Add an invisible text layer to scanned PDFs so you can search, select and copy text. The look and page layout stay exactly the same.',
+    keywords: ['make pdf searchable', 'ocr pdf online', 'add text layer to pdf', 'scanned pdf to searchable pdf', 'ocr pdf converter'],
+    steps: steps('Choose your scanned PDF (up to 20 pages).', 'The engine reads each page and writes an invisible, selectable text layer over it.', 'Download your PDF that now supports search and copy.'),
+    features: [{ title: 'Layout preserved', desc: 'Only an invisible text layer is added; the image and page layout are unchanged.', icon: 'layout' }, free, privacy],
+    faqs: [
+      { question: 'Does the page look different?', answer: 'No. The added text layer is invisible; the page looks exactly the same.' },
+      { question: 'Which languages are supported?', answer: 'English, Turkish or both together.' },
+    ],
+    relatedTools: ['ocr', 'pdf-to-word', 'pdf-to-images'],
+  },
   'pptx-to-pdf': {
     id: 'pptx-to-pdf',
     title: 'PowerPoint to PDF Converter',
