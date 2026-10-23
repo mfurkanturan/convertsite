@@ -1,6 +1,6 @@
 # Modül sınırları
 
-Kullanıcıya sunulan 10 araç, 10 ayrı altyapı veya servis değildir. Ortak sorumluluklar aşağıdaki modüllerde toplanır.
+Kayıtlı 15 araç, 15 ayrı altyapı veya servis değildir. Ortak sorumluluklar aşağıdaki modüllerde toplanır. Uçtan uca destek durumu ENGINE-SUPPORT ve ENGINE-AUDIT belgelerinden kontrol edilir.
 
 ## Sahiplik
 
@@ -29,6 +29,11 @@ Tablo isimleri ve indeksler DATA-MODEL hazırlanırken kesinleştirilir. Bu belg
 | edit-pdf-pages | pdf-operations | EditPdfPages |
 | compress-pdf | pdf-operations | CompressPdf |
 | ocr | ocr | ExtractText |
+| pptx-to-pdf | conversions | PowerPoint → PDF handler'ı |
+| protect-pdf | pdf-operations | PDF şifreleme handler'ı |
+| unlock-pdf | pdf-operations | PDF parola kaldırma handler'ı |
+| page-numbers | pdf-operations | Sayfa numarası handler'ı |
+| watermark-pdf | pdf-operations | Filigran handler'ı |
 
 Benzer motoru kullanmaları ayrı kullanım senaryolarını tek büyük handler'a birleştirme nedeni değildir. Ortak düşük seviyeli motor çağrısı yeniden kullanılabilir.
 

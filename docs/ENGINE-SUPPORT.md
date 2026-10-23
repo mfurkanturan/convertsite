@@ -1,6 +1,6 @@
 # Yerel motor desteği
 
-Durum: İlk uygulama ve sentetik belge doğrulaması. Geniş belge corpus'u, üretim kapasite testi ve tüm bozuk dosya çeşitleri için garanti verilmez. Harici API/AI dönüşüm servisi kullanılmaz.
+Durum: Kodda 15 araç kaydı vardır; kayıtlı olması aracın uçtan uca kullanılabilir veya kaliteli olduğunu kanıtlamaz. Tekrarlanabilir 120 senaryolu inceleme ve araç bazlı bulgular [ENGINE-AUDIT](ENGINE-AUDIT.md) içindedir. Geniş belge corpus'u, üretim kapasite testi ve tüm bozuk dosya çeşitleri için garanti verilmez. Harici API/AI dönüşüm servisi kullanılmaz.
 
 | Araç | Motor | Destek / sınır |
 | --- | --- | --- |
@@ -14,6 +14,11 @@ Durum: İlk uygulama ve sentetik belge doğrulaması. Geniş belge corpus'u, ür
 | PDF sayfa düzenle | QPDF | Sayfa sırası/aralık, seçilmeyeni çıkarma, döndürme; tek PDF veya sayfa başına ZIP. Görsel editör/küçük resimler henüz yok. |
 | PDF sıkıştır | QPDF | Kayıpsız stream/object optimizasyonu. Boyut büyürse özgün baytlar döner; küçülme garantisi verilmez. |
 | OCR | Tesseract + Poppler/Pillow | Türkçe/İngilizce/ikisi, TXT. PDF en fazla 20 sayfa. Görsel kalite/yön sonucu etkiler; yerleşim korunmaz. |
+| PowerPoint → PDF | LibreOffice | Handler kayıtlı; API yükleme izin listesi PPTX'i reddediyor. İmajda Impress açıkça kurulmamış. Uçtan uca destek doğrulanmış değildir. |
+| PDF şifrele | QPDF | Handler AES-256 çıktısı üretmeye çalışır; ortak çıktı PDF kontrolü şifreli PDF reddettiği için mevcut akış başarısız olabilir. |
+| PDF parola kaldır | QPDF | Parola seçeneği var; ortak girdi kontrolü şifreli PDF reddettiğinden işlem handler'a ulaşamıyor. |
+| Sayfa numarası | PyMuPDF | Üç konum, `sayfa / toplam` metni; döndürülmüş sayfalarda görünür konum ayrıca incelenmeli. |
+| Filigran | PyMuPDF | Metin ve sabit biçim; yerleşik Helvetica Türkçe/Unicode metni korumayabilir. Genel kalite garantisi verilmez. |
 
 Her girdi en fazla 10 MiB, toplam 40 MiB; görseller en fazla 25 milyon piksel ve kenar başına 10000 px. Her çıktı en fazla 40 MiB. DOCX/XLSX ZIP açılımı 40 MiB / 2000 entry ile sınırlandırılır; symlink, traversal, şifreleme ve dış ilişkiler reddedilir. Native iş 90 saniyede sonlandırılır.
 

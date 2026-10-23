@@ -39,6 +39,6 @@ Yerel frontend önizlemesi `apps/web` altında kuruludur. Repository kökünde `
 
 Backend ilk dilimi apps/server altındadır. `pnpm setup:local`, `pnpm infra:up`, `pnpm test`, `pnpm infra:down` yerel Docker akışıdır. Backend değişince imajı yeniden build et. Test sırasında worker durur ve sonunda yeniden açılır; kullanıcı verilerini test verilerinden ayır.
 
-10 aracın yerel motor uygulaması vardır; destek/kalite sınırları docs/ENGINE-SUPPORT.md içindedir. Gerçek yüklemede API politikasını esas al. Dosya türü ve seçenekler shared contracts üzerinden doğrulanır. PDF → Word/Excel için birebir yerleşim veya taranmış tablo desteği iddia etme. .env ve .data içeriğini commit etme veya loglama. API, DATA-MODEL, TESTING ve DEPLOYMENT belgelerini ilgili değişiklikte oku.
+15 araç için yerel motor handler'ı kayıtlıdır; kayıt uçtan uca destek kanıtı değildir. Destek/kalite sınırları docs/ENGINE-SUPPORT.md, ölçülen bulgular docs/ENGINE-AUDIT.md içindedir. Gerçek yüklemede API politikasını esas al. Dosya türü ve seçenekler shared contracts üzerinden doğrulanır. PDF → Word/Excel için birebir yerleşim veya taranmış tablo desteği iddia etme. .env ve .data içeriğini commit etme veya loglama. API, DATA-MODEL, TESTING ve DEPLOYMENT belgelerini ilgili değişiklikte oku.
 
 Ürün varsayımları ve açık kararlar PRODUCT içinde, teknik adaylar TECH-STACK içinde tutulur. Belgelerdeki hedefler, uygulanmış özellik kanıtı değildir.

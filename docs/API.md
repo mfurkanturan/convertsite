@@ -1,6 +1,6 @@
 # API — ilk backend dilimi
 
-Kod sözleşmesinin kaynağı `packages/contracts/src/index.ts` ve tools.ts. OpenAPI üretimi henüz eklenmedi. Tarayıcı aynı origin altındaki `/api` yolunu kullanır. 10 araç için tool kimliği ve araca özel options şeması doğrulanır.
+Kod sözleşmesinin kaynağı `packages/contracts/src/index.ts` ve tools.ts. OpenAPI üretimi henüz eklenmedi. Tarayıcı aynı origin altındaki `/api` yolunu kullanır. 15 araç kimliği ve araca özel options şeması kayıtlıdır. PPTX sözleşmede bulunmasına rağmen mevcut dosya yükleme izin listesinde yoktur; kayıtlı olmak işlemin kabul edilmesini garanti etmez. Akış engelleri ve kalite sonuçları ENGINE-AUDIT içinde izlenir.
 
 ## Erişim ve hata modeli
 

@@ -1,5 +1,15 @@
 # Testler
 
+## Motor kalite incelemesi
+
+`pnpm audit:engines` ağsız, 1 CPU / 1024 MiB / 96 PID sınırında ayrı container'da 15 araç için sekizer senaryoyu üç kez çalıştırır. `pnpm audit:engines --performance-only` küçük/orta/sınıra yakın yüklerde ilk + beş tekrar ve iki eşzamanlı motor işlemini ölçer. İşlem başına CPU, child RSS yüksek su işareti, örneklenen disk kullanımı ve çıktı boyutu kaydedilir; container RSS toplamı veya gerçek donanım soğuk başlangıcı olarak sunulmaz.
+
+`pnpm audit:workflow` güncel kodla `docly-audit:local` imajını build eder. Ayrı `docly-quality-audit` Compose projesinde geçici PostgreSQL, depolama, API, motor ve gerçek worker başlatır. Çalışan yerel frontend 4321 portunda olmalıdır; 4329 test geçidi multipart baytlarını bozmadan yalnızca bu API'ye yönlendirir. Chromium gerçek dosya seçme/başlatma/indirme/silme akışını çalıştırır; harici HTTPS istekleri engellenir. Sonunda yalnızca bu audit projesi ve volume'ü kaldırılır; geliştirme PostgreSQL/worker'ı durdurulmaz. Aynı audit runner'ını paralel başlatma.
+
+Yaşam döngüsü kontrolleri gerçek worker ile kuyrukta iptal, yeniden başlama, kontrollü expiry, fiziksel silme, çalışan işte iptal, kısa timeout ve SIGKILL sonrası gerçek 180 saniyelik lease kurtarmayı kapsar. Timeout veya kurtarma testinin başarısızlığı rapora yazılır; test çalışması başarıyla tamamlandı diye ürün davranışı geçti sayılmaz.
+
+Ham JSONL, ilk tekrar çıktıları ve görsel kanıtlar ignored `.qa/engine-audit/` altındadır. `pnpm audit:report` ölçümlerden [ENGINE-AUDIT](ENGINE-AUDIT.md) raporunu üretir. Beklenen NO_TEXT/NO_TABLES retleri başarılı dönüşüm sayılmaz. Görsel, içerik ve düzenlenebilirlik kapıları ayrı tutulur; eksik kontroller genel kalite onayı vermez. Microsoft Word, geniş gerçek belge corpus'u ve Render kapasitesi bu yerel testlerle onaylanmaz.
+
 Son kalite düzeltmesinde 2 dosyada 33 entegrasyon testi geçti. Bu sayım sentetik örnekleri ve koruma sınırlarını kapsar; geniş belge corpus'u veya üretim kapasite onayı değildir.
 
 `pnpm check` import/katman sınırlarını ve server/web tiplerini doğrular. `pnpm build` server tip kontrolü ve Astro statik derlemesini yapar.

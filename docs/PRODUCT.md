@@ -25,6 +25,10 @@ Temel vaat: Aracını seç, dosyanı yükle, işlemi tamamla ve sonucu indir. D�
 
 OCR ilk sürümde özgün yerleşimi koruyan Word veya aranabilir PDF üretme sözü vermez. PDF → Word ve PDF → Excel araçları, kalite kapısını geçmeden halka açık olarak etkinleştirilmez. Kullanılamayan araç işlem kabul etmez ve çalışıyormuş gibi gösterilmez.
 
+## Güncel kayıtlı envanter
+
+Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `page-numbers` ve `watermark-pdf` handler'ları ve arayüz kayıtları eklenmiştir; toplam 15 araç kaydı vardır. Bu kayıtlar destek veya kalite onayı değildir. PPTX yükleme, şifreli girdi/çıktı doğrulaması ve Türkçe filigran gibi mevcut engeller [ENGINE-SUPPORT](ENGINE-SUPPORT.md) ve ölçüm sonuçları [ENGINE-AUDIT](ENGINE-AUDIT.md) içinde izlenir. İlk sürüm varsayımları geçmiş kapsamı anlatır; uygulanmış destek için API davranışı ve bu kanıtlar esas alınır.
+
 ## İlk sürüm için çalışma varsayımları
 
 Bu varsayımlar tasarım ve geliştirme başlangıcı içindir; geri döndürülemez ürün kararı değildir.
