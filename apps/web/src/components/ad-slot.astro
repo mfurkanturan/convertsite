@@ -1,0 +1,47 @@
+---
+interface Props {
+  placement: string;
+  locale: 'tr' | 'en';
+}
+
+const { placement, locale } = Astro.props;
+const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const slotId = placement === 'home-after-tools'
+  ? import.meta.env.PUBLIC_ADSENSE_SLOT_HOME_AFTER_TOOLS
+  : undefined;
+const configured = /^ca-pub-\d+$/.test(adsenseClient ?? '') && /^\d+$/.test(slotId ?? '');
+---
+{configured ? (
+  <aside
+    class="my-8 w-full overflow-hidden"
+    aria-label={locale === 'tr' ? 'Reklam' : 'Advertisement'}
+    data-ad-placement={placement}
+  >
+    <ins
+      class="adsbygoogle block min-h-[112px] w-full sm:min-h-[128px]"
+      style="display:block"
+      data-ad-client={adsenseClient}
+      data-ad-slot={slotId}
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    ></ins>
+  </aside>
+  <script is:inline>
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+) : import.meta.env.DEV ? (
+  <aside
+    class="my-8 flex min-h-[112px] w-full flex-col items-center justify-center gap-2 rounded-panel border border-dashed border-border-strong bg-surface/70 px-5 py-5 text-center sm:min-h-[128px]"
+    aria-label={locale === 'tr' ? 'Reklam alanı önizlemesi' : 'Advertisement placement preview'}
+    data-ad-placement={placement}
+  >
+    <span class="rounded bg-bg px-2 py-1 text-xs font-semibold uppercase tracking-wide text-text-muted">
+      {locale === 'tr' ? 'Reklam' : 'Advertisement'}
+    </span>
+    <p class="text-sm text-text-soft">
+      {locale === 'tr'
+        ? 'Bu alanın gerçek reklamı için yayıncı kimliği ve reklam birimi kimliği bağlanmalı.'
+        : 'Connect your publisher ID and ad unit ID to show a live ad in this space.'}
+    </p>
+  </aside>
+) : null}

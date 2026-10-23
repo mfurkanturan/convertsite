@@ -53,7 +53,7 @@ Araç adı ve açıklama → desteklenen girdiler/limitler → yükleyici → do
 
 Uygulanan düzen: geniş ekranda (≥1024px) sol sütunda yükleyici, dosya listesi ve "İşlemi başlat" paneli; sağ sütunda yapışkan ayar paneli. Dar ekranda sıra yükleyici → dosyalar → ayarlar → başlat'tır. Dosya seçildikten sonra yükleyici kompakt satıra küçülür.
 
-Başlangıçta reklam, zorunlu üyelik penceresi veya dikkat dağıtan promosyon alanı eklenmez. Marka ve footer metinleri ürün kararlarıyla tamamlanır.
+İlk reklam alanı ana sayfada araç kartlarından sonra ve kullanım rehberlerinden önce yer alır. Google AdSense reklam birimi kimlikleri ayarlanana kadar placeholder yalnızca geliştirme önizlemesinde görünür; kimlikler olmadan production'da boş alan bırakılmaz. Araç çalışma/indirme akışının içine, açılır pencere olarak veya sabit mobil yüzeyde reklam konmaz. Zorunlu üyelik penceresi ve dikkat dağıtan promosyon alanı kullanılmaz. Reklam entegrasyonunu yayına almadan önce gizlilik açıklaması ve gerekli bölgesel onay akışı tamamlanmalıdır. Marka ve footer metinleri ürün kararlarıyla tamamlanır.
 
 ## Ortak bileşenler
 

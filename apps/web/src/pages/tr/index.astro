@@ -1,6 +1,7 @@
 ---
 import AppLayout from '../../layouts/app-layout.astro';
 import HomeGuides from '../../components/home-guides.astro';
+import AdSlot from '../../components/ad-slot.astro';
 import { brand } from '../../lib/brand';
 import { homeGraph } from '../../lib/seo/structured-data';
 ---
@@ -8,5 +9,6 @@ import { homeGraph } from '../../lib/seo/structured-data';
   description="Ücretsiz online PDF araçları: PDF birleştirme, PDF küçültme, PDF Word ve Excel dönüştürme, JPG’yi PDF yapma ve OCR. Üyeliksiz, tarayıcıdan, dosyalar otomatik silinir."
   alternates={{ en: '/', tr: '/tr/' }} keywords={['pdf dönüştürücü', 'pdf birleştirme', 'pdf küçültme', 'pdf word çevirme', 'pdf excel çevirme', 'jpg pdf yapma', 'ocr', brand.name]}
   jsonLd={homeGraph('tr')}>
+  <AdSlot placement="home-after-tools" locale="tr" />
   <HomeGuides slot="home" locale="tr" />
 </AppLayout>

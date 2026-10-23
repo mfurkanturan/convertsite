@@ -23,6 +23,8 @@ const xDefault = alternates.en ?? alternates.tr;
 // One branded share card per language; generated once and served from /og.
 const image = absoluteUrl(`/og/og-${locale}.jpg`);
 const imageAlt = locale === 'tr' ? `${brand.name} – PDF ve belge araçları, tek yerde` : `${brand.name} – every PDF and document tool in one place`;
+const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const validAdsenseClient = /^ca-pub-\d+$/.test(adsenseClient ?? '');
 ---
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,6 +32,7 @@ const imageAlt = locale === 'tr' ? `${brand.name} – PDF ve belge araçları, t
 <meta name="description" content={description} />
 {keywords?.length ? <meta name="keywords" content={keywords.join(', ')} /> : null}
 <meta name="theme-color" content="#2563eb" />
+{validAdsenseClient ? <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossorigin="anonymous"></script> : null}
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <link rel="canonical" href={canonical} />
 {links.map(([lang, path]) => <link rel="alternate" hreflang={htmlLang[lang]} href={absoluteUrl(path)} />)}

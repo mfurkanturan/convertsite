@@ -1,8 +1,11 @@
 import { defineConfig } from 'astro/config';
+import { fileURLToPath } from 'node:url';
 import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  // Read the same repository-root .env file used by the API setup.
+  envDir: fileURLToPath(new URL('../../', import.meta.url)),
   integrations: [svelte()],
   output: 'static',
   devToolbar: { enabled: false },

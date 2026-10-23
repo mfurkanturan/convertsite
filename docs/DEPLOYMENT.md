@@ -23,6 +23,8 @@ Setup `.env` oluşturur, mevcut dosyayı korur; eksikse ENGINE_TOKEN'dan ayrı `
 
 Motor genel üst sınırı 20 dosya / 300 sayfa / 40 MiB çıktı; araca özel daha düşük sayfa sınırları ENGINE-SUPPORT içinde. Tek girdi üst sınırı 10 MiB. Toplam native görev süresi 90 saniye, worker istemcisi 95 saniye; kuyruk lease'i 180 saniye ve API/worker kapanma toleransı 110 saniyedir. Yükseltme kapasite testi gerektirir.
 
+Ana sayfadaki AdSense slotu, repository kökündeki `.env` içinde `PUBLIC_ADSENSE_CLIENT` (`ca-pub-...`) ve `PUBLIC_ADSENSE_SLOT_HOME_AFTER_TOOLS` (sayısal reklam birimi kimliği) birlikte tanımlandığında etkinleşir. Doğrulama için publisher kodu `PUBLIC_ADSENSE_CLIENT` ayarlı tüm sayfalara eklenir; bu `PUBLIC_` değerleri statik web build'ine dahil olur ve gizli anahtar değildir. Google kodu canlı domaine erişince AdSense Sites ekranında doğrulamayı ve inceleme talebini tamamla. Reklam gösterimi, Google site onayından sonra başlar. Gerçek reklamı etkinleştirmeden önce gizlilik ve çerez bilgilendirmesini tamamla. Geliştirme önizlemesinde kimlikler yoksa yer tutucu görünür; production build'de boş slot yayımlanmaz.
+
 Worker temizliği periyodiktir. Worker durursa expiry erişimi yine keser; fiziksel temizlik bekler. Silme talebi 120 saniyelik koruma süresi sonrası uygulanır. İş ve dosya süresi ayrı kavramlardır.
 
 ## Üretim öncesi

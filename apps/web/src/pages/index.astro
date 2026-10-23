@@ -1,6 +1,7 @@
 ---
 import AppLayout from '../layouts/app-layout.astro';
 import HomeGuides from '../components/home-guides.astro';
+import AdSlot from '../components/ad-slot.astro';
 import { brand } from '../lib/brand';
 import { homeGraph } from '../lib/seo/structured-data';
 ---
@@ -8,5 +9,6 @@ import { homeGraph } from '../lib/seo/structured-data';
   description="Free online PDF tools: merge PDF, compress PDF, convert PDF to Word and Excel, JPG to PDF and OCR. No sign-up, works in your browser, files deleted automatically."
   alternates={{ en: '/', tr: '/tr/' }} keywords={['pdf converter', 'merge pdf', 'compress pdf', 'pdf to word', 'pdf to excel', 'jpg to pdf', 'ocr', brand.name]}
   jsonLd={homeGraph('en')}>
+  <AdSlot placement="home-after-tools" locale="en" />
   <HomeGuides slot="home" locale="en" />
 </AppLayout>
