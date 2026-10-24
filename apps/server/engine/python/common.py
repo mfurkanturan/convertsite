@@ -14,12 +14,17 @@ class EngineError(Exception):
     pass
 
 
-def run(command, arguments, accepted=(0,)):
-    result = subprocess.run([command, *map(str, arguments)], capture_output=True,
+def run(command, arguments, accepted=(0,), stdin=None):
+    result = subprocess.run([command, *map(str, arguments)], capture_output=True, input=stdin,
                             timeout=35, check=False)
     if result.returncode not in accepted:
         raise EngineError("INVALID_DOCUMENT")
     return result.stdout.decode("utf-8", errors="replace")
+
+
+def qpdf_password(password, path, *arguments, accepted=(0,)):
+    # The password travels on stdin (--password-file=-), never in argv where ps could show it.
+    return run("/usr/bin/qpdf", ["--password-file=-", path, *arguments], accepted, stdin=password.encode("utf-8") + b"\n")
 
 
 def input_path(item):
@@ -28,10 +33,28 @@ def input_path(item):
     return DATA_DIR / (item["id"] + ".pdf")
 
 
-def pdf_pages(path):
-    run("/usr/bin/qpdf", [path, "--is-encrypted"], accepted=(2,))
-    run("/usr/bin/qpdf", [path, "--check"])
-    pages = int(run("/usr/bin/qpdf", [path, "--show-npages"]).strip())
+def pdf_encrypted(path):
+    # qpdf --is-encrypted: 0 = encrypted, 2 = not encrypted, 3 = cannot read.
+    result = subprocess.run(["/usr/bin/qpdf", str(path), "--is-encrypted"], capture_output=True, timeout=35)
+    if result.returncode not in (0, 2):
+        raise EngineError("INVALID_DOCUMENT")
+    return result.returncode == 0
+
+
+def pdf_pages(path, password=None, encrypted_ok=False):
+    # Encrypted PDFs are rejected unless the caller (unlock input, protect output) opts in with a password.
+    if not pdf_encrypted(path):
+        run("/usr/bin/qpdf", [path, "--check"])
+        pages = int(run("/usr/bin/qpdf", [path, "--show-npages"]).strip())
+    elif not encrypted_ok or not password:
+        raise EngineError("WRONG_PASSWORD" if encrypted_ok else "INVALID_DOCUMENT")
+    else:
+        try:
+            qpdf_password(password, path, "--requires-password", accepted=(0, 2, 3))
+            qpdf_password(password, path, "--check")
+        except EngineError:
+            raise EngineError("WRONG_PASSWORD")
+        pages = int(qpdf_password(password, path, "--show-npages").strip())
     if not 1 <= pages <= 300:
         raise EngineError("LIMIT_EXCEEDED")
     return pages

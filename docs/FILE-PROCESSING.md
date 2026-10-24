@@ -9,7 +9,7 @@
 3. Aktarım sırasında gerçek bayt sayısı sınırlandırılır; yarım yüklemeler temizlenir.
 4. Uzantı, bildirilen MIME ve dosya imzası karşılaştırılır; tür bazlı yapısal inceleme uygulanır.
 5. PDF sayfa sayısı, görsel piksel sayısı ve Office arşivinin açılmış boyutu gibi ek sınırlar kontrol edilir.
-6. Bozuk, şifreli, desteklenmeyen veya limit aşan girdiler reddedilir.
+6. Bozuk, şifreli, desteklenmeyen veya limit aşan girdiler reddedilir. Tek istisna, kullanıcı parolasıyla doğrulanan `unlock-pdf` yüklemesidir; doğru parola ve yapısal sınırlar doğrulanmadan dosya ready olmaz.
 7. Hazır dosya için rastgele depolama anahtarı, sahiplik, tür, boyut, checksum ve süre bilgisi kaydedilir.
 
 Yapısal inceleme ve küçük resim üretimi de güvenilmeyen dosya işler; izole, süre/bellek sınırlandırılmış süreçlerde çalışır. DOCX/XLSX içindeki ZIP açılımı için dosya adedi ve toplam açılmış boyut sınırı bulunur. ZIP girdileri işletim sistemi yollarına serbestçe çıkarılmaz.
@@ -39,6 +39,7 @@ Dosyanın `expired` veya `deleted` olması işin geçmişteki başarı bilgisini
 - Çıktı boyutu, dosya adedi, türü ve temel açılabilirliği doğrulanır.
 - Geçerli lease ile sonuç kalıcılaştırılır; ardından başarılı durum yayımlanır.
 - Her bitiş yolunda geçici alanlar ve dosya lease'leri serbest bırakılır.
+- PDF parolası job options/kuyruk payload'ına konmaz; job modülünde şifreli ve expiry'li tutulur, worker'ın Python motor sürecine payload olarak `stdin` üzerinden aktarılır. QPDF parola gerektiren çağrılar parolayı argv yerine stdin/password-file kanalından alır.
 
 İzolasyonun nasıl sağlandığı motor adaptörünün dağıtım tasarımında kanıtlanır. Basit child process çağrısı tek başına sandbox sayılmaz. Office/OCR gibi motorlar aynı host kaynaklarını kontrolsüz paylaşamaz.
 

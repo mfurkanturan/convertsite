@@ -59,15 +59,36 @@ def inspect_office(path, kind):
                         raise EngineError("UNSUPPORTED_FORMAT")
                     if cells > 200000:
                         raise EngineError("LIMIT_EXCEEDED")
+        if kind == "pptx":
+            return pptx_slides(archive, set(names))
     return 0
 
 
-def inspect_input(item):
+def pptx_slides(archive, names):
+    # Count slides through presentation relationships, not loose slide XML parts.
+    relation = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
+    presentation = ElementTree.fromstring(archive.read("ppt/presentation.xml"))
+    ids = [node.get(relation) for node in presentation.iter() if node.tag.endswith("}sldId")]
+    if "ppt/_rels/presentation.xml.rels" not in names or not ids:
+        raise EngineError("INVALID_DOCUMENT")
+    relations = ElementTree.fromstring(archive.read("ppt/_rels/presentation.xml.rels"))
+    targets = {node.get("Id"): node.get("Target", "") for node in relations.iter() if node.tag.endswith("}Relationship")}
+    for rid in ids:
+        target = targets.get(rid, "")
+        part = target.lstrip("/") if target.startswith("/") else "ppt/" + target
+        if not target or part not in names:
+            raise EngineError("INVALID_DOCUMENT")
+    if len(ids) > 300:
+        raise EngineError("LIMIT_EXCEEDED")
+    return len(ids)
+
+
+def inspect_input(item, password=None, encrypted_ok=False):
     path = input_path(item)
     if path.stat().st_size <= 0 or path.stat().st_size > 10 * 1024 * 1024:
         raise EngineError("LIMIT_EXCEEDED")
     kind = item["kind"]
-    inspectors = {"pdf": lambda: pdf_pages(path), "jpg": lambda: inspect_image(path, kind),
+    inspectors = {"pdf": lambda: pdf_pages(path, password, encrypted_ok), "jpg": lambda: inspect_image(path, kind),
                   "png": lambda: inspect_image(path, kind), "docx": lambda: inspect_office(path, kind),
                   "xlsx": lambda: inspect_office(path, kind), "pptx": lambda: inspect_office(path, kind)}
     if kind not in inspectors:

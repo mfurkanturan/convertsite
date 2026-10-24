@@ -17,7 +17,7 @@ export async function createHttpApp(ctx: Context, logging = true) {
     trustProxy: (_address: string, hop: number) => hop < ctx.config.trustProxyHops
   });
   await httpSecurity(app, ctx.config);
-  await app.register(multipart, { limits: { files: 1, fields: 0, parts: 1, fileSize: ctx.config.maxFileBytes, fieldNameSize: 50, headerPairs: 32 } });
+  await app.register(multipart, { limits: { files: 1, fields: 1, parts: 2, fileSize: ctx.config.maxFileBytes, fieldNameSize: 50, headerPairs: 32 } });
   app.get('/api/health/live', async () => ({ status: 'ok' }));
   app.get('/api/health/ready', async (_request, reply) => {
     try {

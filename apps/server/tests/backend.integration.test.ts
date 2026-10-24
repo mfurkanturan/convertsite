@@ -214,4 +214,57 @@ describe('real PostgreSQL + pg-boss + isolated QPDF', () => {
     await expect(uploadAdmission(ctx.pool, { owner: 40, client: 40, global: 2 })(sessions[2], randomUUID(), randomUUID(), expires))
       .rejects.toMatchObject({ code: 'CAPACITY_EXCEEDED', status: 503 });
   });
+  it('protects and unlocks PDFs end-to-end without persisting the password', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'docly-pass-'));
+    try {
+      const plain = await pdfFixture(300, 'Secret content', 1);
+      await writeFile(join(dir, 'plain.pdf'), plain);
+      const unlockPassword = 'şifreözel-2026!&=';
+      await promisify(execFile)('qpdf', ['--encrypt', unlockPassword, 'owner', '256', '--', join(dir, 'plain.pdf'), join(dir, 'encrypted.pdf')]);
+      const cookie = await session();
+      const remote = '10.7.7.7';
+
+      // Wrong and missing passwords are rejected before the encrypted upload becomes ready.
+      for (const password of ['wrong-password', undefined]) {
+        const rejectedUpload = multipart(await readFile(join(dir, 'encrypted.pdf')), 'encrypted.pdf', 'application/pdf', password ? { password } : {});
+        const rejected = await app.inject({ method: 'POST', url: '/api/files', remoteAddress: remote, headers: { cookie, origin: ctx.config.origin, 'content-type': rejectedUpload.contentType }, payload: rejectedUpload.payload });
+        expect(rejected.statusCode, rejected.body).toBe(422);
+      }
+
+      // Correct Unicode/special-character password travels through upload, job secret and worker.
+      const unlockUpload = multipart(await readFile(join(dir, 'encrypted.pdf')), 'encrypted.pdf', 'application/pdf', { password: unlockPassword });
+      const uploadRes = await app.inject({ method: 'POST', url: '/api/files', remoteAddress: remote, headers: { cookie, origin: ctx.config.origin, 'content-type': unlockUpload.contentType }, payload: unlockUpload.payload });
+      expect(uploadRes.statusCode, uploadRes.body).toBe(201);
+      const unlockJobRes = await app.inject({ method: 'POST', url: '/api/jobs', headers: { cookie, origin: ctx.config.origin }, payload: { tool: 'unlock-pdf', fileIds: [uploadRes.json<UploadedFile>().id], options: { password: unlockPassword }, idempotencyKey: randomUUID() } });
+      expect(unlockJobRes.statusCode, unlockJobRes.body).toBe(202);
+      const unlockJob = unlockJobRes.json<JobView>();
+      await ctx.execute(unlockJob.id);
+      const unlocked = await app.inject({ url: `/api/jobs/${unlockJob.id}/download`, headers: { cookie } });
+      expect(unlocked.statusCode).toBe(200);
+      await writeFile(join(dir, 'unlocked.pdf'), unlocked.rawPayload);
+      expect((await promisify(execFile)('pdftotext', [join(dir, 'unlocked.pdf'), '-'])).stdout).toContain('Secret content');
+
+      // protect: encrypt a plain PDF; password round-trips through an encrypted secret and is cleaned up after finish.
+      const plainUpload = multipart(plain, 'plain.pdf', 'application/pdf');
+      const plainRes = await app.inject({ method: 'POST', url: '/api/files', remoteAddress: remote, headers: { cookie, origin: ctx.config.origin, 'content-type': plainUpload.contentType }, payload: plainUpload.payload });
+      expect(plainRes.statusCode, plainRes.body).toBe(201);
+      const protectPassword = 'yeni-şifre-2026!&=';
+      const protectRes = await app.inject({ method: 'POST', url: '/api/jobs', headers: { cookie, origin: ctx.config.origin }, payload: { tool: 'protect-pdf', fileIds: [plainRes.json<UploadedFile>().id], options: { password: protectPassword }, idempotencyKey: randomUUID() } });
+      expect(protectRes.statusCode, protectRes.body).toBe(202);
+      const protectJob = protectRes.json<JobView>();
+      expect(await ctx.jobs.secretFor(protectJob.id)).toBe(protectPassword);
+      const stored = (await ctx.pool.query('SELECT options FROM jobs WHERE id=$1', [protectJob.id])).rows[0];
+      expect(JSON.stringify(stored.options)).not.toContain(protectPassword);
+      await ctx.execute(protectJob.id);
+      const protectedPdf = await app.inject({ url: `/api/jobs/${protectJob.id}/download`, headers: { cookie } });
+      expect(protectedPdf.statusCode).toBe(200);
+      await writeFile(join(dir, 'protected.pdf'), protectedPdf.rawPayload);
+      await promisify(execFile)('qpdf', ['--is-encrypted', join(dir, 'protected.pdf')]);
+      await promisify(execFile)('qpdf', [`--password=${protectPassword}`, '--check', join(dir, 'protected.pdf')]);
+      expect(await ctx.jobs.secretFor(protectJob.id)).toBeNull();
+      await ctx.pool.query(`INSERT INTO job_secrets(job_id,secret,expires_at) VALUES($1,$2,now()+interval '1 hour')`, [protectJob.id, Buffer.from('synthetic-test-secret')]);
+      await ctx.jobs.expireStale();
+      expect((await ctx.pool.query('SELECT 1 FROM job_secrets WHERE job_id=$1', [protectJob.id])).rowCount).toBe(0);
+    } finally { await rm(dir, { recursive: true, force: true }); }
+  });
 });

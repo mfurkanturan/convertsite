@@ -42,6 +42,86 @@ def explicit_column_breaks(document):
         parent.remove(previous)
 
 
+def trim_line_break_spaces(document):
+    # pdf2docx writes "line text " + <w:br/>. When the line fills the text width, Writer wraps the trailing
+    # space and the break adds a second, empty line, doubling the line pitch.
+    for run in document.element.iter(qn('w:r')):
+        following = run.getnext()
+        if following is None or following.tag != qn('w:r'):
+            continue
+        children = list(following)
+        if len(children) != 1 or children[0].tag != qn('w:br') or children[0].get(qn('w:type')) not in (None, 'textWrapping'):
+            continue
+        texts = run.findall(qn('w:t'))
+        if texts and texts[-1].text and texts[-1].text != texts[-1].text.rstrip(' '):
+            texts[-1].text = texts[-1].text.rstrip(' ')
+
+
+def table_grids(document):
+    # pdf2docx writes the right cell widths (w:tcW) but equal w:tblGrid columns. Writer lays out a fixed
+    # table from the grid, so every column moved. Rebuild the grid from the cell edges of all rows.
+    for table in document.element.iter(qn('w:tbl')):
+        rows = table.findall(qn('w:tr'))
+        grid = table.find(qn('w:tblGrid'))
+        if not rows or grid is None:
+            continue
+        layouts = []
+        for row in rows:
+            position, cells = 0, []
+            for cell in row.findall(qn('w:tc')):
+                properties = cell.find(qn('w:tcPr'))
+                width = properties.find(qn('w:tcW')) if properties is not None else None
+                if width is None or width.get(qn('w:type')) != 'dxa':
+                    cells = None
+                    break
+                end = position + int(width.get(qn('w:w')))
+                cells.append((cell, position, end))
+                position = end
+            if cells is None:
+                layouts = None
+                break
+            layouts.append(cells)
+        if not layouts:
+            continue
+        edges = []
+        for value in sorted({edge for cells in layouts for _, start, end in cells for edge in (start, end)}):
+            if not edges or value - edges[-1] > 20:  # 1 pt tolerance between rows
+                edges.append(value)
+        columns = [b - a for a, b in zip(edges, edges[1:])]
+        if not columns:
+            continue
+        def index(value):
+            return min(range(len(edges)), key=lambda i: abs(edges[i] - value))
+        for cells in layouts:
+            for cell, start, end in cells:
+                count = max(1, index(end) - index(start))
+                properties = cell.find(qn('w:tcPr'))
+                span = properties.find(qn('w:gridSpan'))
+                if count == 1 and span is not None:
+                    properties.remove(span)
+                elif count > 1:
+                    if span is None:
+                        span = OxmlElement('w:gridSpan')
+                        properties.find(qn('w:tcW')).addnext(span)
+                    span.set(qn('w:val'), str(count))
+        # Writer outdents a table by its default cell margin; the cells carry their own explicit padding.
+        properties = table.find(qn('w:tblPr'))
+        if properties is not None and properties.find(qn('w:tblCellMar')) is None:
+            margins = OxmlElement('w:tblCellMar')
+            for side in ('left', 'right'):
+                edge = OxmlElement('w:' + side)
+                edge.set(qn('w:w'), '0')
+                edge.set(qn('w:type'), 'dxa')
+                margins.append(edge)
+            properties.append(margins)
+        for column in list(grid):
+            grid.remove(column)
+        for width in columns:
+            column = OxmlElement('w:gridCol')
+            column.set(qn('w:w'), str(width))
+            grid.append(column)
+
+
 def pixel_key(blob):
     with Image.open(io.BytesIO(blob)) as image:
         if image.width * image.height > 25_000_000:

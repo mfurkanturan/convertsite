@@ -15,4 +15,5 @@ export interface JobRepository {
   cancel(owner: string, id: string, remove?: boolean): Promise<void>;
   usesFile(id: string, activeOnly?: boolean): Promise<boolean>;
   expireStale(): Promise<void>;
+  secretFor(id: string): Promise<string | null>;
 }

@@ -11,12 +11,14 @@ if (!isAbsolute(dataDir)) throw new Error('DATA_DIR must be absolute for the eng
 export function runPython(payload: unknown, signal: AbortSignal): Promise<string> {
   return new Promise((resolve, reject) => {
     const child = spawn('/usr/bin/prlimit', ['--as=2147483648', '--cpu=80', '--fsize=41943040', '--nofile=256', '--',
-      '/opt/docly-python/bin/python', '-B', script, JSON.stringify(payload)], {
-      detached: true, stdio: ['ignore', 'pipe', 'pipe'],
+      '/opt/docly-python/bin/python', '-B', script], {
+      detached: true, stdio: ['pipe', 'pipe', 'pipe'],
       env: { PATH: '/usr/bin:/bin', HOME: '/tmp', LANG: 'C.UTF-8', LC_ALL: 'C.UTF-8',
         OMP_THREAD_LIMIT: '1', OMP_NUM_THREADS: '1', OPENBLAS_NUM_THREADS: '1', MKL_NUM_THREADS: '1', PYTHONDONTWRITEBYTECODE: '1', DOCLY_DATA_DIR: dataDir },
     });
     let stdout = ''; let stderr = ''; let bytes = 0; let overflow = false;
+    child.stdin.on('error', () => { /* A cancelled child may close stdin before the payload is written. */ });
+    child.stdin.end(JSON.stringify(payload));
     function kill() { if (child.pid) { try { process.kill(-child.pid, 'SIGKILL'); } catch { /* already exited */ } } }
     child.stdout.on('data', (chunk: Buffer) => { bytes += chunk.length; if (bytes > 131072) { overflow = true; kill(); } else stdout += chunk.toString('utf8'); });
     child.stderr.on('data', (chunk: Buffer) => { bytes += chunk.length; if (bytes > 131072) { overflow = true; kill(); } else stderr += chunk.toString('utf8'); });

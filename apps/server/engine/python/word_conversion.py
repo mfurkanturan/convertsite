@@ -1,9 +1,11 @@
 """Reconstruct editable Word layout from PDF geometry, rather than plain text."""
 import logging
+import pymupdf
 from docx import Document
 from docx.oxml.ns import qn
 from common import EngineError, input_path
-from word_layout import explicit_column_breaks, positioned_images
+from word_spacing import install as install_line_spacing
+from word_layout import explicit_column_breaks, positioned_images, table_grids, trim_line_break_spaces
 
 
 def remove_external_links(document):
@@ -35,10 +37,57 @@ def remove_external_links(document):
             part.drop_rel(key)
 
 
+def upright_rotation(page):
+    # pdf2docx only keeps horizontal text. Pick the page rotation under which the dominant text reads left to right.
+    weight = {}
+    for block in page.get_text("dict")["blocks"]:
+        for line in block.get("lines", []):
+            key = (round(line["dir"][0]), round(line["dir"][1]))
+            weight[key] = weight.get(key, 0) + sum(len(span["text"]) for span in line["spans"])
+    if not weight:
+        return page.rotation
+    dx, dy = max(weight, key=weight.get)
+    for rotation in (0, 90, 180, 270):
+        matrix = pymupdf.Matrix(1, 0, 0, 1, 0, 0).prerotate(rotation)
+        if round(dx * matrix.a + dy * matrix.c) == 1:
+            return rotation
+    return page.rotation
+
+
+def normalized_copy(source, directory):
+    # Working copy only; the uploaded file is never modified. Returns the path to convert from.
+    with pymupdf.open(source) as pdf:
+        changed = False
+        for page in pdf:
+            target = upright_rotation(page)
+            if target != page.rotation:
+                page.set_rotation(target)
+                changed = True
+        if not changed:
+            return source
+        path = directory / "upright.pdf"
+        pdf.save(path)
+        return path
+
+
+def page_text(source):
+    with pymupdf.open(source) as pdf:
+        return "".join(page.get_text() for page in pdf)
+
+
+def alphanumeric(text):
+    return sum(character.isalnum() for character in text)
+
+
+def docx_characters(document):
+    paragraphs = list(document.paragraphs) + [p for table in document.tables for row in table.rows for cell in row.cells for p in cell.paragraphs]
+    return alphanumeric("".join(p.text for p in paragraphs))
+
+
 def pdf_to_word(inputs, options, directory):
     # Lazy import keeps the layout engine's native dependencies out of other tools.
-    import pymupdf
     from pdf2docx import Converter
+    install_line_spacing()
 
     source = input_path(inputs[0])
     with pymupdf.open(source) as pdf:
@@ -48,6 +97,8 @@ def pdf_to_word(inputs, options, directory):
     if not characters:
         raise EngineError("NO_TEXT")
 
+    expected = alphanumeric(page_text(source))
+    source = normalized_copy(source, directory)
     output = directory / "result.docx"
     # The converter uses the root logger for progress; never log document content.
     logging.disable(logging.CRITICAL)
@@ -59,8 +110,13 @@ def pdf_to_word(inputs, options, directory):
     finally:
         converter.close()
     document = Document(output)
+    # A converted document that lost most of the source text is a failure, not a successful empty file.
+    if docx_characters(document) < expected * 0.8:
+        raise EngineError("INVALID_DOCUMENT")
     remove_external_links(document)
     explicit_column_breaks(document)
+    table_grids(document)
+    trim_line_break_spaces(document)
     with pymupdf.open(source) as pdf:
         positioned_images(document, pdf)
     document.save(output)

@@ -15,6 +15,7 @@ export function engineClient(config: Config) {
         LIMIT_EXCEEDED: 'Belgenin sayfa, piksel veya çıktı boyutu sınırı aşıldı.', INVALID_OPTIONS: 'Sayfa aralığını ve işlem seçeneklerini kontrol et.',
         NO_TEXT: 'Metin bulunamadı. Taranmış PDF için OCR kullanabilir veya daha net bir görsel seçebilirsin.',
         NO_TABLES: 'PDF içinde aktarılabilir tablo bulunamadı. Taranmış tablolar bu araçta desteklenmiyor.',
+        WRONG_PASSWORD: 'Parola yanlış veya eksik. Korumalı PDF için doğru parolayı gir.',
         PROCESSING_TIMEOUT: 'Belge işleme süresi aşıldı. Daha küçük bir belgeyle yeniden dene.',
       };
       const code = response.status === 503 ? 'ENGINE_UNAVAILABLE' : value?.error && Object.hasOwn(messages, value.error) ? value.error : 'INVALID_DOCUMENT';
@@ -23,8 +24,8 @@ export function engineClient(config: Config) {
     return response;
   }
   return {
-    async inspect(id: string, kind: InputKind = 'pdf') {
-      const response = await request('/inspect', { id, kind });
+    async inspect(id: string, kind: InputKind = 'pdf', password?: string) {
+      const response = await request('/inspect', { id, kind, password });
       const value: unknown = await response.json();
       if (!value || typeof value !== 'object' || !('pages' in value) || !Number.isSafeInteger(value.pages) || Number(value.pages) < 0) throw new AppError('INVALID_DOCUMENT', 'Belge doğrulanamadı.', 422);
       return Number(value.pages);

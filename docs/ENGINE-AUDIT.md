@@ -1,6 +1,10 @@
 # Motor kalite incelemesi — ölçülen başlangıç durumu
 
-Üretildi: 2026-10-23T16:16:17.856Z. 120 senaryo, 360 çalıştırma. Motor davranışı bu incelemede değiştirilmedi.
+Üretildi: 2026-10-23T18:26:57.555Z. 120 senaryo, 360 çalıştırma. Motor davranışı bu incelemede değiştirilmedi.
+
+Kapsam: onaylanan plandaki 15 araç. Daha sonra eklenen 16. araç `pdf-to-pdf-ocr` bu incelemeye dahil değildir. Ana ölçümler kalite altyapısının `122e845` commit’inde korunan motor koduyla yapılmıştır; son OCR kelime hata ölçümü `9bb1b18` üzerinde yenilenmiştir. Bu commit mevcut TXT OCR fonksiyonunu değiştirmeden ayrı aranabilir PDF handler’ı ekler. Önceki ölçümler yeni aracın veya tüm güncel sürümün doğrulaması olarak sunulmaz.
+
+Son bütünlük kontrolü: 120 senaryonun her birinde üç ayrı tekrar; 15 × 3 yük düzeyinde altışar sıralı ve ikişer eşzamanlı çalıştırma, toplam 360 performans kaydı. Bunlar motor çağrısı sayılarıdır; başarısız çağrılar da dahildir. OCR için karakter doğruluğuna ek olarak kelime ekleme/silme/değiştirme hata oranı ölçüldü. Audit değerlendiricisinin dört birim testi geçti. İzole regresyon koşusunda iki suite / 36 test geçti; bunlar önceki ölçüm sürümüne aittir.
 
 **“Geçen senaryo” yalnızca uygulanmış kontrolleri ifade eder; eksik görsel veya uygulama uyumluluğu kapıları varsa üretim kalitesi onayı değildir. Beklenen retler başarılı dönüşüm sayılmaz.**
 
@@ -8,7 +12,7 @@
 |---|---:|---:|---:|---|---:|---|
 | pdf-to-word | 8/8 | 0/7 | 1/1 | succeeded | 1.31 | İyileştir / yerel alternatifle karşılaştır |
 | pdf-to-excel | 8/8 | 2/4 | 4/4 | succeeded | 0.76 | İyileştir |
-| ocr | 8/8 | 6/7 | 1/1 | succeeded | 1.33 | İyileştir |
+| ocr | 8/8 | 6/7 | 1/1 | succeeded | 1.16 | İyileştir |
 | compress-pdf | 8/8 | 8/8 | 0/0 | succeeded | 0.92 | Kayıpsız motoru koru, kapsamı açıkla |
 | merge-pdf | 8/8 | 8/8 | 0/0 | succeeded | 0.87 | Çalışan çekirdeği koru; eksik kapıları tamamla |
 | edit-pdf-pages | 8/8 | 8/8 | 0/0 | succeeded | 1.24 | Çalışan çekirdeği koru; eksik kapıları tamamla |
@@ -34,6 +38,10 @@ Render tanımı API/motor/worker süreçlerini aynı container’da çalıştır
 
 Dönüşüm çalışma dizini 384 MiB tmpfs içindedir; kanıtlar ölçümden sonra host’a kopyalanır. Doğrudan Python audit container’ı `--init` ile orphan süreçleri toplar. Windows bind mount çalışma dizini ve PID 1 reaping problemi içeren ön koşular ham deney olarak ayrılmıştır; rapor tablosuna dahil edilmez.
 
+Performans container’ında cgroup tepe belleği 1024 MiB, tepe süreç sayısı 38. Bellek olayları: low 0; high 0; max 3570; oom 0; oom_kill 0; oom_group_kill 0. 1024 MiB sınıra erişildi; OOM öldürmesi gözlenmedi. Bu değer tek bir araca mal edilemez ve tmpfs/cache belleğini de içerir. Kaynak payı konusunda daha düşük bellekli üretim ortamına garanti verilmez.
+
+Doğrulanmayan kapsam: tüm belgelerde elle kırpılma/örtüşme kontrolü, Microsoft Word ve kaynak Office uygulamalarıyla karşılaştırma, PDF form/yer imi/açıklama/dijital imza koruması, ICC renk profilleri, her araçta tüm bozuk dosya ve sınır çeşitleri, fiziksel disk dolması/silme hatası, çoklu worker kapasitesi ve canlı Render yükü. Manuel ve uygulamaya özgü referans seti tamamlanmadığı için bunlar geçti sayılmadı; ilgili belge sınıflarının güven düzeyi sınırlıdır.
+
 ## Yaşam döngüsü sonuçları
 
 - queued-cancel-and-worker-restart: **GEÇTİ**, 13.5 sn.
@@ -58,7 +66,7 @@ Statik veri işleme bulgusu: `jobs` repository create metodu (repository.ts:54) 
 
 İyileştir / yerel alternatifle karşılaştır. Metin, kritik sayılar, 5 pt yerleşim ve düzenlenebilirlik ayrı kapılardır; tek bir geçer puanı yok.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 1/8; beklenen ret: 1; tutarsız senaryo: 0; tepe child RSS: 139108 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 0/7; doğru beklenen ret: 1/1; tutarsız senaryo: 0; tepe child RSS: 139108 KiB.
 
 Başarısızlıklar:
 
@@ -87,7 +95,7 @@ HTTP kuyruğu: 0.05078 sn; worker teslimi: 2.910666 sn; tarayıcı akışı: 11.
 
 İyileştir. Çizgisiz ve birleşik tablolarda kapsamı netleştir; sayısal türler/formül güvenliği ve hücre yapısını ayrı doğrula.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 6/8; beklenen ret: 4; tutarsız senaryo: 0; tepe child RSS: 139108 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 2/4; doğru beklenen ret: 4/4; tutarsız senaryo: 0; tepe child RSS: 139108 KiB.
 
 Başarısızlıklar:
 
@@ -110,7 +118,7 @@ HTTP kuyruğu: 0.546367 sn; worker teslimi: 0.707392 sn; tarayıcı akışı: 7.
 
 İyileştir. Sabit 150 DPI ve PSM 3 yerine yön/eğiklik ve çözünürlük adaylarını aynı corpus ile karşılaştır.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 7/8; beklenen ret: 1; tutarsız senaryo: 0; tepe child RSS: 138032 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 6/7; doğru beklenen ret: 1/1; tutarsız senaryo: 0; tepe child RSS: 130556 KiB.
 
 Başarısızlıklar:
 
@@ -121,6 +129,7 @@ Başarısızlıklar:
 HTTP kuyruğu: 0.46339 sn; worker teslimi: 1.710789 sn; tarayıcı akışı: 7.36 sn. Bunlar tek küçük belge örneğidir, servis p95 değeri değildir.
 
 - character_accuracy: min 0.0000, maks 1.0000 (yalnızca ölçülebilen çıktılar).
+- word_error_rate: min 0.0000, maks 1.0000 (yalnızca ölçülebilen çıktılar).
 
 | Yük | Birim | Sıralı başarılı/deneme | Sıcak medyan sn | Tepe child RSS KiB | İki eşzamanlı başarılı/deneme |
 |---|---:|---:|---:|---:|---:|
@@ -132,7 +141,7 @@ HTTP kuyruğu: 0.46339 sn; worker teslimi: 1.710789 sn; tarayıcı akışı: 7.3
 
 Kayıpsız motoru koru, kapsamı açıkla. Küçülmeme başarısızlık değildir; görüntü ağırlıklı belgeler için ayrı kayıplı profil ancak kalite onayından sonra değerlendirilmeli.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 8/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -152,7 +161,7 @@ HTTP kuyruğu: 0.076382 sn; worker teslimi: 0.776872 sn; tarayıcı akışı: 5.
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 8/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -171,7 +180,7 @@ HTTP kuyruğu: 0.034965 sn; worker teslimi: 0.668847 sn; tarayıcı akışı: 4.
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 8/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -190,7 +199,7 @@ HTTP kuyruğu: 0.894566 sn; worker teslimi: 0.705897 sn; tarayıcı akışı: 5.
 
 Desteği sınırla; çıktı kontrolünü düzelt. Ortak pdf_pages kontrolü şifreli PDF reddediyor; doğru üretilen şifreli çıktının yayımlanmasını da engelleyebilir.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 0/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 0/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Başarısızlıklar:
 
@@ -218,7 +227,7 @@ HTTP kuyruğu: 0.254889 sn; worker teslimi: 0.634755 sn; tarayıcı akışı: 4.
 
 Desteği sınırla; parola farkındalığı ekle. Ortak girdi incelemesi şifreli PDF reddediyor; parola handler’a ulaşmadan akış kesiliyor.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 0/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 0/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Başarısızlıklar:
 
@@ -244,7 +253,7 @@ Başarısızlıklar:
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 7/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 7/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Başarısızlıklar:
 
@@ -267,7 +276,7 @@ HTTP kuyruğu: 1.497196 sn; worker teslimi: 0.72667 sn; tarayıcı akışı: 4.4
 
 İyileştir. Yerleşik Helvetica ile Unicode/Türkçe metin ve sayfa dönüşleri doğrulanmalı.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 4/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 4/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Başarısızlıklar:
 
@@ -293,7 +302,7 @@ HTTP kuyruğu: 0.0583 sn; worker teslimi: 0.809923 sn; tarayıcı akışı: 4.73
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 8/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 143792 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -314,7 +323,7 @@ HTTP kuyruğu: 0.609511 sn; worker teslimi: 0.682539 sn; tarayıcı akışı: 4.
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 1; tutarsız senaryo: 0; tepe child RSS: 130648 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 7/7; doğru beklenen ret: 1/1; tutarsız senaryo: 0; tepe child RSS: 130648 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -335,7 +344,7 @@ HTTP kuyruğu: 0.225064 sn; worker teslimi: 0.741505 sn; tarayıcı akışı: 4.
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 216232 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 8/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 216232 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -354,7 +363,7 @@ HTTP kuyruğu: 0.710638 sn; worker teslimi: 2.857848 sn; tarayıcı akışı: 7.
 
 Çalışan çekirdeği koru; eksik kapıları tamamla. İçerik/yapısal sonuçlar ile görsel kontroller birlikte tamamlanmadan genel üretim onayı verilmez.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 8/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 216392 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 8/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 216392 KiB.
 
 Uygulanmış kontrollerde başarısızlık gözlenmedi.
 
@@ -373,7 +382,7 @@ HTTP kuyruğu: 0.424937 sn; worker teslimi: 2.975608 sn; tarayıcı akışı: 7.
 
 Desteği sınırla; akış engellerini gider. API yükleme izin listesi PPTX kabul etmiyor; imajda Impress açıkça kurulmamış.
 
-Üç tekrarı tamamlanan senaryo: 8/8; kontrol kapıları geçen: 0/8; beklenen ret: 0; tutarsız senaryo: 0; tepe child RSS: 216132 KiB.
+Üç tekrarı tamamlanan senaryo: 8/8; çıktı kontrolleri geçen: 0/8; doğru beklenen ret: 0/0; tutarsız senaryo: 0; tepe child RSS: 216132 KiB.
 
 Başarısızlıklar:
 
@@ -429,6 +438,23 @@ PDF → Word plain/layout örneklerinin kaynak ve LibreOffice render görüntül
 - pptx-to-pdf / package-diagnostic: {"tool":"pptx-to-pdf","profile":"package-diagnostic","impress_installed":false}
 
 Üretim profilinde değişiklik yapılmadı. Tek belgede kazanan profil, tüm belge sınıfları için seçilmedi; %20 performans hedefi kalite kapılarından bağımsız bir kabul değildir.
+
+Aday kararı: yön profili dönük OCR örneğinde karakter doğruluğunu %0’dan %100’e çıkardı; süre yaklaşık iki katına çıktı. 300 DPI küçük yazıda %97,56’dan %100’e çıktı, fakat eğik örnekte %100’den %97,56’ya düştü. Bu nedenle tüm girdilere tek profil uygulamak yerine belge sınıfına göre seçim ayrıca doğrulanmalı. Çizgisiz tabloda algılama artışı, hücre/başlık ve kritik sayı kapıları tamamlanmadan kabul edilmemeli.
+
+## Yerel gerçek belge karşılaştırması
+
+Kullanıcının önceden paylaştığı örnek yalnızca ağsız, Git dışında tutulan yerel alanda yeniden işlendi. Yeni çıktıda normalize metin ve kritik sayı kontrolleri, düzenlenebilir metin ve sayfa sayısı geçti; 5 pt yerleşim kapısı geçmedi. Önceki DOCX ile metin karşılaştırması da yapıldı. Çok sütunlu belgede geometrik ve mantıksal okuma sırası farklı olabildiğinden eski/yeni dizi doğruluğu genel kalite yüzdesine dönüştürülmedi. Bu tek örnek genelleştirilmez; belge adı, metni ve çıktıları rapora eklenmedi. Microsoft Word üzerinde elle kontrol yapılmadı.
+
+## Önceliklendirilmiş uygulama ve yeniden doğrulama
+
+1. Yüksek — Şifreleme/parola kaldırma ve parola saklama: parola farkındalığı olan giriş/çıkış doğrulaması, güvenli gizli veri yaşam döngüsü. Yeniden kabul: sekizer senaryo üçer kez; doğru/yanlış parola, bağımsız QPDF kontrolü ve gerçek API akışı geçmeli.
+2. Yüksek — PDF → Word: dönük sayfada başarılı görünen boş çıktı ve yerleşim kaymaları. Yeniden kabul: desteklenen belgelerde ≥%99,5 normalize metin, kritik sayılarda tam doğruluk, düzenlenebilir metin, sayfa sayısı ve 5 pt konum; ayrıca elle kırpılma/örtüşme kontrolü.
+3. Yüksek — PPTX: yükleme izinleri ve Impress bileşeni birlikte düzeltilmeli. Yeniden kabul: sekiz sentetik sunumda API → worker → indirme; kaynak uygulama referansıyla slayt sayısı/metin/yerleşim.
+4. Yüksek — Timeout: gerçek süre aşımında ENGINE_UNAVAILABLE yerine doğru hata ve kaynak temizliği. Yeniden kabul: aynı kısa timeout fault testi, iptal ve lease kurtarma regresyonları birlikte geçmeli.
+5. Orta — PDF → Excel: çizgisiz/birleşik hücreler için profil seçimi. Yeniden kabul: hücre ≥%99, satır/sütun ≥%98, kritik sayılar tam; inert formül metni korunmalı.
+6. Orta — OCR yön/çözünürlük: tek profile geçmeden aynı corpus üzerinde CER/WER ve üç tekrar. Temiz ≥%98 / bozulmuş ≥%95 karakter hedefi; iyileşen dönük örnek diğer sınıfları bozmamalı.
+7. Orta — Türkçe filigran ve döndürülmüş sayfa numarası: gömülü font/koordinat düzeltmesi. Yeniden kabul: sekizer senaryoda görünür metin, konum ve sayfa sınırları.
+8. Sonraki kapsam — Çalışan çekirdekleri koru; eksik görsel/Office referans ve PDF özellik koruma kapılarını tamamla. Hız/bellek adayı aynı kalite kapılarıyla karşılaştırılmalı; medyan süre veya tepe bellekte %20 hedefi henüz kanıtlanmış bir kazanım değildir.
 
 Upstream kaynakları (23 Ekim 2026 kontrolü): [pdf2docx bakım durumu](https://github.com/ArtifexSoftware/pdf2docx/discussions/374), [pdf2docx MIT lisansı](https://pdf2docx.readthedocs.io/en/latest/license.html), [PyMuPDF lisansı](https://pymupdf.readthedocs.io/en/latest/license.html), [Tesseract kalite önerileri](https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html), [pdfplumber tablo stratejileri](https://github.com/jsvine/pdfplumber#extracting-tables), [QPDF kapsamı](https://qpdf.readthedocs.io/en/stable/overview.html). pdf2docx için Artifex aktif bakımı bırakmıştır; PyMuPDF lisans yükümlülükleri ayrı incelenmelidir. Bu rapor hukuki uygunluk onayı değildir.
 

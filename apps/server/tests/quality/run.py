@@ -45,7 +45,9 @@ def execute(case, corpus, root, label, inspect=True):
     start=time.monotonic(); peak=0; tmp_peak=0; status=None; usage=None; timed_out=False
     with (work/'stdout.tmp').open('wb') as out, (work/'stderr.tmp').open('wb') as err:
         entry=Path(__file__).with_name('trace_main.py') if case.get('trace') else MAIN
-        child=subprocess.Popen(['/usr/bin/prlimit','--as=2147483648','--cpu=80','--fsize=41943040','--nofile=256','--',PYTHON,'-B',str(entry),json.dumps(payload)],stdout=out,stderr=err,env=environment,start_new_session=True)
+        child=subprocess.Popen(['/usr/bin/prlimit','--as=2147483648','--cpu=80','--fsize=41943040','--nofile=256','--',PYTHON,'-B',str(entry)],stdin=subprocess.PIPE,stdout=out,stderr=err,env=environment,start_new_session=True)
+        child.stdin.write(json.dumps(payload).encode('utf-8'))
+        child.stdin.close()
         while True:
             waited,status,usage=os.wait4(child.pid,os.WNOHANG)
             peak=max(peak,working_bytes(work))

@@ -15,7 +15,9 @@ export function executeJob(deps: { repository: JobRepository; storage: FileStora
     try {
       const handler = deps.handlers.get(job.tool);
       if (!handler) throw new Error('ENGINE_UNAVAILABLE');
-      const output = await handler.execute(job.input_ids, controller.signal, job.options);
+      const secret = await deps.repository.secretFor(job.id);
+      const options = secret ? { ...job.options, password: secret } : job.options;
+      const output = await handler.execute(job.input_ids, controller.signal, options);
       const size = await deps.storage.write(outputId, output.stream, deps.maxBytes);
       if (!await deps.storage.signature(outputId, output.kind)) throw new Error('INVALID_OUTPUT');
       const committed = await deps.repository.finish(job, attempt, { id: outputId, size, pages: output.pages, kind: output.kind });

@@ -64,6 +64,30 @@ def docx_text(path):
         return ' '.join(n.text or '' for n in root.iter() if n.tag.endswith('}t'))
 
 
+def ordered_word_matches(expected, actual):
+    """Align repeated words in reading order instead of reusing nearest duplicates."""
+    expected_tokens=[unicodedata.normalize('NFC',word['text']) for word in expected]
+    actual_tokens=[unicodedata.normalize('NFC',word['text']) for word in actual]
+    matcher=SequenceMatcher(None,expected_tokens,actual_tokens,autojunk=False)
+    return [
+        (expected[block.a+offset],actual[block.b+offset])
+        for block in matcher.get_matching_blocks()
+        for offset in range(block.size)
+    ]
+
+
+def upright_word(word, page):
+    """Map word bounds from a rotated PDF page back to its upright text orientation."""
+    rotation=page.rotation % 360
+    if rotation == 90:
+        return {**word,'x0':word['top'],'x1':word['bottom'],'top':page.width-word['x1'],'bottom':page.width-word['x0']}
+    if rotation == 180:
+        return {**word,'x0':page.width-word['x1'],'x1':page.width-word['x0'],'top':page.height-word['bottom'],'bottom':page.height-word['top']}
+    if rotation == 270:
+        return {**word,'x0':page.width-word['bottom'],'x1':page.width-word['top'],'top':word['x0'],'bottom':word['x1']}
+    return word
+
+
 def pdf_summary(path):
     with pdfplumber.open(path) as pdf:
         return [{'width':p.width,'height':p.height,'rotation':p.rotation,'text':normalized(command(['/usr/bin/pdftotext','-f',i,'-l',i,path,'-']).decode('utf-8'))} for i,p in enumerate(pdf.pages,1)]
@@ -103,10 +127,11 @@ def evaluate(case, output, kind, corpus, directory):
         displacements=[]
         with pdfplumber.open(source) as a, pdfplumber.open(rendered) as b:
             for pa,pb in zip(a.pages,b.pages):
-                aw,bw=pa.extract_words(),pb.extract_words()
-                for word in aw:
-                    matches=[w for w in bw if w['text']==word['text']]
-                    if matches: displacements.append(min(max(abs(w['x0']-word['x0']),abs(w['top']-word['top'])) for w in matches))
+                aw=[upright_word(word,pa) for word in pa.extract_words()]
+                bw=[upright_word(word,pb) for word in pb.extract_words()]
+                matches=ordered_word_matches(aw,bw)
+                for expected_word,actual_word in matches:
+                    displacements.append(max(abs(actual_word['x0']-expected_word['x0']),abs(actual_word['top']-expected_word['top'])))
         metrics['max_word_displacement_pt']=max(displacements,default=None)
         checks['layout_5pt']=bool(displacements) and max(displacements)<=5
         missing += ['manual_clipping_overlap_review','Microsoft_Word_rendering']
@@ -118,13 +143,15 @@ def evaluate(case, output, kind, corpus, directory):
         # Ruled table fixture has independently declared ground truth.
         expected=[['Ürün','Adet','Not'],['Kalem','12','=1+1'],['Defter','7','İstanbul']]
         if source.name in ['table.pdf','borderless.pdf','merged.pdf']:
-            if source.name!='table.pdf': expected=[['Kalem','12','1234,56'] for _ in range(4)]
+            if source.name=='borderless.pdf': expected=[['Kalem','12','1234,56'] for _ in range(4)]
+            if source.name=='merged.pdf': expected=[['Kalem','','1234,56']]+[['Kalem','12','1234,56'] for _ in range(3)]
             observed=[[str(c.value or '') for c in row] for row in w.worksheets[0]]
             exact=sum(i<len(observed) and j<len(observed[i]) and normalized(v)==normalized(observed[i][j]) for i,row in enumerate(expected) for j,v in enumerate(row))
             count=sum(map(len,expected))
             metrics['cell_accuracy']=exact/count; checks['cell_accuracy']=exact/count>=.99
             checks['structure']=len(observed)==len(expected) and all(len(row)==3 for row in observed)
             checks['critical_numbers']=checks['structure'] and all(observed[i][j]==value for i,row in enumerate(expected) for j,value in enumerate(row) if any(c.isdigit() for c in value))
+            if source.name=='merged.pdf': checks['merged_cell_structure']='A1:B1' in {str(rng) for rng in w.worksheets[0].merged_cells.ranges}
         elif source.name=='multi-table.pdf':
             expected_sheets=[]
             for page in range(2): expected_sheets.append([['Tarih','Tutar','Kod'],[f'{23+page*2}.10.2026','1234,56' if page==0 else '0,00',f'00{12+page*2}'],[f'{24+page*2}.10.2026','-45,10' if page==0 else '9999,99',f'00{13+page*2}']])
@@ -144,41 +171,57 @@ def evaluate(case, output, kind, corpus, directory):
         checks['ocr_accuracy']=metrics['character_accuracy']>=(.95 if source.stem in ['blur','skew','small','rotate'] else .98)
         signature={'text':normalized(text)}
     elif kind=='pdf':
-        command(['/usr/bin/qpdf','--check',output]); text=pdf_text(output)
-        summary=pdf_summary(output); signature={'pages':summary}
-        if expect.get('image_pages'): checks['page_count']=len(summary)==expect['image_pages']; missing += ['image_orientation_color_crop_review']
-        elif expect.get('office'):
-            ext=expect['office']
-            if ext=='docx': expected=docx_text(source)
-            elif ext=='xlsx': expected='Kalem'
-            else: expected='İstanbul Türkiye Şişli öğle çözüm 1234,56 2026-10-23'
-            checks['source_text_present']=normalized(expected) in normalized(text)
-            if ext=='pptx': checks['slide_count']=len(summary)==(2 if int(source.stem.split('-')[-1])%2 else 1)
-            if ext=='xlsx': checks['calculated_value']=bool(re.search(r'\b5\b',text)); missing+=['print_layout_reference']
-            missing+=['manual_clipping_overlap_review','source_application_reference']
-        elif expect.get('numbers'):
-            checks['all_page_numbers']=all(normalized(f'{i} / {len(summary)}') in p['text'] for i,p in enumerate(summary,1))
-            missing+=['number_position_geometry']
-        elif expect.get('overlay'):
-            checks['all_watermarks']=all(normalized(expect['overlay']) in p['text'] for p in summary)
-            missing+=['watermark_position_geometry']
-        elif expect.get('selection'):
-            plan=[]
-            for part in expect['selection'].split(','):
-                bounds=list(map(int,part.split('-'))); first,last=bounds[0],bounds[-1]
-                plan+=list(range(first,last+(1 if last>=first else -1),1 if last>=first else -1))
-            checks['order']=len(summary)==len(plan) and all(f'SAYFA{i}' in p['text'] for i,p in zip(plan,summary))
-            checks['rotation']=all(p['rotation']==expect['rotation'] for p in summary)
-        elif tool=='merge-pdf':
-            expected=''.join(normalized(pdf_text(corpus/f)) for f in case['inputs'])
-            checks['content_order']=normalized(text)==expected
-            checks['pages']=len(summary)==sum(len(pdf_summary(corpus/f)) for f in case['inputs'])
-        elif tool in ['compress-pdf','unlock-pdf']:
-            original=corpus/expect.get('source',source.name)
-            checks['content_preserved']=normalized(text)==normalized(pdf_text(original))
-            metrics['visual']=compare_visual(original,output,directory)
-            checks['lossless_visual']=all(p.get('mean_pixel_error')==0 for p in metrics['visual'])
-            if tool=='compress-pdf': checks['not_larger']=output.stat().st_size<=source.stat().st_size; metrics['size_ratio']=output.stat().st_size/source.stat().st_size
+        if expect.get('encrypted'):
+            # protect-pdf: verify the artifact is genuinely encrypted and opens with the known password.
+            password=case['options'].get('password')
+            checks['encrypted']=subprocess.run(['/usr/bin/qpdf',str(output),'--is-encrypted'],capture_output=True).returncode==0
+            decrypted=directory/'decrypted.pdf'
+            opened=subprocess.run(['/usr/bin/qpdf',f'--password={password}',str(output),'--decrypt',str(decrypted)],capture_output=True)
+            checks['opens_with_password']=opened.returncode==0 and decrypted.exists()
+            if checks['opens_with_password']:
+                checks['content_preserved']=normalized(pdf_text(decrypted))==normalized(pdf_text(source))
+                checks['page_count']=len(pdf_summary(decrypted))==len(pdf_summary(source))
+                metrics['visual']=compare_visual(source,decrypted,directory)
+            else:
+                checks['content_preserved']=False; checks['page_count']=False
+            signature={'encrypted':checks['encrypted'],'opens_with_password':checks['opens_with_password']}
+            missing+=['owner_permissions_review']
+        else:
+            command(['/usr/bin/qpdf','--check',output]); text=pdf_text(output)
+            summary=pdf_summary(output); signature={'pages':summary}
+            if expect.get('image_pages'): checks['page_count']=len(summary)==expect['image_pages']; missing += ['image_orientation_color_crop_review']
+            elif expect.get('office'):
+                ext=expect['office']
+                if ext=='docx': expected=docx_text(source)
+                elif ext=='xlsx': expected='Kalem'
+                else: expected='İstanbul Türkiye Şişli öğle çözüm 1234,56 2026-10-23'
+                checks['source_text_present']=normalized(expected) in normalized(text)
+                if ext=='pptx': checks['slide_count']=len(summary)==(2 if int(source.stem.split('-')[-1])%2 else 1)
+                if ext=='xlsx': checks['calculated_value']=bool(re.search(r'\b5\b',text)); missing+=['print_layout_reference']
+                missing+=['manual_clipping_overlap_review','source_application_reference']
+            elif expect.get('numbers'):
+                checks['all_page_numbers']=all(normalized(f'{i} / {len(summary)}') in p['text'] for i,p in enumerate(summary,1))
+                missing+=['number_position_geometry']
+            elif expect.get('overlay'):
+                checks['all_watermarks']=all(normalized(expect['overlay']) in p['text'] for p in summary)
+                missing+=['watermark_position_geometry']
+            elif expect.get('selection'):
+                plan=[]
+                for part in expect['selection'].split(','):
+                    bounds=list(map(int,part.split('-'))); first,last=bounds[0],bounds[-1]
+                    plan+=list(range(first,last+(1 if last>=first else -1),1 if last>=first else -1))
+                checks['order']=len(summary)==len(plan) and all(f'SAYFA{i}' in p['text'] for i,p in zip(plan,summary))
+                checks['rotation']=all(p['rotation']==expect['rotation'] for p in summary)
+            elif tool=='merge-pdf':
+                expected=''.join(normalized(pdf_text(corpus/f)) for f in case['inputs'])
+                checks['content_order']=normalized(text)==expected
+                checks['pages']=len(summary)==sum(len(pdf_summary(corpus/f)) for f in case['inputs'])
+            elif tool in ['compress-pdf','unlock-pdf']:
+                original=corpus/expect.get('source',source.name)
+                checks['content_preserved']=normalized(text)==normalized(pdf_text(original))
+                metrics['visual']=compare_visual(original,output,directory)
+                checks['lossless_visual']=all(p.get('mean_pixel_error')==0 for p in metrics['visual'])
+                if tool=='compress-pdf': checks['not_larger']=output.stat().st_size<=source.stat().st_size; metrics['size_ratio']=output.stat().st_size/source.stat().st_size
     elif kind in ['png','jpg','zip']:
         images=[]
         if kind=='zip':

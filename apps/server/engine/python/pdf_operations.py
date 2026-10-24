@@ -1,5 +1,7 @@
+import os
 import shutil
-from common import input_path, pdf_pages, run, page_plan, pack_outputs, EngineError
+from watermark import apply_watermark
+from common import input_path, pdf_pages, pdf_encrypted, qpdf_password, run, page_plan, pack_outputs, EngineError
 
 
 def merge_pdf(inputs, options, directory):
@@ -46,7 +48,15 @@ def protect_pdf(inputs, options, directory):
     password = options.get("password")
     if not password:
         raise EngineError("INVALID_OPTIONS")
-    run("/usr/bin/qpdf", [source, "--encrypt", password, password, "256", "--", output])
+    # qpdf --encrypt has no stdin channel, so the password goes through an @-argument file (0600, job directory, always removed).
+    argfile = directory / ".qpdf-args"
+    try:
+        fd = os.open(argfile, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write("\n".join(["--encrypt", password, password, "256", "--"]) + "\n")
+        run("/usr/bin/qpdf", [source, f"@{argfile}", output])
+    finally:
+        argfile.unlink(missing_ok=True)
     return output, "pdf"
 
 
@@ -54,30 +64,18 @@ def unlock_pdf(inputs, options, directory):
     source = input_path(inputs[0])
     output = directory / "unlocked.pdf"
     password = options.get("password")
-    arguments = []
-    if password:
-        arguments.append(f"--password={password}")
-    arguments.extend([source, "--decrypt", output])
-    run("/usr/bin/qpdf", arguments)
+    if pdf_encrypted(source):
+        if not password:
+            raise EngineError("WRONG_PASSWORD")
+        qpdf_password(password, source, "--decrypt", output)
+    else:
+        run("/usr/bin/qpdf", [source, "--decrypt", output])
     return output, "pdf"
 
 
 def watermark_pdf(inputs, options, directory):
-    import fitz
-    source = input_path(inputs[0])
     output = directory / "watermarked.pdf"
-    text = (options.get("watermarkText") or "CONFIDENTIAL").strip()
-    doc = fitz.open(source)
-    for page in doc:
-        rect = page.rect
-        p = fitz.Point(rect.width * 0.15, rect.height * 0.5)
-        try:
-            m = fitz.Matrix(-35)
-            page.insert_text(p, text, fontsize=38, fontname="helv", color=(0.75, 0.2, 0.2), fill_opacity=0.35, morph=(p, m))
-        except Exception:
-            page.insert_textbox(rect, f"\n\n\n{text}", fontsize=44, fontname="helv", color=(0.75, 0.2, 0.2), fill_opacity=0.35, align=fitz.TEXT_ALIGN_CENTER)
-    doc.save(output)
-    doc.close()
+    apply_watermark(input_path(inputs[0]), output, (options.get("watermarkText") or "CONFIDENTIAL").strip())
     return output, "pdf"
 
 

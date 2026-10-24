@@ -34,19 +34,28 @@ OPERATIONS = {
 
 
 def main():
-    request = json.loads(sys.argv[1])
-    counts = [inspect_input(item) for item in request["inputs"]]
-    if request["tool"] == "inspect":
+    request = json.load(sys.stdin)
+    tool = request["tool"]
+    options = request.get("options", {})
+    if tool == "inspect":
+        counts = [inspect_input(item, options.get("password"), bool(options.get("password"))) for item in request["inputs"]]
         print(json.dumps({"pages": counts[0]}))
         return
+    password = options.get("password") if tool == "unlock-pdf" else None
+    counts = [inspect_input(item, password, tool == "unlock-pdf") for item in request["inputs"]]
     if sum(counts) > request["maxPages"]:
         raise EngineError("LIMIT_EXCEEDED")
-    output, kind = OPERATIONS[request["tool"]](request["inputs"], request["options"], Path(request["directory"]))
+    output, kind = OPERATIONS[tool](request["inputs"], request["options"], Path(request["directory"]))
     if not output.is_file() or not 0 < output.stat().st_size <= MAX_OUTPUT:
         raise EngineError("LIMIT_EXCEEDED")
-    pages = pdf_pages(output) if kind == "pdf" else sum(counts)
-    if kind in ("docx", "xlsx"):
+    if kind == "pdf":
+        # protect-pdf produces an encrypted PDF; verify it with the known password.
+        pages = pdf_pages(output, options.get("password"), True) if tool == "protect-pdf" else pdf_pages(output)
+    elif kind in ("docx", "xlsx"):
         inspect_office(output, kind)
+        pages = sum(counts)
+    else:
+        pages = sum(counts)
     print(json.dumps({"path": str(output), "kind": kind, "pages": pages}))
 
 

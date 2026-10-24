@@ -1,12 +1,22 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, sep } from 'node:path';
 
-const output = resolve('.qa/engine-audit');
+const args = process.argv.slice(2);
+const outputFlag = args.indexOf('--output-dir');
+let outputPath = '.qa/engine-audit';
+if (outputFlag >= 0) {
+  outputPath = args[outputFlag + 1];
+  if (!outputPath || outputPath.startsWith('--')) throw new Error('--output-dir requires a path.');
+  args.splice(outputFlag, 2);
+}
+const qaRoot = resolve('.qa');
+const output = resolve(outputPath);
+if (output !== qaRoot && !output.startsWith(qaRoot + sep))
+  throw new Error('Audit output must stay inside .qa/.');
 mkdirSync(output, { recursive: true });
 const image = spawnSync('docker', ['image', 'inspect', 'docly-backend:local', '--format', '{{.Id}}'], { encoding: 'utf8' });
 const revision = spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' });
-const args = process.argv.slice(2);
 const profiles = args.includes('--profiles');
 const supplement = args.includes('--supplement');
 const mode = supplement ? 'supplement' : profiles ? 'profiles' : args.includes('--performance-only') ? 'performance' : 'quality';

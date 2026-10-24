@@ -48,14 +48,14 @@ export function engineHttpApp(token: string) {
   });
   app.get('/health', async () => ({ status: 'ok', tools: toolIds }));
   const inputSchema = Type.Object({ id: Type.String({ format: 'uuid' }), kind: InputKindSchema }, { additionalProperties: false });
-  app.post<{ Body: { id: string; kind?: InputKind } }>('/inspect', {
-    schema: { body: Type.Object({ id: Type.String({ format: 'uuid' }), kind: Type.Optional(InputKindSchema) }, { additionalProperties: false }) },
+  app.post<{ Body: { id: string; kind?: InputKind; password?: string } }>('/inspect', {
+    schema: { body: Type.Object({ id: Type.String({ format: 'uuid' }), kind: Type.Optional(InputKindSchema), password: Type.Optional(Type.String({ maxLength: 64 })) }, { additionalProperties: false }) },
   }, async (request, reply) => {
     const operation = signalFor(reply);
     try {
       if (!await inspections.acquire(operation.signal)) return reply.code(503).send({ error: 'ENGINE_BUSY' });
       try {
-        const output = await runPython({ tool: 'inspect', inputs: [{ id: request.body.id, kind: request.body.kind ?? 'pdf' }] }, operation.signal);
+        const output = await runPython({ tool: 'inspect', inputs: [{ id: request.body.id, kind: request.body.kind ?? 'pdf' }], options: request.body.password ? { password: request.body.password } : {} }, operation.signal);
         return JSON.parse(output) as { pages: number };
       } finally { inspections.release(); }
     } finally { operation.clear(); }

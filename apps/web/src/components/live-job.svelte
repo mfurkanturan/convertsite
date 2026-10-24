@@ -64,7 +64,7 @@
     try {
       for (let index = 0; index < files.length; index++) {
         phase = text.uploading(index + 1, files.length);
-        const item = await api.uploadFile(files[index], controller.signal, (value) => progress = Math.round(((index + value) / files.length) * 100));
+        const item = await api.uploadFile(files[index], controller.signal, (value) => progress = Math.round(((index + value) / files.length) * 100), tool.id === 'unlock-pdf' ? String(options.password ?? '') : undefined);
         uploaded.push(item.id);
       }
       if (controller.signal.aborted || disposed) throw new Error(cancelledText);

@@ -107,9 +107,9 @@ export function diskStorage(directory: string): FileStorage {
         }
 
         // 4. For DOCX / XLSX: check for disguised VBA macro binaries in standard non-macro documents
-        if (kind === 'docx' || kind === 'xlsx') {
+        if (kind === 'docx' || kind === 'xlsx' || kind === 'pptx') {
           const headHex = head.toString('binary');
-          if (headHex.includes('vbaProject.bin') || headHex.includes('word/vbaProject.bin') || headHex.includes('xl/vbaProject.bin')) {
+          if (headHex.includes('vbaProject.bin') || headHex.includes('word/vbaProject.bin') || headHex.includes('xl/vbaProject.bin') || headHex.includes('ppt/vbaProject.bin')) {
             return { clean: false, threat: 'VBA_MACRO_PAYLOAD' };
           }
           if (fileSize > 65536) {
@@ -117,7 +117,7 @@ export function diskStorage(directory: string): FileStorage {
             const tailBuffer = Buffer.alloc(Math.min(65536, fileSize - tailOffset));
             const { bytesRead: tailRead } = await handle.read(tailBuffer, 0, tailBuffer.length, tailOffset);
             const tailStr = tailBuffer.subarray(0, tailRead).toString('binary');
-            if (tailStr.includes('vbaProject.bin') || tailStr.includes('word/vbaProject.bin') || tailStr.includes('xl/vbaProject.bin')) {
+            if (tailStr.includes('vbaProject.bin') || tailStr.includes('word/vbaProject.bin') || tailStr.includes('xl/vbaProject.bin') || tailStr.includes('ppt/vbaProject.bin')) {
               return { clean: false, threat: 'VBA_MACRO_PAYLOAD' };
             }
           }

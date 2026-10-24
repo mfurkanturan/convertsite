@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHmac } from 'node:crypto';
 import { Readable } from 'node:stream';
 import type { FastifyInstance } from 'fastify';
 import { CreateJobSchema, IdSchema, mimeTypes, type CreateJob, type JobView } from '@convertsite/contracts';
@@ -11,7 +11,7 @@ export function view(job: JobRecord): JobView {
     resultAvailable: job.state === 'succeeded' && !job.deleted && job.expires_at > new Date(),
     expiresAt: job.expires_at.toISOString(), createdAt: job.created_at.toISOString() };
 }
-export async function jobRoutes(app: FastifyInstance, deps: { jobs: JobRepository; files: FileRepository; storage: FileStorage }) {
+export async function jobRoutes(app: FastifyInstance, deps: { jobs: JobRepository; files: FileRepository; storage: FileStorage; config: { secretKey: Buffer } }) {
   async function ownedView(owner: string, id: string) {
     const job = await deps.jobs.owned(owner, id);
     const result = view(job);
@@ -24,7 +24,8 @@ export async function jobRoutes(app: FastifyInstance, deps: { jobs: JobRepositor
   app.post<{ Body: CreateJob }>('/api/jobs', { schema: { body: CreateJobSchema } }, async (request, reply) => {
     const { fileIds, idempotencyKey, tool, options = {} } = request.body;
     const normalized = Object.fromEntries(Object.entries(options).sort(([a], [b]) => a.localeCompare(b)));
-    const hash = createHash('sha256').update(JSON.stringify({ tool, fileIds, options: normalized })).digest('hex');
+    // Keyed HMAC so the idempotency hash does not leave a recoverable digest of the password.
+    const hash = createHmac('sha256', deps.config.secretKey).update(JSON.stringify({ tool, fileIds, options: normalized })).digest('hex');
     const job = await deps.jobs.create(request.owner, fileIds, idempotencyKey, hash, tool, options);
     return reply.code(202).send(view(job));
   });

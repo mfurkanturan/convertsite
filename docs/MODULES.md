@@ -1,6 +1,6 @@
 # Modül sınırları
 
-Kayıtlı 15 araç, 15 ayrı altyapı veya servis değildir. Ortak sorumluluklar aşağıdaki modüllerde toplanır. Uçtan uca destek durumu ENGINE-SUPPORT ve ENGINE-AUDIT belgelerinden kontrol edilir.
+Kayıtlı 16 araç, 16 ayrı altyapı veya servis değildir. Ortak sorumluluklar aşağıdaki modüllerde toplanır. Uçtan uca destek durumu ENGINE-SUPPORT ve ENGINE-AUDIT belgelerinden kontrol edilir. Mevcut motor audit'i ilk 15 aracı kapsar; daha sonra eklenen aranabilir PDF bu ölçümlere dahil değildir.
 
 ## Sahiplik
 
@@ -29,6 +29,7 @@ Tablo isimleri ve indeksler DATA-MODEL hazırlanırken kesinleştirilir. Bu belg
 | edit-pdf-pages | pdf-operations | EditPdfPages |
 | compress-pdf | pdf-operations | CompressPdf |
 | ocr | ocr | ExtractText |
+| pdf-to-pdf-ocr | ocr | Aranabilir PDF handler'ı; 15 araçlık audit kapsamı dışında |
 | pptx-to-pdf | conversions | PowerPoint → PDF handler'ı |
 | protect-pdf | pdf-operations | PDF şifreleme handler'ı |
 | unlock-pdf | pdf-operations | PDF parola kaldırma handler'ı |

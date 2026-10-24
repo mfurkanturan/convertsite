@@ -38,7 +38,7 @@ export function apiFor(locale: Locale) {
     deleteJob: (id: string) => request<{ status: string }>(`/jobs/${id}`, { method: 'DELETE' }),
     deleteFile: (id: string) => request<void>(`/files/${id}`, { method: 'DELETE' }),
     downloadUrl: (jobId: string) => getUrl(`/jobs/${jobId}/download`),
-    uploadFile(file: File, signal: AbortSignal, progress: (value: number) => void): Promise<UploadedFile> {
+    uploadFile(file: File, signal: AbortSignal, progress: (value: number) => void, password?: string): Promise<UploadedFile> {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         const abort = () => xhr.abort();
@@ -58,7 +58,7 @@ export function apiFor(locale: Locale) {
         xhr.onabort = () => { signal.removeEventListener('abort', abort); reject(new Error(text.uploadCancelled)); };
         signal.addEventListener('abort', abort, { once: true });
         if (signal.aborted) { reject(new Error(text.uploadCancelled)); return; }
-        const form = new FormData(); form.append('file', file); xhr.send(form);
+        const form = new FormData(); if (password) form.append('password', password); form.append('file', file); xhr.send(form);
       });
     },
   };

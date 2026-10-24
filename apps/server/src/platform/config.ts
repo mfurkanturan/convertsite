@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEnvFile } from 'node:process';
+import { createHash } from 'node:crypto';
 
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 try { loadEnvFile(resolve(root, '.env')); } catch (error) {
@@ -29,6 +30,8 @@ export function getConfig() {
     databaseUrl: process.env.DATABASE_URL ?? 'postgres://docly:docly-local@127.0.0.1:55432/docly',
     dataDir: resolve(root, process.env.DATA_DIR ?? '.data/files'),
     engineUrl: process.env.ENGINE_URL ?? 'http://127.0.0.1:3002', engineToken, sessionSecret,
+    // Deterministic key for encrypting transient job secrets (e.g. PDF passwords); derived from SESSION_SECRET, never stored in the DB.
+    secretKey: createHash('sha256').update(`docly-job-secret:${sessionSecret}`).digest(),
     adminSecret: process.env.ADMIN_SECRET || sessionSecret,
     // Number of reverse proxies in front of the API; 0 ignores X-Forwarded-For entirely.
     trustProxyHops: integer('TRUST_PROXY_HOPS', 0, 0, 5),

@@ -14,23 +14,13 @@ from openpyxl import Workbook
 
 FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 TEXT = 'İstanbul Türkiye Şişli öğle çözüm 1234,56 2026-10-23'
+PPTX_GENERATOR = None
 
 
 def pptx(path, text, count):
-    ns = 'http://schemas.openxmlformats.org/presentationml/2006/main'
-    drawing = 'http://schemas.openxmlformats.org/drawingml/2006/main'
-    rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
-    package = 'http://schemas.openxmlformats.org/package/2006/relationships'
-    with zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED) as z:
-        overrides = ''.join(f'<Override PartName="/ppt/slides/slide{i}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>' for i in range(1, count + 1))
-        z.writestr('[Content_Types].xml', f'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>{overrides}</Types>')
-        z.writestr('_rels/.rels', f'<Relationships xmlns="{package}"><Relationship Id="rId1" Type="{rel}/officeDocument" Target="ppt/presentation.xml"/></Relationships>')
-        ids = ''.join(f'<p:sldId id="{255+i}" r:id="rId{i}"/>' for i in range(1, count + 1))
-        z.writestr('ppt/presentation.xml', f'<p:presentation xmlns:p="{ns}" xmlns:r="{rel}"><p:sldIdLst>{ids}</p:sldIdLst><p:sldSz cx="9144000" cy="6858000"/><p:notesSz cx="6858000" cy="9144000"/></p:presentation>')
-        rels = ''.join(f'<Relationship Id="rId{i}" Type="{rel}/slide" Target="slides/slide{i}.xml"/>' for i in range(1, count + 1))
-        z.writestr('ppt/_rels/presentation.xml.rels', f'<Relationships xmlns="{package}">{rels}</Relationships>')
-        for i in range(1, count + 1):
-            z.writestr(f'ppt/slides/slide{i}.xml', f'<p:sld xmlns:p="{ns}" xmlns:a="{drawing}"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name="group"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/><p:sp><p:nvSpPr><p:cNvPr id="2" name="text"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr><p:spPr><a:xfrm><a:off x="400000" y="400000"/><a:ext cx="8000000" cy="2000000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="tr-TR" sz="1800"/><a:t>{escape(text)} SLIDE {i}</a:t></a:r></a:p></p:txBody></p:sp></p:spTree></p:cSld></p:sld>')
+    if PPTX_GENERATOR is None:
+        raise RuntimeError('Quality PPTX fixtures require the validated engine fixture generator.')
+    PPTX_GENERATOR(path, [f'{text} SLIDE {i}' for i in range(1, count + 1)])
 
 
 def generate(root):
@@ -38,7 +28,9 @@ def generate(root):
     previous = sys.argv
     try:
         sys.argv = ['engine-fixtures.py', str(root)]
-        runpy.run_path(str(Path(__file__).parent.parent / 'engine-fixtures.py'), run_name='__main__')
+        engine_fixtures = runpy.run_path(str(Path(__file__).parent.parent / 'engine-fixtures.py'), run_name='__main__')
+        global PPTX_GENERATOR
+        PPTX_GENERATOR = engine_fixtures['make_pptx']
     finally:
         sys.argv = previous
     pdfmetrics.registerFont(TTFont('Audit', FONT))
@@ -52,13 +44,22 @@ def generate(root):
                 c.drawString(40, 500, TEXT if name != 'plain' else 'REPORT 1234.56 TEST 2026')
                 c.drawString(40, 470, f'PAGE {page + 1}')
             if name in ('borderless', 'merged'):
-                for row in range(4):
-                    for col, value in enumerate(['Kalem', '12', '1234,56']):
-                        c.drawString(40 + col * 150, 400 - row * 30, value)
                 if name == 'merged':
-                    for y in [280, 310, 340, 370, 430]: c.line(35, y, 490, y)
-                    for x in [35, 185, 335, 490]: c.line(x, 280, x, 400)
-                    c.line(35, 430, 35, 400); c.line(490, 430, 490, 400)
+                    # Four real table rows; the first row spans the first two columns.
+                    for y in [310, 340, 370, 400]: c.line(35, y, 490, y)
+                    for x in [35, 185, 335, 490]: c.line(x, 310, x, 400)
+                    c.line(35, 400, 35, 430); c.line(490, 400, 490, 430)
+                    c.line(335, 400, 335, 430)
+                    c.line(35, 430, 490, 430)
+                    c.drawString(45, 415, 'Kalem')
+                    c.drawString(345, 415, '1234,56')
+                    for row, y in enumerate([385, 355, 325], 1):
+                        for col, value in enumerate(['Kalem', '12', '1234,56']):
+                            c.drawString(45 + col * 150, y, value)
+                else:
+                    for row in range(4):
+                        for col, value in enumerate(['Kalem', '12', '1234,56']):
+                            c.drawString(40 + col * 150, 400 - row * 30, value)
             c.showPage()
         c.save()
         d = Document(); d.add_heading(f'Audit {index}', 0); d.add_paragraph(TEXT)

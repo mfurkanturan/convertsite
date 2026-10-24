@@ -114,6 +114,47 @@ describe('all ten real engines', () => {
     expect(Math.abs(layout.pages[0].images[0].x0 - original.pages[0].images[0].x0)).toBeLessThan(2);
     expect(Math.abs(layout.pages[0].images[0].top - original.pages[0].images[0].top)).toBeLessThan(2);
   });
+  it.each(['word-rot90.pdf','word-rot180.pdf','word-rot270.pdf','word-content90.pdf'])('keeps the text of rotated source %s in an editable DOCX', async (name) => {
+    const result = await execute('pdf-to-word', [name]);
+    const text = (await inspect('docx', result.download.rawPayload)).text.replace(/\s+/g, ' ');
+    for (const part of ['DONUK SAYFA 1234,56', 'İstanbul Türkiye 2026', 'Üçüncü satır öğle çözüm']) expect(text).toContain(part);
+  });
+  it('keeps table column widths and cell positions within 5 pt after Word rendering', async () => {
+    const result = await execute('pdf-to-word', ['table.pdf']);
+    await writeFile(join(directory, 'table-result.docx'), result.download.rawPayload);
+    const rendered = await execute('word-to-pdf', ['table-result.docx']);
+    const source = (await inspect('pdf', await readFile(join(directory, 'table.pdf')))).pages[0].words;
+    const target = (await inspect('pdf', rendered.download.rawPayload)).pages[0].words;
+    expect(target).toHaveLength(source.length);
+    for (const word of source) {
+      const match = target.filter((item: {text:string}) => item.text === word.text)
+        .sort((a: {x0:number;top:number}, b: {x0:number;top:number}) => Math.hypot(a.x0 - word.x0, a.top - word.top) - Math.hypot(b.x0 - word.x0, b.top - word.top))[0];
+      expect(match, 'Missing ' + word.text).toBeDefined();
+      expect(Math.abs(match.x0 - word.x0), word.text).toBeLessThanOrEqual(5);
+      expect(Math.abs(match.top - word.top), word.text).toBeLessThanOrEqual(5);
+    }
+  });
+  it('keeps the source line pitch of multi-row paragraphs within 5 pt after Word rendering', async () => {
+    const result = await execute('pdf-to-word', ['pitch.pdf']);
+    await writeFile(join(directory, 'pitch-result.docx'), result.download.rawPayload);
+    const rendered = await execute('word-to-pdf', ['pitch-result.docx']);
+    const source = (await inspect('pdf', await readFile(join(directory, 'pitch.pdf')))).pages;
+    const target = (await inspect('pdf', rendered.download.rawPayload)).pages;
+    expect(target).toHaveLength(source.length);
+    source.forEach((page: {words: {text:string;top:number;x0:number}[]}, index: number) => {
+      const seen = new Map<string, number>();
+      const ordered = (words: {text:string;top:number;x0:number}[]) => [...words].sort((a, b) => Math.round(a.top / 3) - Math.round(b.top / 3) || a.x0 - b.x0);
+      const found = ordered(target[index].words);
+      expect(found).toHaveLength(page.words.length);
+      for (const word of ordered(page.words)) {
+        const occurrence = seen.get(word.text) ?? 0; seen.set(word.text, occurrence + 1);
+        const match = found.filter((item) => item.text === word.text)[occurrence];
+        expect(match, 'Missing ' + word.text).toBeDefined();
+        expect(Math.abs(match.top - word.top), word.text + ' page ' + (index + 1)).toBeLessThanOrEqual(5);
+        expect(Math.abs(match.x0 - word.x0), word.text).toBeLessThanOrEqual(5);
+      }
+    });
+  });
   it('exports detected tables to XLSX and keeps extracted formulas inert', async () => {
     const result = await execute('pdf-to-excel', ['table.pdf']);
     expect(result.job.resultKind).toBe('xlsx');
@@ -131,6 +172,35 @@ describe('all ten real engines', () => {
     const first = await execute('excel-to-pdf', ['workbook.xlsx'], { sheets: 'first' });
     expect((await PDFDocument.load(all.download.rawPayload)).getPageCount()).toBe(2);
     expect((await PDFDocument.load(first.download.rawPayload)).getPageCount()).toBe(1);
+  });
+  it('converts a synthetic PPTX to PDF through API, worker and download, skipping the hidden slide', async () => {
+    const result = await execute('pptx-to-pdf', ['deck.pptx']);
+    expect(result.job.resultKind).toBe('pdf');
+    expect(result.download.headers['content-type']).toContain('application/pdf');
+    // Hidden slides are not exported (LibreOffice default); the visible slide count is 2 of 3.
+    expect((await PDFDocument.load(result.download.rawPayload)).getPageCount()).toBe(2);
+    const text = await pdfText(result.download.rawPayload);
+    expect(text).toContain('İstanbul'); expect(text).toContain('İkinci slayt'); expect(text).not.toContain('GİZLİ');
+  });
+  it.each(['macro.pptx','traversal.pptx','external.pptx','notpptx.pptx'])('rejects unsafe or invalid %s during inspection', async (name) => {
+    await upload(await session(), name, 422);
+  });
+  async function watermarkReport(bytes: Buffer) {
+    const path = join(directory, `${randomUUID()}.pdf`); await writeFile(path, bytes);
+    return JSON.parse((await command('/opt/docly-python/bin/python', ['-B', 'tests/inspect-watermark.py', path])).stdout);
+  }
+  it.each(['wm-rotated90.pdf', 'wm-rotated270.pdf', 'wm-cropped.pdf', 'pages.pdf'])('stamps a Turkish watermark inside the visible area of %s with an embedded font', async (name) => {
+    const result = await execute('watermark-pdf', [name], { watermarkText: 'GİZLİ ŞİRKET ÖĞÜT ığüşöç' });
+    const report = await watermarkReport(result.download.rawPayload);
+    expect(report.fonts).toContain('DejaVu Sans Bold');
+    expect(report.text.replace(/\s+/g, ' ')).toContain('GİZLİ ŞİRKET ÖĞÜT ığüşöç');
+    const [left, top, right, bottom] = report.box;
+    expect(left).toBeGreaterThan(0.03); expect(top).toBeGreaterThan(0.03); expect(right).toBeLessThan(0.97); expect(bottom).toBeLessThan(0.97);
+    expect(right - left).toBeGreaterThan(0.3);
+  });
+  it('rejects a watermark that cannot be rendered legibly instead of returning a broken file', async () => {
+    expect((await execute('watermark-pdf', ['pages.pdf'], { watermarkText: 'x'.repeat(80) }, 'failed')).job.error).toBe('INVALID_OPTIONS');
+    expect((await execute('watermark-pdf', ['pages.pdf'], { watermarkText: '中文' }, 'failed')).job.error).toBe('INVALID_OPTIONS');
   });
   it('renders selected PDF pages into ordered PNGs in a ZIP', async () => {
     const result = await execute('pdf-to-images', ['pages.pdf'], { pages: '3,1', format: 'png', dpi: 100 });
