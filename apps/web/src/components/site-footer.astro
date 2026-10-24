@@ -1,4 +1,5 @@
 ---
+import AnalyticsConsent from './analytics-consent.svelte';
 import Logo from './logo.svelte';
 import { brand } from '../lib/brand';
 import { getTools } from '../lib/tools';
@@ -50,6 +51,7 @@ const hub = localePath(locale, locale === 'tr' ? '/kullanim/' : '/use-cases/');
       <div class="flex flex-wrap items-center gap-4 sm:gap-6">
         <a href={locale === 'tr' ? '/en/' : '/'} hreflang={locale === 'tr' ? 'en' : 'tr'} onclick={`try{localStorage.setItem('dc-locale','${locale === 'tr' ? 'en' : 'tr'}')}catch(e){}`} class="transition-colors hover:text-text">{text.switchTo}</a>
         {legal.map(([href, label]) => <a href={href} class="transition-colors hover:text-text">{label}</a>)}
+        <AnalyticsConsent client:load {locale} />
       </div>
     </div>
   </div>

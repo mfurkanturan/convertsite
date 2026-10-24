@@ -55,5 +55,10 @@ services:
         value: ca-pub-1185594059702325
       - key: PUBLIC_ADSENSE_SLOT_HOME_AFTER_TOOLS
         value: '1455397835'
+      # Public ingestion token; never put a personal PostHog API key here.
+      - key: PUBLIC_POSTHOG_KEY
+        value: phc_r8W8GxvHDjqQ8iSoQd7MajYos4Ch4FDsnyFvNgYEJeZz
+      - key: PUBLIC_POSTHOG_ENABLED
+        value: 'true'
       - key: NODE_VERSION
         value: 22.23.4

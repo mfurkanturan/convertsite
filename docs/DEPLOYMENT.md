@@ -29,6 +29,8 @@ Worker temizliği periyodiktir. Worker durursa expiry erişimi yine keser; fizik
 
 ## Üretim öncesi
 
+PostHog EU kullanım ölçümü için kurulum, build değişkenleri ve izin davranışı [POSTHOG](POSTHOG.md) içinde tanımlıdır. Üretimde yalnızca doctorconverter.com/www üzerinde ve ziyaretçi izin verdiğinde çalışır. `PUBLIC_POSTHOG_ENABLED=false` ile yeniden build edilerek kapatılabilir; `PUBLIC_POSTHOG_LOCAL=true` Render'da açılmamalıdır. Public ingestion token yönetim anahtarı değildir. Bu istemci ölçümü backend iş istatistiğinin yerine geçmez.
+
 TLS/alan adı, secret rotasyonu, imaj digest pinleme, kaynak/disk kapasitesi, alarm eşikleri, paylaşılan rate limiting, metadata prune, backup/restore denemesi ve migration geri alma/ileri düzeltme prosedürü tamamlanmalıdır. `docly-backend:local` bir üretim pinleme stratejisi değildir.
 
 PostgreSQL volume'ü metadata, .data/files geçici belge içerir. Geçici belgeler yedek politikasına sessizce dahil edilmez. Yerel ortamda `pg_dump` ve `psql` restore boru hattı (app_migrations, files, jobs, usage_accounts, worker_heartbeats tabloları) başarıyla doğrulanmıştır; otomatik zamanlanmış yedekleme veya üretim rollback otomasyonu henüz uygulanmadı.

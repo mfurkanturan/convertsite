@@ -14,7 +14,7 @@
 </script>
 
 {#if href}
-  <a {href} download={download || null} class="{base} {variants[variant]} {className}" aria-disabled={disabled || undefined}><slot /></a>
+  <a {href} {onclick} download={download || null} class="{base} {variants[variant]} {className}" aria-disabled={disabled || undefined}><slot /></a>
 {:else}
   <button {type} {disabled} {onclick} class="{base} {variants[variant]} {className}"><slot /></button>
 {/if}

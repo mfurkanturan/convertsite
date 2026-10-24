@@ -3,6 +3,7 @@
   import type { Capabilities, JobView, ToolOptions } from '@convertsite/contracts';
   import type { Tool } from '../lib/tools';
   import { apiFor } from '../lib/api-client';
+  import { track, trackOutcome } from '../lib/analytics';
   import { toolLimits as toolSpecs } from '@convertsite/contracts/limits';
   import { formatBytes, selectionMaxBytes, selectionMaxFiles } from '../lib/file-selection';
   import { useLocale, useUi } from '../i18n/context';
@@ -42,6 +43,9 @@
     try {
       while (!disposed && !controller.signal.aborted) {
         job = await api.job(id, controller.signal);
+        if (['succeeded', 'failed', 'cancelled'].includes(job.state)) {
+          trackOutcome(job.id, job.state === 'succeeded' ? 'conversion_completed' : job.state === 'failed' ? 'conversion_failed' : 'conversion_cancelled', { tool: tool.id });
+        }
         if (!['queued', 'running'].includes(job.state)) break;
         phase = job.state === 'queued' ? text.queued : text.processing;
         await new Promise((resolve) => setTimeout(resolve, document.hidden ? 4000 : 1000));
@@ -64,12 +68,15 @@
         uploaded.push(item.id);
       }
       if (controller.signal.aborted || disposed) throw new Error(cancelledText);
+      track('upload_completed', { tool: tool.id, file_count: uploaded.length });
       phase = text.queueing;
       job = await api.createJob({ tool: tool.id, fileIds: uploaded, options, idempotencyKey: crypto.randomUUID() });
+      track('conversion_requested', { tool: tool.id, file_count: uploaded.length });
       sessionStorage.setItem(key, job.id);
       if (controller.signal.aborted) await api.cancel(job.id);
       await poll(job.id);
     } catch (cause) {
+      if (!controller.signal.aborted && !disposed) track('client_error', { tool: tool.id, error_code: 'UPLOAD_OR_REQUEST_FAILED' });
       error = cause instanceof Error ? cause.message : text.cannotStart;
       if (!job) await Promise.allSettled(uploaded.map((id) => api.deleteFile(id)));
     } finally { busy = false; phase = ''; }
@@ -80,7 +87,7 @@
   }
   async function remove() {
     if (!job) return;
-    try { await api.deleteJob(job.id); sessionStorage.removeItem(key); job = null; removed = true; onclear(); }
+    try { await api.deleteJob(job.id); track('files_deleted', { tool: tool.id }); sessionStorage.removeItem(key); job = null; removed = true; onclear(); }
     catch { error = text.deleteFailed; }
   }
   onMount(() => {
@@ -107,7 +114,7 @@
   {/if}
   {#if job && !busy}
     <div class="mt-4 rounded-card border p-5 {job.state === 'succeeded' && job.resultAvailable ? 'border-success/25 bg-success-soft' : job.state === 'failed' ? 'border-danger/25 bg-danger-soft' : 'border-border bg-bg'}" aria-live="polite">
-      {#if job.state === 'succeeded' && job.resultAvailable}<h3 class="flex items-center gap-2 text-lg font-semibold text-success"><Icon name="check" size={20} /> {text.ready}</h3><p class="mt-1 text-sm leading-relaxed text-text-soft">{text.done} {job.resultKind?.toUpperCase() ?? tool.output}{job.resultSize ? ` · ${formatBytes(job.resultSize)}` : ''}</p><div class="mt-4 flex flex-wrap gap-2"><Button href={api.downloadUrl(job.id)} download>{text.download} <Icon name="download" size={17} /></Button><Button variant="secondary" onclick={remove}>{text.deleteFiles}</Button></div>
+      {#if job.state === 'succeeded' && job.resultAvailable}<h3 class="flex items-center gap-2 text-lg font-semibold text-success"><Icon name="check" size={20} /> {text.ready}</h3><p class="mt-1 text-sm leading-relaxed text-text-soft">{text.done} {job.resultKind?.toUpperCase() ?? tool.output}{job.resultSize ? ` · ${formatBytes(job.resultSize)}` : ''}</p><div class="mt-4 flex flex-wrap gap-2"><Button href={api.downloadUrl(job.id)} download onclick={() => track('download_clicked', { tool: tool.id })}>{text.download} <Icon name="download" size={17} /></Button><Button variant="secondary" onclick={remove}>{text.deleteFiles}</Button></div>
       {:else if job.state === 'cancelled'}<h3 class="text-lg font-semibold text-text">{text.cancelled}</h3><div class="mt-3"><Button variant="secondary" onclick={remove}>{text.deleteJobFiles}</Button></div>
       {:else if job.state === 'failed'}<h3 class="text-lg font-semibold text-danger">{text.failed}</h3><p class="mt-1 text-sm leading-relaxed text-text-soft">{text.jobErrors[job.error ?? ''] ?? text.jobErrors.default}</p><div class="mt-3"><Button variant="secondary" onclick={remove}>{text.deleteJobFiles}</Button></div>
       {:else if !job.resultAvailable && job.state === 'succeeded'}<h3 class="text-lg font-semibold text-text">{text.expired}</h3><p class="mt-1 text-sm leading-relaxed text-text-soft">{text.newJob}</p>

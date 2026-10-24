@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { track } from '../lib/analytics';
   import Icon from './icon.svelte';
   import FileDropzone from './file-dropzone.svelte';
   import FileList from './file-list.svelte';
@@ -26,6 +27,7 @@
   let busy = false;
 
   onMount(() => {
+    track('tool_viewed', { tool: tool.id });
     if (initialFile) {
       addFiles([initialFile]);
     }
