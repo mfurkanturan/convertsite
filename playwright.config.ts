@@ -12,6 +12,14 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4321',
     trace: 'on-first-retry',
   },
+  ...(process.env.PLAYWRIGHT_BASE_URL ? {} : {
+    webServer: {
+      command: 'pnpm --filter @convertsite/web dev',
+      url: 'http://127.0.0.1:4321/tr/',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+  }),
   projects: [
     {
       name: 'chromium',
@@ -21,5 +29,18 @@ export default defineConfig({
       name: 'mobile-chrome',
       use: { ...devices['Pixel 5'] },
     },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'safari-webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'mobile-safari-webkit',
+      use: { ...devices['iPhone 13'] },
+    },
+    ...(process.platform === 'win32' ? [{ name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' as const } }] : []),
   ],
 });

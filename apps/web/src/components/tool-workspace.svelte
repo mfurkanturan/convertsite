@@ -25,17 +25,18 @@
   let customInput = '';
   let selectedSettings: Record<string, string> = {};
   let busy = false;
+  let workspaceTitle: HTMLHeadingElement;
 
   onMount(() => {
     track('tool_viewed', { tool: tool.id });
     if (initialFile) {
       addFiles([initialFile]);
+      requestAnimationFrame(() => workspaceTitle?.focus());
     }
   });
   $: settings = getSettings(tool.id, locale);
   $: options = requestOptions(tool.id, selectedSettings, pageRange, locale, customInput);
   $: invalidPageRange = !!pageRange && !/^\d+(?:-\d+)?(?:\s*,\s*\d+(?:-\d+)?)*$/.test(pageRange);
-  $: tip = text.tips[tool.id] ?? text.tips.default;
   $: hasPageRange = tool.id === 'edit-pdf-pages' || tool.id === 'pdf-to-images';
   $: hasCustom = tool.id === 'protect-pdf' || tool.id === 'unlock-pdf' || tool.id === 'watermark-pdf';
   $: hasSettings = settings.length > 0 || hasPageRange || hasCustom;
@@ -61,19 +62,19 @@
   }
 </script>
 
-<section aria-labelledby="workspace-title">
+<section class={hasSettings ? '' : 'mx-auto max-w-[900px]'} aria-labelledby="workspace-title">
   <button class="-ml-1 inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm text-text-soft transition-colors hover:text-accent" onclick={onback}><Icon name="back" size={17} /> {text.back}</button>
   <header class="mt-3 mb-7 flex items-center gap-5 max-[650px]:items-start max-[650px]:gap-4">
     <span class="tool-icon large max-[650px]:!h-12 max-[650px]:!w-12" data-color={tool.color}><Icon name={tool.icon} size={30} /></span>
     <div class="min-w-0">
-      <h1 id="workspace-title" class="font-display text-[clamp(26px,3vw,34px)] font-semibold leading-tight tracking-[-0.02em] text-text">{heading?.title ?? tool.name}</h1>
+      <h1 id="workspace-title" bind:this={workspaceTitle} tabindex="-1" class="font-display text-[clamp(26px,3vw,34px)] font-semibold leading-tight tracking-[-0.02em] text-text">{heading?.title ?? tool.name}</h1>
       <p class="mt-1.5 text-base text-text-soft">{heading?.lead ?? tool.description}</p>
     </div>
   </header>
 
-  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[auto_1fr] max-[650px]:gap-4">
+  <div class="grid items-start gap-6 max-[650px]:gap-4 {hasSettings ? 'lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[auto_1fr]' : 'mx-auto max-w-[900px]'}">
     <div class="min-w-0">
-      {#if !busy && (tool.multiple || files.length === 0)}
+      {#if !busy}
         <FileDropzone {tool} compact={files.length > 0} onfiles={addFiles} />
       {/if}
       {#if error}<div class="mt-4"><InlineNotice variant="danger" role="alert">{error}</InlineNotice></div>{/if}
@@ -103,15 +104,15 @@
       {/if}
     </div>
 
+    {#if hasSettings}
     <aside class="rounded-panel border border-border bg-surface p-6 max-[650px]:p-5 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1" aria-labelledby="settings-title">
       <div class="flex items-center justify-between gap-3">
-        <h2 id="settings-title" class="text-lg font-semibold text-text">{hasSettings ? text.settings : text.output}</h2>
-        {#if hasSettings}<span class="rounded-md bg-bg px-2 py-0.5 text-xs font-medium text-text-muted ring-1 ring-border">{text.optional}</span>{/if}
+        <h2 id="settings-title" class="text-lg font-semibold text-text">{text.settings}</h2>
       </div>
-      {#if hasSettings}<p class="mt-1 text-sm text-text-soft">{text.defaults}</p>{/if}
       {#each settings as setting}
         <label for={setting.key} class="mt-5 mb-1.5 block text-sm font-medium text-text">{setting.label}</label>
-        <select id={setting.key} disabled={busy} value={selectedSettings[setting.key] ?? setting.options[0].value} onchange={(event) => selectedSettings = { ...selectedSettings, [setting.key]: event.currentTarget.value }} class="field">{#each setting.options as option}<option value={option.value}>{option.label}</option>{/each}</select>
+        <select id={setting.key} aria-describedby={`setting-help-${setting.key}`} disabled={busy} value={selectedSettings[setting.key] ?? setting.options[0].value} onchange={(event) => selectedSettings = { ...selectedSettings, [setting.key]: event.currentTarget.value }} class="field">{#each setting.options as option}<option value={option.value}>{option.label}</option>{/each}</select>
+        <small id={`setting-help-${setting.key}`} class="mt-2 block min-h-10 text-[13px] leading-relaxed text-text-muted">{setting.options.find((option) => option.value === (selectedSettings[setting.key] ?? setting.options[0].value))?.help}</small>
       {/each}
       {#if hasPageRange}
         <label for="page-range" class="mt-5 mb-1.5 block text-sm font-medium text-text">{text.pages}</label>
@@ -121,28 +122,26 @@
       {/if}
       {#if tool.id === 'protect-pdf' || tool.id === 'unlock-pdf'}
         <label for="pdf-password" class="mt-5 mb-1.5 block text-sm font-medium text-text">
-          {tool.id === 'protect-pdf' ? (locale === 'tr' ? 'Parola belirleyin' : 'Set password') : (locale === 'tr' ? 'Mevcut parola' : 'Current password')}
+          {tool.id === 'protect-pdf' ? (text.setPassword) : (text.currentPassword)}
         </label>
-        <input id="pdf-password" type="password" disabled={busy} placeholder={locale === 'tr' ? 'Şifrenizi yazın...' : 'Enter password...'} bind:value={customInput} class="field" />
+        <input id="pdf-password" type="password" disabled={busy} placeholder={text.passwordPlaceholder} bind:value={customInput} class="field" />
         {#if tool.id === 'protect-pdf' && !customInput.trim()}
-          <small class="mt-1.5 block text-xs text-text-muted">{locale === 'tr' ? 'Kilitlemek için lütfen bir parola belirleyin.' : 'Please enter a password to lock.'}</small>
+          <small class="mt-1.5 block text-xs text-text-muted">{text.passwordRequired}</small>
         {/if}
       {/if}
       {#if tool.id === 'watermark-pdf'}
         <label for="pdf-watermark" class="mt-5 mb-1.5 block text-sm font-medium text-text">
-          {locale === 'tr' ? 'Filigran metni' : 'Watermark text'}
+          {text.watermarkLabel}
         </label>
-        <input id="pdf-watermark" type="text" disabled={busy} placeholder={locale === 'tr' ? 'Örn: GİZLİDİR veya TASLAK' : 'e.g. CONFIDENTIAL'} bind:value={customInput} class="field" />
+        <input id="pdf-watermark" type="text" disabled={busy} placeholder={text.watermarkPlaceholder} bind:value={customInput} class="field" />
       {/if}
       <div class="flex items-center justify-between text-sm text-text-soft {hasSettings ? 'mt-6 border-t border-border pt-5' : 'mt-3'}"><span>{text.outputFormat}</span><strong class="rounded-md bg-accent-soft px-2 py-1 text-[13px] font-semibold text-accent-strong">{tool.output}</strong></div>
     </aside>
+    {/if}
 
-    <div class="min-w-0 lg:col-start-1 lg:row-start-2">
-      <LiveJob {files} {tool} {options} startDisabled={invalidPageRange || (tool.id === 'protect-pdf' && !customInput.trim())} bind:busy onclear={() => { files = []; }} />
-      <div class="mt-4 flex gap-3 rounded-card border border-border bg-surface p-4 text-text-soft">
-        <span class="mt-0.5 shrink-0 text-accent"><Icon name="info" size={18} /></span>
-        <p class="text-sm leading-relaxed"><strong class="font-semibold text-text">{text.know}</strong><br />{tip}</p>
-      </div>
+    <div class="min-w-0 {hasSettings ? 'lg:col-start-1 lg:row-start-2' : ''}">
+      <LiveJob {files} {tool} {options} showOutput={!hasSettings} startDisabled={invalidPageRange || (tool.id === 'protect-pdf' && !customInput.trim())} bind:busy onclear={() => { files = []; }} />
+
     </div>
   </div>
 </section>

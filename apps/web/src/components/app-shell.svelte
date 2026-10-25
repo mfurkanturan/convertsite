@@ -9,6 +9,7 @@
   import { getTools, type Category, type Tool } from '../lib/tools';
   import { provideLocale } from '../i18n/context';
   import { localePath, type Locale } from '../i18n/locales';
+  import { track } from '../lib/analytics';
 
   export let initialToolId: string | undefined = undefined;
   export let locale: Locale = 'tr';
@@ -24,9 +25,13 @@
   let menuOpen = false;
   let stagedFile: File | undefined = undefined;
   let activeTool: Tool | undefined = initialToolId ? tools.find((t) => t.id === initialToolId) : undefined;
+  $: currentSwitchHref = activeTool
+    ? localePath(locale === 'tr' ? 'en' : 'tr', `/${activeTool.id}`)
+    : switchHref;
   const onHome = () => window.location.pathname === home || window.location.pathname === home.replace(/\/$/, '') || window.location.pathname === '';
 
   function setCategory(value: Category) {
+    track('tool_filter', { category: value });
     if (!onHome()) {
       window.location.href = `${home}#tools`;
       return;
@@ -49,6 +54,7 @@
   }
 
   function openTool(id: string) {
+    track('tool_open', { tool: id });
     if (!onHome()) {
       window.location.href = localePath(locale, `/${id}`);
       return;
@@ -77,8 +83,7 @@
   function search(value: string) {
     query = value;
     if (activeTool && onHome()) { activeTool = undefined; history.replaceState(null, '', '#tools'); }
-    else if (activeTool) { window.location.href = `${home}#tools`; return; }
-    if (value) requestAnimationFrame(() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    if (value && onHome()) requestAnimationFrame(() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   }
 
   onMount(() => {
@@ -106,15 +111,14 @@
 <div class="w-full flex flex-col min-w-0 bg-bg">
   <Topbar
     {query}
-    {category}
     {menuOpen}
-    {switchHref}
+    switchHref={currentSwitchHref}
     current={activeTool?.name}
-    oncategory={setCategory}
     onsearch={search}
+    ontool={openTool}
     onmenu={() => menuOpen = !menuOpen}
   />
-  <main id="main-content" class="mx-auto w-full max-w-[1240px] flex-1 px-6 sm:px-8 pt-8 max-[540px]:px-4 max-[540px]:pt-5">
+  <main id="main-content" class="page-container flex-1 pt-8 max-[540px]:pt-5">
     {#if activeTool}
       {#key activeTool.id}<ToolWorkspace tool={activeTool} initialFile={stagedFile} onback={handleBack} heading={activeTool.id === initialToolId ? heading : undefined} />{/key}
       <slot />
@@ -123,6 +127,6 @@
       <ToolGrid bind:query {category} oncategory={setCategory} ontool={openTool} />
       <slot name="home" />
     {/if}
-    <HelpSection />
+    <HelpSection compact={!!activeTool} />
   </main>
 </div>

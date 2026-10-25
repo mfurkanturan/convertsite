@@ -1,270 +1,309 @@
 import type { ToolId } from '@convertsite/contracts';
 import type { ToolSeoData } from './tool-seo';
 
-const free = { title: 'Free, no install', desc: 'No software to download and no account to create. It runs in any browser.', icon: 'zap' };
-const privacy = { title: 'Private by default', desc: 'Encrypted transfer, session-only access and automatic deletion when files expire.', icon: 'shield' };
-const steps = (pick: string, run: string, get: string) => [
-  { title: '1. Choose your file', description: pick },
-  { title: '2. Start the job', description: run },
-  { title: '3. Download', description: get },
-];
-
-// English tool landing pages; keywords follow how global users phrase these searches.
 export const toolSeoMapEn: Record<ToolId, ToolSeoData> = {
-  'pdf-to-word': {
-    id: 'pdf-to-word',
-    title: 'PDF to Word Converter',
-    metaTitle: 'PDF to Word Converter – Free Online PDF to DOCX | DoctorConverter',
-    metaDescription: 'Convert PDF to editable Word (DOCX) online for free. Keeps fonts, tables, images and columns. No sign-up, files deleted automatically.',
-    h1: 'PDF to Word Converter',
-    lead: 'Turn PDFs into editable Word documents. Fonts, tables, images and multi-column layouts are rebuilt so you can keep working.',
-    keywords: ['pdf to word', 'pdf to docx', 'convert pdf to word free', 'edit pdf in word', 'pdf to word without losing formatting'],
-    steps: steps('Drag your PDF into the box or click “Choose file” (up to 50 pages).', 'Text, tables and images are analyzed and rebuilt as a DOCX.', 'Download your Word file and open it in Word, Google Docs or Pages.'),
-    features: [{ title: 'Layout rebuilt', desc: 'Paragraphs, headings, tables and columns come through as editable Word content.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Is PDF to Word free?', answer: 'Yes. All DoctorConverter tools are free and need no account.' },
-      { question: 'Will the formatting be kept?', answer: 'Fonts, tables, images and columns are rebuilt; complex designs may differ slightly.' },
-      { question: 'Can I convert scanned PDFs?', answer: 'Scanned pages have no text layer. Use Extract text (OCR) first.' },
-      { question: 'Are password-protected PDFs supported?', answer: 'No. Remove the open password before converting.' },
+  "pdf-to-word": {
+    "id": "pdf-to-word",
+    "title": "PDF to Word",
+    "metaTitle": "PDF to Word | DoctorConverter",
+    "metaDescription": "Convert text-based PDFs into editable Word documents. Open the DOCX and check headings, columns, tables and page breaks.",
+    "h1": "PDF to Word",
+    "lead": "Convert text-based PDFs into editable Word documents.",
+    "keywords": ["pdf to word", "pdf to docx", "convert pdf to word free", "edit pdf in word"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Select Convert to Word." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['word-to-pdf', 'pdf-to-excel', 'compress-pdf', 'ocr'],
+    "resultCheck": "Open the DOCX and check headings, columns, tables and page breaks.",
+    "faqs": [
+      { "question": "Can I convert scanned PDFs to Word?", "answer": "This tool requires selectable text. Extract text (OCR) can create TXT from scanned pages for use in Word; it does not reconstruct the page layout." }
+    ],
+    "relatedTools": ["word-to-pdf", "pdf-to-excel", "compress-pdf", "ocr"]
   },
-  'word-to-pdf': {
-    id: 'word-to-pdf',
-    title: 'Word to PDF Converter',
-    metaTitle: 'Word to PDF Converter – Free DOCX to PDF Online | DoctorConverter',
-    metaDescription: 'Convert Word documents (DOCX) to PDF online for free. Lock your layout so it looks the same on every device. No sign-up needed.',
-    h1: 'Word to PDF Converter',
-    lead: 'Convert DOCX files to PDF so your resume, report or letter looks exactly the same on every device.',
-    keywords: ['word to pdf', 'docx to pdf', 'convert word to pdf free', 'save word as pdf', 'word to pdf without losing formatting'],
-    steps: steps('Choose your .docx file.', 'The document is rendered to PDF with its page layout.', 'Download a PDF that looks the same everywhere.'),
-    features: [{ title: 'Layout locked', desc: 'PDF keeps page breaks, fonts and spacing fixed for every reader.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Are .doc files supported?', answer: '.docx is supported. Save older .doc files as .docx in Word first.' },
-      { question: 'Do macros work?', answer: 'Files with macros or external links are rejected for security.' },
-      { question: 'Will my fonts change?', answer: 'Common fonts are kept; rare fonts may be replaced with a close match.' },
+  "word-to-pdf": {
+    "id": "word-to-pdf",
+    "title": "Word to PDF",
+    "metaTitle": "Word to PDF | DoctorConverter",
+    "metaDescription": "Convert a DOCX document to PDF. Open the PDF and check fonts, tables and page breaks.",
+    "h1": "Word to PDF",
+    "lead": "Convert a DOCX document to PDF.",
+    "keywords": ["word to pdf", "docx to pdf", "convert word to pdf free", "save word as pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a DOCX file." },
+      { "title": "Start processing", "description": "Select Convert to PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['pdf-to-word', 'merge-pdf', 'compress-pdf'],
+    "resultCheck": "Open the PDF and check fonts, tables and page breaks.",
+    "faqs": [
+      { "question": "Can I upload DOC or macro-enabled Word files?", "answer": "Only DOCX is accepted. Office files containing macros, embedded executable content or external links are rejected." }
+    ],
+    "relatedTools": ["pdf-to-word", "merge-pdf", "compress-pdf"]
   },
-  'merge-pdf': {
-    id: 'merge-pdf',
-    title: 'Merge PDF',
-    metaTitle: 'Merge PDF – Combine PDF Files into One Online Free | DoctorConverter',
-    metaDescription: 'Combine multiple PDF files into one document in the order you choose. Merge up to 20 PDFs online for free, no watermark, no sign-up.',
-    h1: 'Merge PDF Files Online',
-    lead: 'Combine up to 20 PDFs into a single document. Drag to set the order, merge, download. No watermark.',
-    keywords: ['merge pdf', 'combine pdf', 'combine pdf files into one', 'join pdf', 'merge pdf free no watermark'],
-    steps: steps('Select up to 20 PDF files.', 'Put them in order with the arrows and click “Merge PDFs”.', 'Download one combined PDF.'),
-    features: [{ title: 'Your order, exactly', desc: 'The output follows the file order you set, page for page.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'How many PDFs can I merge?', answer: 'Up to 20 files and 300 pages in total, with 10 MB per file.' },
-      { question: 'Is there a watermark?', answer: 'No. The merged PDF has no watermark.' },
-      { question: 'Can I merge images too?', answer: 'Convert images with JPG to PDF first, then merge them.' },
+  "merge-pdf": {
+    "id": "merge-pdf",
+    "title": "Merge PDF",
+    "metaTitle": "Merge PDF | DoctorConverter",
+    "metaDescription": "Combine PDF files in the order you choose. Open the PDF and check the document order and first/last pages.",
+    "h1": "Merge PDF",
+    "lead": "Combine PDF files in the order you choose.",
+    "keywords": ["merge pdf", "combine pdf", "combine pdf files into one", "join pdf", "merge pdf free no watermark"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose the PDFs to combine." },
+      { "title": "Start processing", "description": "Add at least two PDFs. Drag files or use the up/down buttons to set the order, then select Merge PDFs." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['compress-pdf', 'edit-pdf-pages', 'images-to-pdf'],
+    "resultCheck": "Open the PDF and check the document order and first/last pages.",
+    "faqs": [
+      { "question": "How do I change the file order?", "answer": "Use the up/down buttons or drag files in the list. To change individual pages, use Edit PDF pages." }
+    ],
+    "relatedTools": ["compress-pdf", "edit-pdf-pages", "images-to-pdf"]
   },
-  'compress-pdf': {
-    id: 'compress-pdf',
-    title: 'Compress PDF',
-    metaTitle: 'Compress PDF – Reduce PDF File Size Online Free | DoctorConverter',
-    metaDescription: 'Reduce PDF file size online without losing quality. Lossless optimization for email, job portals, visa and court uploads. Free, no sign-up.',
-    h1: 'Compress PDF Online',
-    lead: 'Shrink PDFs for email, job portals and upload forms. Lossless optimization keeps text and images sharp.',
-    keywords: ['compress pdf', 'reduce pdf size', 'pdf compressor', 'shrink pdf', 'compress pdf without losing quality', 'make pdf smaller'],
-    steps: steps('Choose the PDF you want to shrink.', 'The file is restructured and recompressed losslessly.', 'Download the optimized PDF and check the new size.'),
-    features: [{ title: 'No quality loss', desc: 'Lossless optimization keeps text, signatures and images exactly as they were.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Will quality drop?', answer: 'No. Optimization is lossless.' },
-      { question: 'Why did my file barely shrink?', answer: 'Already optimized or image-only scans have little to gain. Remove unneeded pages or split the file.' },
-      { question: 'What is the size limit?', answer: 'Up to 10 MB and 300 pages per file.' },
+  "compress-pdf": {
+    "id": "compress-pdf",
+    "title": "Compress PDF",
+    "metaTitle": "Compress PDF | DoctorConverter",
+    "metaDescription": "Try to reduce a PDF file’s size. Compare the downloaded file size with the source and the destination’s upload limit.",
+    "h1": "Compress PDF",
+    "lead": "Try to reduce a PDF file’s size.",
+    "keywords": ["compress pdf", "reduce pdf size", "pdf compressor", "shrink pdf", "make pdf smaller"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Select Compress PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['merge-pdf', 'edit-pdf-pages', 'pdf-to-images'],
+    "resultCheck": "Compare the downloaded file size with the source and the destination’s upload limit.",
+    "faqs": [
+      { "question": "Why did the file not get smaller?", "answer": "The tool optimizes the PDF’s internal structure without downsampling scanned images. Already optimized files may not shrink; the original file is returned in that case." }
+    ],
+    "relatedTools": ["merge-pdf", "edit-pdf-pages", "pdf-to-images"]
   },
-  'pdf-to-excel': {
-    id: 'pdf-to-excel',
-    title: 'PDF to Excel Converter',
-    metaTitle: 'PDF to Excel Converter – Extract Tables to XLSX Free | DoctorConverter',
-    metaDescription: 'Extract tables from PDF files into Excel spreadsheets. Bank statements, invoices and reports to XLSX, one sheet per table. Free online.',
-    h1: 'PDF to Excel Converter',
-    lead: 'Pull tables out of PDFs into Excel: every detected table gets its own sheet, ready to filter and total.',
-    keywords: ['pdf to excel', 'pdf to xlsx', 'extract table from pdf', 'convert pdf table to excel', 'bank statement pdf to excel'],
-    steps: steps('Choose a digital PDF with tables (up to 50 pages).', 'Tables are detected and exported as separate sheets.', 'Download the XLSX file.'),
-    features: [{ title: 'One sheet per table', desc: 'Each detected table lands on its own sheet with a frozen header row.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Do scanned PDFs work?', answer: 'No. Tables are only detected in digital PDFs. Use OCR for scanned text.' },
-      { question: 'Are formulas executed?', answer: 'No. Cell values are imported as text for safety.' },
+  "pdf-to-excel": {
+    "id": "pdf-to-excel",
+    "title": "PDF to Excel",
+    "metaTitle": "PDF to Excel | DoctorConverter",
+    "metaDescription": "Export detected PDF tables to Excel worksheets. Open the XLSX and compare tables, rows, columns and numeric values with the source.",
+    "h1": "PDF to Excel",
+    "lead": "Export detected PDF tables to Excel worksheets.",
+    "keywords": ["pdf to excel", "pdf to xlsx", "extract table from pdf", "convert pdf table to excel", "bank statement pdf to excel"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Select Export to Excel." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['excel-to-pdf', 'pdf-to-word', 'ocr'],
+    "resultCheck": "Open the XLSX and compare tables, rows, columns and numeric values with the source.",
+    "faqs": [
+      { "question": "Are the exported cells formulas?", "answer": "Cells are written as text that does not execute formulas. Check number and date formats before calculating. Each detected table becomes a separate worksheet." }
+    ],
+    "relatedTools": ["excel-to-pdf", "pdf-to-word", "ocr"]
   },
-  'excel-to-pdf': {
-    id: 'excel-to-pdf',
-    title: 'Excel to PDF Converter',
-    metaTitle: 'Excel to PDF Converter – Free XLSX to PDF Online | DoctorConverter',
-    metaDescription: 'Convert Excel spreadsheets to PDF online. Export all worksheets or just the first one using your print layout. Free, no sign-up.',
-    h1: 'Excel to PDF Converter',
-    lead: 'Share spreadsheets as PDF so quotes, price lists and reports look exactly right for the reader.',
-    keywords: ['excel to pdf', 'xlsx to pdf', 'convert spreadsheet to pdf', 'save excel as pdf'],
-    steps: steps('Choose your .xlsx file.', 'Pick all worksheets or the first one.', 'Download the PDF.'),
-    features: [{ title: 'Print layout respected', desc: 'Page setup from Excel is used for the PDF.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Are macros supported?', answer: 'No. Files with macros, embedded binaries or external links are rejected.' },
-      { question: 'Can I export one sheet only?', answer: 'Yes, choose “First worksheet only”.' },
+  "excel-to-pdf": {
+    "id": "excel-to-pdf",
+    "title": "Excel to PDF",
+    "metaTitle": "Excel to PDF | DoctorConverter",
+    "metaDescription": "Convert XLSX worksheets to PDF. Open the PDF and check for clipped columns, orientation and page breaks.",
+    "h1": "Excel to PDF",
+    "lead": "Convert XLSX worksheets to PDF.",
+    "keywords": ["excel to pdf", "xlsx to pdf", "convert spreadsheet to pdf", "save excel as pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose an XLSX file." },
+      { "title": "Start processing", "description": "Choose all worksheets or only the first, then select Convert to PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['pdf-to-excel', 'word-to-pdf', 'compress-pdf'],
+    "resultCheck": "Open the PDF and check for clipped columns, orientation and page breaks.",
+    "faqs": [
+      { "question": "Why is my table split across pages?", "answer": "The source workbook’s print area, scale and page settings affect the result. Adjust them in the source file and convert again if needed." }
+    ],
+    "relatedTools": ["pdf-to-excel", "word-to-pdf", "compress-pdf"]
   },
-  'pdf-to-images': {
-    id: 'pdf-to-images',
-    title: 'PDF to JPG / PNG',
-    metaTitle: 'PDF to JPG / PNG – Convert PDF Pages to Images Free | DoctorConverter',
-    metaDescription: 'Convert PDF pages to high-quality JPG or PNG images online. Pick pages, format and quality; multiple pages download as a ZIP. Free.',
-    h1: 'Convert PDF to JPG or PNG',
-    lead: 'Turn PDF pages into images for social media, websites and presentations. One page returns an image, several return a ZIP.',
-    keywords: ['pdf to jpg', 'pdf to png', 'convert pdf to image', 'pdf page to picture', 'pdf to jpg high quality'],
-    steps: steps('Choose a PDF of up to 30 pages.', 'Pick JPG or PNG, quality and optional pages.', 'Download an image or a ZIP.'),
-    features: [{ title: 'Pick exact pages', desc: 'Convert only the pages you need, in the order you type them.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'What resolution are the images?', answer: 'Standard renders at 100 DPI and High at 150 DPI.' },
-      { question: 'How many pages?', answer: 'PDFs of up to 30 pages are supported.' },
+  "pptx-to-pdf": {
+    "id": "pptx-to-pdf",
+    "title": "PowerPoint to PDF",
+    "metaTitle": "PowerPoint to PDF | DoctorConverter",
+    "metaDescription": "Convert a PPTX presentation to PDF. Open the PDF and check slide count, images, fonts and table layouts.",
+    "h1": "PowerPoint to PDF",
+    "lead": "Convert a PPTX presentation to PDF.",
+    "keywords": ["powerpoint to pdf", "convert pptx to pdf", "pptx to pdf online free", "slides to pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PPTX file." },
+      { "title": "Start processing", "description": "Select Convert to PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['images-to-pdf', 'compress-pdf', 'edit-pdf-pages'],
+    "resultCheck": "Open the PDF and check slide count, images, fonts and table layouts.",
+    "faqs": [
+      { "question": "Are animations and hidden slides exported?", "answer": "PDF pages are static and do not play animations. Hidden slides may be omitted. Check that all slides you need are present." }
+    ],
+    "relatedTools": ["word-to-pdf", "excel-to-pdf", "pdf-to-word"]
   },
-  'images-to-pdf': {
-    id: 'images-to-pdf',
-    title: 'JPG / PNG to PDF',
-    metaTitle: 'JPG to PDF – Convert Images to One PDF Online Free | DoctorConverter',
-    metaDescription: 'Convert JPG and PNG images into a single PDF. Order photos, choose A4 or image size and orientation. Free online image to PDF converter.',
-    h1: 'Convert JPG and PNG to PDF',
-    lead: 'Put photos and scans in order and collect them in one PDF: perfect for homework, receipts and documents.',
-    keywords: ['jpg to pdf', 'png to pdf', 'image to pdf', 'photos to pdf', 'combine images into pdf'],
-    steps: steps('Choose up to 20 JPG or PNG images.', 'Order them and pick page size and orientation.', 'Download one PDF.'),
-    features: [{ title: 'A4 or original size', desc: 'Center photos on A4 pages or keep each image’s own size.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Are HEIC photos supported?', answer: 'JPG and PNG are supported. Set your iPhone camera to “Most Compatible” to save JPG.' },
-      { question: 'Is there a limit per image?', answer: '10 MB and 25 megapixels per image.' },
+  "pdf-to-images": {
+    "id": "pdf-to-images",
+    "title": "PDF to JPG / PNG",
+    "metaTitle": "PDF to JPG / PNG | DoctorConverter",
+    "metaDescription": "Export PDF pages as JPG or PNG images. Download the image or ZIP and check the selected pages and text readability.",
+    "h1": "PDF to JPG / PNG",
+    "lead": "Export PDF pages as JPG or PNG images.",
+    "keywords": ["pdf to jpg", "pdf to png", "convert pdf to image", "pdf page to picture", "pdf to jpg high quality"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Choose JPG/PNG, image quality and an optional page range, then select Create images." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['pdf-to-images', 'merge-pdf', 'compress-pdf'],
+    "resultCheck": "Download the image or ZIP and check the selected pages and text readability.",
+    "faqs": [
+      { "question": "What does image quality change?", "answer": "Standard uses 100 DPI and High uses 150 DPI. The output’s long edge is also limited. A higher setting cannot create detail missing from the source." }
+    ],
+    "relatedTools": ["images-to-pdf", "compress-pdf", "edit-pdf-pages"]
   },
-  'edit-pdf-pages': {
-    id: 'edit-pdf-pages',
-    title: 'Edit PDF Pages',
-    metaTitle: 'Split, Reorder & Rotate PDF Pages Online Free | DoctorConverter',
-    metaDescription: 'Extract, delete, reorder and rotate PDF pages online. Save selected pages as one PDF or every page as its own file. Free, no sign-up.',
-    h1: 'Split, Reorder and Rotate PDF Pages',
-    lead: 'Type a page range to keep, reorder or rotate pages, or export every page as its own PDF.',
-    keywords: ['split pdf', 'extract pages from pdf', 'delete pdf pages', 'rotate pdf', 'reorder pdf pages'],
-    steps: steps('Choose a PDF of up to 300 pages.', 'Type pages like “3, 1-2” and pick rotation or ZIP output.', 'Download the edited PDF or ZIP.'),
-    features: [{ title: 'Page-range control', desc: 'Keep, reorder and rotate pages with one simple range.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'How do I delete pages?', answer: 'List only the pages you want to keep; the rest are removed.' },
-      { question: 'Can I split every page?', answer: 'Yes, choose “One PDF per page (ZIP)”.' },
+  "images-to-pdf": {
+    "id": "images-to-pdf",
+    "title": "JPG / PNG to PDF",
+    "metaTitle": "JPG / PNG to PDF | DoctorConverter",
+    "metaDescription": "Combine JPG and PNG images into one PDF. Open the PDF and check image order, orientation and size on the page.",
+    "h1": "JPG / PNG to PDF",
+    "lead": "Combine JPG and PNG images into one PDF.",
+    "keywords": ["jpg to pdf", "png to pdf", "image to pdf", "photos to pdf", "combine images into pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose JPG or PNG images." },
+      { "title": "Start processing", "description": "Order the images, choose page size and orientation, then select Create PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['merge-pdf', 'compress-pdf', 'pdf-to-images'],
+    "resultCheck": "Open the PDF and check image order, orientation and size on the page.",
+    "faqs": [
+      { "question": "How are transparent PNGs and phone photos handled?", "answer": "Transparent areas become white. Photo orientation metadata is applied; check the resulting page orientations." }
+    ],
+    "relatedTools": ["pdf-to-images", "merge-pdf", "compress-pdf"]
   },
-  ocr: {
-    id: 'ocr',
-    title: 'OCR Text Extraction',
-    metaTitle: 'OCR Online – Extract Text from Scanned PDF and Images | DoctorConverter',
-    metaDescription: 'Extract text from scanned PDFs and photos with free online OCR. English and Turkish supported. Copy text from images in seconds.',
-    h1: 'Extract Text from Scans and Images (OCR)',
-    lead: 'Turn scanned PDFs and photos into plain text you can copy, search and quote.',
-    keywords: ['ocr online', 'image to text', 'scanned pdf to text', 'extract text from image', 'copy text from pdf scan'],
-    steps: steps('Choose a scanned PDF (up to 20 pages) or a JPG/PNG.', 'Select English, Turkish or both.', 'Download the text as a TXT file.'),
-    features: [{ title: 'English & Turkish', desc: 'Recognition for English, Turkish or both languages together.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Is the layout kept?', answer: 'No. OCR returns plain text; layout is not preserved.' },
-      { question: 'Does it read handwriting?', answer: 'It is built for printed text; handwriting accuracy is low.' },
+  "edit-pdf-pages": {
+    "id": "edit-pdf-pages",
+    "title": "Edit PDF pages",
+    "metaTitle": "Edit PDF pages | DoctorConverter",
+    "metaDescription": "Reorder, rotate, split or remove PDF pages. Open the PDF or ZIP and check page order, rotations and removed pages.",
+    "h1": "Edit PDF pages",
+    "lead": "Reorder, rotate, split or remove PDF pages.",
+    "keywords": ["split pdf", "extract pages from pdf", "delete pdf pages", "rotate pdf", "reorder pdf pages"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Select and arrange pages, choose the output format, then select Save pages." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['pdf-to-word', 'pdf-to-excel', 'pdf-to-images'],
+    "resultCheck": "Open the PDF or ZIP and check page order, rotations and removed pages.",
+    "faqs": [
+      { "question": "Can I get a separate PDF for each page?", "answer": "Choose “One PDF per page (ZIP)” in the output setting. Keep at least one page. This tool does not edit the text within pages." }
+    ],
+    "relatedTools": ["merge-pdf", "compress-pdf", "pdf-to-images"]
   },
-  'pdf-to-pdf-ocr': {
-    id: 'pdf-to-pdf-ocr',
-    title: 'Make PDF Searchable (OCR)',
-    metaTitle: 'Make PDF Searchable – Add OCR Text Layer to Scanned PDF | DoctorConverter',
-    metaDescription: 'Add a searchable, copyable text layer to scanned PDFs. Layout stays the same while you can search and copy text inside the PDF.',
-    h1: 'Make Scanned PDFs Searchable (OCR)',
-    lead: 'Add an invisible text layer to scanned PDFs so you can search, select and copy text. The look and page layout stay exactly the same.',
-    keywords: ['make pdf searchable', 'ocr pdf online', 'add text layer to pdf', 'scanned pdf to searchable pdf', 'ocr pdf converter'],
-    steps: steps('Choose your scanned PDF (up to 20 pages).', 'The engine reads each page and writes an invisible, selectable text layer over it.', 'Download your PDF that now supports search and copy.'),
-    features: [{ title: 'Layout preserved', desc: 'Only an invisible text layer is added; the image and page layout are unchanged.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Does the page look different?', answer: 'No. The added text layer is invisible; the page looks exactly the same.' },
-      { question: 'Which languages are supported?', answer: 'English, Turkish or both together.' },
+  "page-numbers": {
+    "id": "page-numbers",
+    "title": "Add page numbers",
+    "metaTitle": "Add page numbers | DoctorConverter",
+    "metaDescription": "Add the page number and total page count to a PDF. Open the first and last pages and check that numbers do not overlap the content.",
+    "h1": "Add page numbers",
+    "lead": "Add the page number and total page count to a PDF.",
+    "keywords": ["add page numbers to pdf", "number pdf pages", "pdf page numbering", "bates numbering"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Choose the position, then select Add page numbers." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['ocr', 'pdf-to-word', 'pdf-to-images'],
+    "resultCheck": "Open the first and last pages and check that numbers do not overlap the content.",
+    "faqs": [
+      { "question": "Can I customize the number format?", "answer": "Numbers use “page / total”. Choose bottom center, bottom right or top right. A custom starting number is not available." }
+    ],
+    "relatedTools": ["edit-pdf-pages", "merge-pdf", "watermark-pdf"]
   },
-  'pptx-to-pdf': {
-    id: 'pptx-to-pdf',
-    title: 'PowerPoint to PDF Converter',
-    metaTitle: 'PowerPoint to PDF – Free Online PPTX to PDF Converter | DoctorConverter',
-    metaDescription: 'Convert PowerPoint (PPTX) presentations into PDF online. Keeps fonts, layouts, and formatting intact. Fast, free, and secure.',
-    h1: 'Online PowerPoint to PDF Converter',
-    lead: 'Turn PowerPoint slides into universally viewable PDF documents that open reliably on any phone, tablet, or PC.',
-    keywords: ['powerpoint to pdf', 'convert pptx to pdf', 'pptx to pdf online free', 'slides to pdf'],
-    steps: steps('Upload your PPTX presentation file.', 'Our engine converts your slides to crisp vector PDF.', 'Download your clean, printable PDF in seconds.'),
-    features: [{ title: 'Precise slide layout', desc: 'Preserves fonts, colors, shapes and alignment across devices.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'What happens to slide animations?', answer: 'PDF is a static format; each slide is captured in its final presented state.' }
+  "watermark-pdf": {
+    "id": "watermark-pdf",
+    "title": "Add watermark",
+    "metaTitle": "Add watermark | DoctorConverter",
+    "metaDescription": "Add a text watermark to PDF pages. Open the PDF and check the watermark, characters and document readability.",
+    "h1": "Add watermark",
+    "lead": "Add a text watermark to PDF pages.",
+    "keywords": ["add watermark to pdf", "pdf watermark online", "stamp pdf confidential", "draft watermark pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Enter the watermark text, then select Add watermark." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['word-to-pdf', 'excel-to-pdf', 'pdf-to-word']
+    "resultCheck": "Open the PDF and check the watermark, characters and document readability.",
+    "faqs": [
+      { "question": "Can I watermark only selected pages?", "answer": "A diagonal watermark is added to every page. Page selection and image watermarks are not supported. Text that does not fit or contains unsupported characters is rejected." }
+    ],
+    "relatedTools": ["page-numbers", "protect-pdf", "compress-pdf"]
   },
-  'protect-pdf': {
-    id: 'protect-pdf',
-    title: 'Password Protect PDF',
-    metaTitle: 'Protect PDF – Password Protect PDF Files Online Free | DoctorConverter',
-    metaDescription: 'Encrypt your PDF with strong 256-bit AES password protection. Prevent unauthorized opening, copying, or printing. Free and secure.',
-    h1: 'Password Protect and Encrypt PDF Files',
-    lead: 'Secure confidential documents, payrolls, and contracts with strong password encryption. Only those with the password can open them.',
-    keywords: ['protect pdf', 'encrypt pdf', 'password protect pdf online', 'lock pdf'],
-    steps: steps('Select the PDF you want to protect.', 'Enter a strong password to lock the document.', 'Download your secure 256-bit AES encrypted PDF.'),
-    features: [{ title: '256-bit AES encryption', desc: 'Military-grade encryption protects your files from unauthorized access.', icon: 'shield' }, free, privacy],
-    faqs: [
-      { question: 'Can I recover the password if forgotten?', answer: 'No. For your security, we never store your passwords or keys.' }
+  "protect-pdf": {
+    "id": "protect-pdf",
+    "title": "Encrypt PDF",
+    "metaTitle": "Encrypt PDF | DoctorConverter",
+    "metaDescription": "Set a password required to open a PDF. Close and reopen the downloaded PDF to check that your password works.",
+    "h1": "Encrypt PDF",
+    "lead": "Set a password required to open a PDF.",
+    "keywords": ["protect pdf", "encrypt pdf", "password protect pdf online", "lock pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Enter a password, then select Encrypt PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['unlock-pdf', 'compress-pdf', 'merge-pdf']
+    "resultCheck": "Close and reopen the downloaded PDF to check that your password works.",
+    "faqs": [
+      { "question": "Can I recover a forgotten password?", "answer": "Keep the password yourself. This tool does not provide password recovery; retain a copy of the source file." }
+    ],
+    "relatedTools": ["unlock-pdf", "compress-pdf", "merge-pdf"]
   },
-  'unlock-pdf': {
-    id: 'unlock-pdf',
-    title: 'Unlock Protected PDF',
-    metaTitle: 'Unlock PDF – Remove Password from PDF Online Free | DoctorConverter',
-    metaDescription: 'Remove passwords and permissions from secured PDF files if you know the password. Free, fast, and browser-based.',
-    h1: 'Unlock and Remove Password from PDF',
-    lead: 'Remove the annoying password prompt from files you have the right to open, making them easy to share and archive.',
-    keywords: ['unlock pdf', 'remove pdf password', 'pdf password remover', 'decrypt pdf'],
-    steps: steps('Upload your locked PDF document.', 'Type the current password to authorize decryption.', 'Download your unlocked PDF file with no password prompt.'),
-    features: [{ title: 'Permanent removal', desc: 'Open, print, and share your PDF without repeatedly entering passwords.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Does this crack unknown passwords?', answer: 'No. This tool removes protection from files where you know the current password.' }
+  "unlock-pdf": {
+    "id": "unlock-pdf",
+    "title": "Remove PDF password",
+    "metaTitle": "Remove PDF password | DoctorConverter",
+    "metaDescription": "Remove protection from a PDF whose password you know. Reopen the downloaded PDF and check that it no longer asks for a password.",
+    "h1": "Remove PDF password",
+    "lead": "Remove protection from a PDF whose password you know.",
+    "keywords": ["unlock pdf", "remove pdf password", "pdf password remover", "decrypt pdf"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Enter the current password, then select Remove password." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['protect-pdf', 'merge-pdf', 'compress-pdf']
+    "resultCheck": "Reopen the downloaded PDF and check that it no longer asks for a password.",
+    "faqs": [
+      { "question": "Can I use this without knowing the password?", "answer": "No. The correct current password is required. A missing or wrong password prevents processing." }
+    ],
+    "relatedTools": ["protect-pdf", "merge-pdf", "compress-pdf"]
   },
-  'page-numbers': {
-    id: 'page-numbers',
-    title: 'Add Page Numbers to PDF',
-    metaTitle: 'Add Page Numbers to PDF Online Free | DoctorConverter',
-    metaDescription: 'Insert automated page numbers onto your PDF document pages. Perfect for legal exhibits, university theses, and contracts.',
-    h1: 'Add Page Numbers to PDF Documents',
-    lead: 'Stamp clean, sequential page numbers across all pages of your PDF document in seconds.',
-    keywords: ['add page numbers to pdf', 'number pdf pages', 'pdf page numbering', 'bates numbering'],
-    steps: steps('Upload the PDF you want to number.', 'Choose page number alignment (bottom center, bottom right, top right).', 'Download your newly numbered PDF document.'),
-    features: [{ title: 'Clean numbering', desc: 'Applies "Page X of Y" formatting without distorting underlying content.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Where will the numbers appear?', answer: 'By default, numbers are placed neatly at the bottom center of each page.' }
+  "ocr": {
+    "id": "ocr",
+    "title": "Extract text (OCR)",
+    "metaTitle": "Extract text (OCR) | DoctorConverter",
+    "metaDescription": "Extract text from a PDF or image into a TXT file. Open the TXT and compare names, numbers and accented characters with the source.",
+    "h1": "Extract text (OCR)",
+    "lead": "Extract text from a PDF or image into a TXT file.",
+    "keywords": ["ocr online", "image to text", "scanned pdf to text", "extract text from image", "copy text from pdf scan"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF, JPG or PNG file." },
+      { "title": "Start processing", "description": "Choose the document language, then select Extract text." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['edit-pdf-pages', 'merge-pdf', 'watermark-pdf']
+    "resultCheck": "Open the TXT and compare names, numbers and accented characters with the source.",
+    "faqs": [
+      { "question": "Does this produce Word or a searchable PDF?", "answer": "This tool produces plain TXT only. Open or paste it in Word to edit. To add text to the original PDF, use Make PDF searchable." }
+    ],
+    "relatedTools": ["pdf-to-word", "pdf-to-excel", "pdf-to-images"]
   },
-  'watermark-pdf': {
-    id: 'watermark-pdf',
-    title: 'Add Watermark to PDF',
-    metaTitle: 'Add Watermark to PDF Online Free | DoctorConverter',
-    metaDescription: 'Stamp custom text watermarks like CONFIDENTIAL, DRAFT, or sample text across your PDF pages. Fast, free, and secure.',
-    h1: 'Stamp Custom Text Watermark on PDF',
-    lead: 'Protect intellectual property and mark document status with diagonal, semi-transparent text watermarks.',
-    keywords: ['add watermark to pdf', 'pdf watermark online', 'stamp pdf confidential', 'draft watermark pdf'],
-    steps: steps('Choose your PDF document.', 'Type your watermark text (e.g. CONFIDENTIAL, DRAFT).', 'Download your watermarked PDF document.'),
-    features: [{ title: 'Semi-transparent', desc: 'Diagonal stamp that remains clear and legible over existing content.', icon: 'layout' }, free, privacy],
-    faqs: [
-      { question: 'Can the watermark be easily removed?', answer: 'The watermark is permanently rendered into the page layer for maximum protection.' }
+  "pdf-to-pdf-ocr": {
+    "id": "pdf-to-pdf-ocr",
+    "title": "Make PDF searchable (OCR)",
+    "metaTitle": "Make PDF searchable (OCR) | DoctorConverter",
+    "metaDescription": "Add selectable, searchable text to a scanned PDF. Open the PDF, search for a word and select text. Compare recognized text with the image.",
+    "h1": "Make PDF searchable (OCR)",
+    "lead": "Add selectable, searchable text to a scanned PDF.",
+    "keywords": ["make pdf searchable", "ocr pdf online", "add text layer to pdf", "scanned pdf to searchable pdf", "ocr pdf converter"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Choose the document language, then select Create searchable PDF." },
+      { "title": "Download the result", "description": "Download the result from the same browser session when processing finishes." }
     ],
-    relatedTools: ['page-numbers', 'protect-pdf', 'compress-pdf']
+    "resultCheck": "Open the PDF, search for a word and select text. Compare recognized text with the image.",
+    "faqs": [
+      { "question": "How does this differ from Extract text (OCR)?", "answer": "This tool adds text to a PDF containing the page images. Extract text (OCR) produces a separate TXT file. Applying OCR to pages that already contain text may create duplicate text layers." }
+    ],
+    "relatedTools": ["ocr", "pdf-to-word", "pdf-to-images"]
   }
 };

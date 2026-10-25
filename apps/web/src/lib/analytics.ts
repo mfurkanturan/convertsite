@@ -103,7 +103,7 @@ export function track(event: string, properties: AnalyticsProperties = {}): bool
 
 const outcomes = new Set<string>();
 export function trackOutcome(jobId: string, event: string, properties: AnalyticsProperties): void {
-  const key = `dc-analytics-outcome:${jobId}`;
+  const key = `dc-analytics-outcome:${jobId}:${event}`;
   try { if (outcomes.has(key) || sessionStorage.getItem(key)) return; } catch { /* In-memory deduplication remains. */ }
   if (track(event, properties)) {
     outcomes.add(key);

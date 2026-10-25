@@ -38,6 +38,59 @@ test('no PostHog requests before consent or after declining/reloading', async ({
   expect(capture.requests).toHaveLength(0);
 });
 
+test('navigation and file-selection events contain only allowlisted, non-sensitive properties', async ({ page }) => {
+  const capture = await intercept(page);
+  await page.route('**/api/capabilities', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+    enabledTools: ['pdf-to-word', 'word-to-pdf', 'merge-pdf', 'compress-pdf', 'pdf-to-excel', 'excel-to-pdf', 'pptx-to-pdf', 'pdf-to-images', 'images-to-pdf', 'edit-pdf-pages', 'page-numbers', 'watermark-pdf', 'protect-pdf', 'unlock-pdf', 'ocr', 'pdf-to-pdf-ocr'],
+    maxFileBytes: 10485760, maxFiles: 20, maxTotalBytes: 41943040, maxTotalPages: 300, retentionMinutes: 60,
+  }) }));
+  await page.goto('/tr/');
+  await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
+  await expect.poll(() => capture.events.some(event => event.event === '$pageview')).toBe(true);
+  const search = page.getByRole('combobox', { name: /Araç ara/ });
+  await search.fill('excel');
+  await expect.poll(() => capture.events.some(event => event.event === 'tool_search')).toBe(true);
+  await search.fill('');
+  await page.getByRole('group', { name: 'Araç kategorileri' }).getByRole('button', { name: 'Dönüştür' }).click();
+  await expect.poll(() => capture.events.some(event => event.event === 'tool_filter')).toBe(true);
+  await page.locator('#faq button[aria-controls]').first().click();
+  await expect.poll(() => capture.events.some(event => event.event === 'faq_expand')).toBe(true);
+  await page.locator('#guides a').filter({ hasText: 'Rehberi oku' }).first().evaluate(element => {
+    element.addEventListener('click', event => event.preventDefault(), { once: true });
+    (element as HTMLAnchorElement).click();
+  });
+  await expect.poll(() => capture.events.some(event => event.event === 'guide_open')).toBe(true);
+  await page.locator('#tools button[data-tool-id="pdf-to-word"]').click();
+  await expect.poll(() => capture.events.some(event => event.event === 'tool_open')).toBe(true);
+  await page.locator('input[type="file"]').setInputFiles({ name: 'PRIVATE_SENTINEL.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n%%EOF') });
+  await expect.poll(() => capture.events.some(event => event.event === 'file_selected')).toBe(true);
+  const expected = ['tool_search', 'tool_filter', 'faq_expand', 'guide_open', 'tool_open', 'file_selected'];
+  for (const name of expected) expect(capture.events.some(event => event.event === name)).toBe(true);
+  const payload = JSON.stringify(capture.events);
+  expect(payload).not.toContain('PRIVATE_SENTINEL');
+  expect(payload).not.toMatch(/query|search_term|filename|file_name|options|password/i);
+  const filter = capture.events.find(event => event.event === 'tool_filter')!;
+  expect(filter.properties.category).toBe('convert');
+  const selected = capture.events.find(event => event.event === 'file_selected')!;
+  expect(selected.properties.tool).toBe('pdf-to-word');
+  expect(selected.properties.file_count).toBe(1);
+});
+
+test('hero upload intent is recorded without reading the selected file', async ({ page }) => {
+  const capture = await intercept(page);
+  await page.route('**/api/capabilities', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ enabledTools: [], maxFileBytes: 10485760, maxFiles: 20, maxTotalBytes: 41943040, maxTotalPages: 300, retentionMinutes: 60 }) }));
+  await page.goto('/tr/');
+  await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
+  await expect.poll(() => capture.events.some(event => event.event === '$pageview')).toBe(true);
+  const chooserEvent = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Dosya seç', exact: true }).click();
+  const chooser = await chooserEvent;
+  await chooser.setFiles({ name: 'PRIVATE_SENTINEL.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n%%EOF') });
+  await expect.poll(() => capture.events.some(event => event.event === 'hero_upload_click')).toBe(true);
+  await expect.poll(() => capture.events.some(event => event.event === 'file_selected')).toBe(true);
+  expect(JSON.stringify(capture.events)).not.toContain('PRIVATE_SENTINEL');
+});
+
 test('consent permits sanitized events; revocation stops capture', async ({ page }) => {
   const capture = await intercept(page);
   await page.goto('/tr/pdf-to-word?password=PRIVATE_SENTINEL');
@@ -100,9 +153,12 @@ for (const state of ['succeeded', 'failed'] as const) {
     await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
     await expect.poll(() => capture.events.some(e => e.event === '$pageview')).toBe(true);
     await page.locator('input[type="file"]').setInputFiles({ name: 'PRIVATE_SENTINEL.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n%%EOF') });
-    await page.getByRole('button', { name: 'Dönüştürmeyi başlat', exact: true }).click();
+    await page.getByRole('button', { name: 'Word’e dönüştür', exact: true }).click();
     const outcome = state === 'succeeded' ? 'conversion_completed' : 'conversion_failed';
+    const privacyOutcome = state === 'succeeded' ? 'processing_success' : 'processing_error';
     await expect.poll(() => capture.events.filter(e => e.event === outcome).length).toBe(1);
+    await expect.poll(() => capture.events.filter(e => e.event === privacyOutcome).length).toBe(1);
+    expect(capture.events.some(e => e.event === 'processing_started')).toBe(true);
     for (const event of ['upload_completed', 'conversion_requested']) expect(capture.events.some(e => e.event === event)).toBe(true);
     await page.reload({ waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('button', { name: 'Analitik tercihleri', exact: true })).toBeVisible();

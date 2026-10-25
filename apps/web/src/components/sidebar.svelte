@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from './icon.svelte';
   import Logo from './logo.svelte';
-  import { getCategories, getTools, type Category } from '../lib/tools';
+  import { getCategories, getTools, suggestedToolIds, type Category } from '../lib/tools';
   import { brand } from '../lib/brand';
   import { useLocale, useUi } from '../i18n/context';
   import { localePath } from '../i18n/locales';
@@ -18,25 +18,25 @@
   const categories = getCategories(locale);
   const legal = locale === 'tr'
     ? [['/hakkimizda', ui.links.about], ['/guvenlik', ui.links.security], ['/gizlilik', ui.links.privacy], ['/kullanim-sartlari', ui.links.terms], ['/iletisim', ui.links.contact]]
-    : [['/en/about', ui.links.about], ['/en/security', ui.links.security], ['/en/privacy', ui.links.privacy], ['/en/terms', ui.links.terms], ['/en/contact', ui.links.contact]];
+    : [['/about', ui.links.about], ['/security', ui.links.security], ['/privacy', ui.links.privacy], ['/terms', ui.links.terms], ['/contact', ui.links.contact]];
 </script>
 
 {#if open}
   <button
-    class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity md:hidden"
+    class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity lg:hidden"
     aria-label={text.close}
     onclick={onclose}
   ></button>
 
   <aside
     id="main-sidebar"
-    class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-y-auto border-r border-border bg-surface px-5 pt-6 pb-6 shadow-2xl transition-transform duration-200 md:hidden"
+    class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-y-auto border-r border-border bg-surface px-5 pt-6 pb-6 shadow-2xl transition-transform duration-200 lg:hidden"
     aria-label={text.label}
   >
     <div class="flex items-center justify-between pb-4 border-b border-border">
       <Logo href={localePath(locale, '/')} {locale} />
       <button
-        class="flex h-9 w-9 items-center justify-center rounded-lg text-text-muted hover:bg-bg hover:text-text transition-colors"
+        class="flex h-11 w-11 items-center justify-center rounded-lg text-text-muted hover:bg-bg hover:text-text transition-colors"
         aria-label={text.close}
         onclick={onclose}
       >
@@ -64,7 +64,7 @@
 
     <p class="mt-6 mb-2 pl-2 text-xs font-bold tracking-wider uppercase text-text-muted">{text.frequent}</p>
     <nav class="flex flex-col gap-1" aria-label={text.popularNav}>
-      {#each tools.filter((tool) => tool.popular) as tool}
+      {#each tools.filter((tool) => suggestedToolIds.includes(tool.id)) as tool}
         <button
           class="flex min-h-10 items-center gap-3 rounded-lg px-3 text-left text-sm text-text-soft transition-colors hover:bg-bg hover:text-text"
           onclick={() => { ontool(tool.id); onclose(); }}
@@ -86,7 +86,7 @@
         <p class="text-xs text-text-soft">{text.storageText}</p>
       </div>
       <div class="mt-4 flex flex-col gap-2 text-xs text-text-muted">
-        {#each legal as [href, label]}<a {href} class="hover:text-accent transition-colors" onclick={onclose}>{label}</a>{/each}
+        {#each legal as [href, label]}<a href={localePath(locale, href)} class="hover:text-accent transition-colors" onclick={onclose}>{label}</a>{/each}
       </div>
       <p class="mt-4 text-[11px] text-text-muted">© {brand.year} {brand.name}</p>
     </div>

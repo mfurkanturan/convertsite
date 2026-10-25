@@ -31,14 +31,14 @@ const configured = /^ca-pub-\d+$/.test(adsenseClient ?? '') && /^\d+$/.test(slot
   </script>
 ) : import.meta.env.DEV ? (
   <aside
-    class="my-8 flex min-h-[112px] w-full flex-col items-center justify-center gap-2 rounded-panel border border-dashed border-border-strong bg-surface/70 px-5 py-5 text-center sm:min-h-[128px]"
+    class="my-6 flex min-h-16 w-full flex-col items-center justify-center gap-1 border-y border-border/70 px-4 py-3 text-center"
     aria-label={locale === 'tr' ? 'Reklam alanı önizlemesi' : 'Advertisement placement preview'}
     data-ad-placement={placement}
   >
-    <span class="rounded bg-bg px-2 py-1 text-xs font-semibold uppercase tracking-wide text-text-muted">
-      {locale === 'tr' ? 'Reklam' : 'Advertisement'}
+    <span class="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
+      {locale === 'tr' ? 'Reklam önizlemesi' : 'Ad placement preview'}
     </span>
-    <p class="text-sm text-text-soft">
+    <p class="text-xs leading-relaxed text-text-muted">
       {locale === 'tr'
         ? 'Bu alanın gerçek reklamı için yayıncı kimliği ve reklam birimi kimliği bağlanmalı.'
         : 'Connect your publisher ID and ad unit ID to show a live ad in this space.'}

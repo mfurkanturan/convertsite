@@ -19,9 +19,17 @@ const items = groupOrder.flatMap((group) =>
       groupLabel: groupLabels[locale][item.group],
       title: item.title,
       lead: item.lead,
+      steps: item.steps,
       href: scenarioPath(locale, item.slug),
     }))
 );
+const featured = (items.find((item) => item.group === 'student') ?? items[0])!;
+const sideGuides = ['legal', 'finance']
+  .map((group) => items.find((item) => item.group === group && item.slug !== featured?.slug))
+  .filter((item) => item !== undefined);
+const quickGuides = ['visa', 'career', 'office']
+  .map((group) => items.find((item) => item.group === group))
+  .filter((item) => item !== undefined);
 ---
 <HomeGuidesShowcase
   client:idle
@@ -30,5 +38,7 @@ const items = groupOrder.flatMap((group) =>
   hubLead={text.hubLead}
   allGuidesHref={localePath(locale, scenarioBase[locale])}
   allGuidesLabel={ui[locale].footer.allGuides}
-  items={items}
+  featured={featured}
+  sideGuides={sideGuides}
+  quickGuides={quickGuides}
 />

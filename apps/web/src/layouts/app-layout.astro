@@ -32,6 +32,6 @@ const switchHref = alternates[locale === 'tr' ? 'en' : 'tr'];
       <slot />
       <slot name="home" slot="home" />
     </AppShell>
-    <SiteFooter {locale} />
+    <SiteFooter {locale} alternateHref={switchHref} />
   </body>
 </html>

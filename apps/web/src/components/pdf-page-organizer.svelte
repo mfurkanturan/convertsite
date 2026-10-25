@@ -119,7 +119,7 @@
         {pages.length} {locale === 'tr' ? 'Sayfa' : 'Pages'}
       </span>
       <span class="text-xs text-text-muted hidden sm:inline">
-        • {locale === 'tr' ? 'Sürükleyerek veya oklarla sırayı değiştirin' : 'Drag or use arrows to reorder'}
+        • {locale === 'tr' ? 'Sürükleyerek veya oklarla sırayı değiştir' : 'Drag or use arrows to reorder'}
       </span>
     </div>
 
@@ -165,7 +165,7 @@
     </div>
   {:else}
     <!-- Pages Drag & Drop Grid -->
-    <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+    <div class="mt-4 grid grid-cols-1 min-[520px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
       {#each pages as page, index}
         {@const isDragged = draggedIndex === index}
         {@const isOver = dragOverIndex === index}
@@ -188,7 +188,7 @@
               <!-- Rotate button -->
               <button
                 type="button"
-                class="flex h-6 w-6 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors"
+                class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 title={locale === 'tr' ? '90° Döndür' : 'Rotate 90°'}
                 onclick={() => rotatePage(index)}
               >
@@ -198,7 +198,7 @@
               <!-- Zoom / Preview button -->
               <button
                 type="button"
-                class="flex h-6 w-6 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors"
+                class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 title={locale === 'tr' ? 'Büyüt' : 'Zoom'}
                 onclick={() => zoomPage = page}
               >
@@ -208,7 +208,7 @@
               <!-- Delete / Remove page -->
               <button
                 type="button"
-                class="flex h-6 w-6 items-center justify-center rounded-md text-text-muted hover:bg-danger-soft hover:text-danger transition-colors disabled:opacity-30"
+                class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-danger-soft hover:text-danger transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-30"
                 title={locale === 'tr' ? 'Sayfayı kaldır' : 'Remove page'}
                 disabled={disabled || pages.length <= 1}
                 onclick={() => removePage(index)}
@@ -223,7 +223,7 @@
             type="button"
             class="relative flex h-36 sm:h-44 w-full items-center justify-center rounded-lg border border-border/60 bg-white overflow-hidden cursor-grab active:cursor-grabbing p-1"
             onclick={() => zoomPage = page}
-            title={locale === 'tr' ? 'Tutup sürükleyerek sırasını değiştirin' : 'Drag to reorder'}
+            title={locale === 'tr' ? 'Sürükleyerek sırasını değiştir' : 'Drag to reorder'}
           >
             <img
               src={page.dataUrl}
@@ -249,7 +249,7 @@
             <div class="flex items-center gap-1">
               <button
                 type="button"
-                class="flex h-5 w-5 items-center justify-center rounded bg-surface hover:bg-accent-soft hover:text-accent text-text-muted border border-border/60 disabled:opacity-30 transition-colors"
+                class="flex h-11 w-11 items-center justify-center rounded bg-surface hover:bg-accent-soft hover:text-accent text-text-muted border border-border/60 disabled:opacity-30 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 disabled={disabled || index === 0}
                 title={locale === 'tr' ? 'Sola / Başa taşı' : 'Move left'}
                 onclick={() => movePage(index, -1)}
@@ -258,7 +258,7 @@
               </button>
               <button
                 type="button"
-                class="flex h-5 w-5 items-center justify-center rounded bg-surface hover:bg-accent-soft hover:text-accent text-text-muted border border-border/60 disabled:opacity-30 transition-colors"
+                class="flex h-11 w-11 items-center justify-center rounded bg-surface hover:bg-accent-soft hover:text-accent text-text-muted border border-border/60 disabled:opacity-30 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 disabled={disabled || index === pages.length - 1}
                 title={locale === 'tr' ? 'Sağa / Sona taşı' : 'Move right'}
                 onclick={() => movePage(index, 1)}

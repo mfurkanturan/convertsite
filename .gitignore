@@ -8,6 +8,7 @@ dist/
 .qa/
 .playwright-mcp/
 .data/
+apps/web/public/pdfjs/
 output/
 .neon
 graphify-out/

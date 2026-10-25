@@ -1,6 +1,7 @@
 <script lang="ts">
   import Icon from './icon.svelte';
   import type { Locale } from '../i18n/locales';
+  import { track } from '../lib/analytics';
 
   interface GuideItem {
     slug: string;
@@ -8,6 +9,7 @@
     groupLabel: string;
     title: string;
     lead: string;
+    steps: { title: string; text: string }[];
     href: string;
   }
 
@@ -16,102 +18,78 @@
   export let allGuidesLabel: string;
   export let hubTitle: string;
   export let hubLead: string;
-  export let items: GuideItem[] = [];
+  export let featured: GuideItem;
+  export let sideGuides: GuideItem[] = [];
+  export let quickGuides: GuideItem[] = [];
 
-  let activeGroup = 'all';
-
-  const groupIcons: Record<string, string> = {
-    student: '🎓',
-    legal: '⚖️',
-    visa: '🏛️',
-    career: '💼',
-    finance: '📊',
-    office: '🏢',
-  };
-
-  const uniqueGroups = Array.from(new Set(items.map((i) => i.group))).map((groupId) => {
-    const found = items.find((i) => i.group === groupId);
-    return {
-      id: groupId,
-      label: found ? found.groupLabel : groupId,
-      icon: groupIcons[groupId] || '📌',
-    };
-  });
-
-  $: filtered = activeGroup === 'all'
-    ? items.slice(0, 6) // Curate top 6 when all is selected for clean layout
-    : items.filter((i) => i.group === activeGroup);
+  const copy = locale === 'tr'
+    ? { featured: 'Rehber', more: 'Diğer senaryolar', read: 'Rehberi oku', steps: 'Rehber adımları' }
+    : { featured: 'Guide', more: 'More guides', read: 'Read the guide', steps: 'Guide steps' };
 </script>
 
-<section id="guides" class="mt-14 border-t border-border pt-12 max-[600px]:mt-10 max-[600px]:pt-9" aria-labelledby="guides-title">
-  <!-- Section Header -->
-  <div class="flex flex-wrap items-end justify-between gap-4">
+<section id="guides" class="mt-[var(--section-space)] border-t border-border pt-[var(--section-space)]" aria-labelledby="guides-title">
+  <header class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h2 id="guides-title" class="font-display text-[clamp(22px,2.2vw,28px)] font-semibold tracking-[-0.02em] text-text">
-        {hubTitle}<span class="text-accent">.</span>
-      </h2>
-      <p class="mt-1.5 max-w-2xl text-[15px] text-text-soft">
-        {hubLead}
-      </p>
+      <h2 id="guides-title" class="home-section-title">{hubTitle}</h2>
+      <p class="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-text-soft">{hubLead}</p>
     </div>
-    <a href={allGuidesHref} class="text-sm font-semibold text-accent hover:underline flex items-center gap-1">
-      <span>{allGuidesLabel}</span>
-      <Icon name="arrow" size={14} />
+    <a href={allGuidesHref} class="inline-flex min-h-11 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+      <span>{allGuidesLabel}</span><Icon name="arrow" size={14} />
     </a>
-  </div>
+  </header>
 
-  <!-- Interactive Audience Tabs -->
-  <div class="mt-6 -mx-1 flex min-w-0 gap-1.5 overflow-x-auto px-1 py-1 [scrollbar-width:none]" role="tablist">
-    <button
-      type="button"
-      role="tab"
-      aria-selected={activeGroup === 'all'}
-      class="flex min-h-9 shrink-0 items-center whitespace-nowrap rounded-lg px-3.5 text-xs font-semibold transition-all {activeGroup === 'all' ? 'bg-accent text-white shadow-xs' : 'bg-surface text-text-soft border border-border/80 hover:border-accent/40 hover:text-text'}"
-      onclick={() => activeGroup = 'all'}
-    >
-      {locale === 'tr' ? '⭐ Öne Çıkanlar' : '⭐ Highlights'}
-    </button>
-
-    {#each uniqueGroups as group}
-      <button
-        type="button"
-        role="tab"
-        aria-selected={activeGroup === group.id}
-        class="flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 text-xs font-semibold transition-all {activeGroup === group.id ? 'bg-accent text-white shadow-xs' : 'bg-surface text-text-soft border border-border/80 hover:border-accent/40 hover:text-text'}"
-        onclick={() => activeGroup = group.id}
-      >
-        <span>{group.icon}</span>
-        <span>{group.label}</span>
-      </button>
-    {/each}
-  </div>
-
-  <!-- Cards Grid -->
-  <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {#each filtered as item}
-      <a
-        href={item.href}
-        class="group flex flex-col justify-between rounded-card border border-border/80 bg-surface p-5 transition-all duration-150 hover:-translate-y-0.5 hover:border-accent hover:shadow-card"
-      >
+  <div class="mt-6 grid items-start gap-4">
+    <a href={featured.href} onclick={() => track('guide_open')} class="group flex flex-col items-start gap-4 rounded-panel border border-border-strong bg-surface p-5 transition-colors hover:border-accent/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:p-6">
+      <div class="flex w-full flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="rounded-md bg-accent-soft/70 px-2 py-0.5 text-[11px] font-semibold text-accent border border-accent/20">
-              {item.groupLabel}
-            </span>
-          </div>
-          <h3 class="text-[15px] font-semibold text-text group-hover:text-accent transition-colors leading-snug">
-            {item.title}
-          </h3>
-          <p class="mt-2 text-xs sm:text-[13px] text-text-soft line-clamp-2 leading-relaxed">
-            {item.lead}
-          </p>
+          <span class="guide-category">{copy.featured} · {featured.groupLabel}</span>
+          <h3 class="mt-2 max-w-2xl font-display text-xl font-semibold leading-snug tracking-[-0.025em] [text-wrap:balance] text-text group-hover:text-accent sm:text-2xl">{featured.title}</h3>
+          <p class="mt-2 max-w-2xl text-sm leading-relaxed text-text-soft">{featured.lead}</p>
         </div>
+        <span class="inline-flex min-h-11 w-fit shrink-0 items-center gap-2 text-sm font-semibold text-accent">
+          {copy.read}<Icon name="arrow" size={16} />
+        </span>
+      </div>
 
-        <div class="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs font-semibold text-accent">
-          <span>{locale === 'tr' ? 'Rehberi Aç' : 'Read Guide'}</span>
-          <span class="transition-transform group-hover:translate-x-1">→</span>
-        </div>
-      </a>
-    {/each}
+      <ol class="grid w-full border-t border-border sm:grid-cols-3" aria-label={copy.steps}>
+        {#each featured.steps as step, index}
+          <li class="flex gap-3 border-b border-border py-4 last:border-b-0 sm:border-b-0 sm:px-3 sm:first:pl-0 sm:last:pr-0 sm:border-r sm:last:border-r-0">
+            <span class="guide-step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h4 class="text-[15px] font-semibold leading-snug text-text sm:text-base">{step.title}</h4>
+              <p class="mt-1 text-sm leading-relaxed text-text-soft">{step.text}</p>
+            </div>
+          </li>
+        {/each}
+      </ol>
+    </a>
+
+    <div class="grid items-stretch gap-x-8 gap-y-4 sm:grid-cols-2">
+      {#each sideGuides as item}
+        <a href={item.href} onclick={() => track('guide_open')} class="group flex flex-col border-t border-border py-5 transition-colors sm:py-6">
+          <div class="flex-1">
+            <span class="guide-category">{item.groupLabel}</span>
+            <h3 class="mt-2 font-display text-lg font-semibold leading-snug text-text group-hover:text-accent">{item.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-soft">{item.lead}</p>
+          </div>
+          <span class="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-accent">{copy.read}<Icon name="arrow" size={15} /></span>
+        </a>
+      {/each}
+    </div>
   </div>
+
+  {#if quickGuides.length}
+    <nav class="mt-7 border-t border-border pt-5" aria-label={copy.more}>
+      <h3 class="text-sm font-semibold text-text">{copy.more}</h3>
+      <ul class="mt-3 grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+        {#each quickGuides as item}
+          <li class="border-b border-border/70 py-3">
+            <a href={item.href} onclick={() => track('guide_open')} class="group flex min-h-11 items-center justify-between gap-3 text-sm leading-snug text-text-soft hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+              <span>{item.title}</span><span class="shrink-0 text-accent " aria-hidden="true">→</span>
+            </a>
+          </li>
+        {/each}
+      </ul>
+    </nav>
+  {/if}
 </section>

@@ -1,58 +1,83 @@
 ---
 import AnalyticsConsent from './analytics-consent.svelte';
 import Logo from './logo.svelte';
+import LanguageSwitch from './language-switch.svelte';
 import { brand } from '../lib/brand';
-import { getTools } from '../lib/tools';
+import { getTools, suggestedToolIds } from '../lib/tools';
 import { ui } from '../i18n/ui';
 import { localePath, type Locale } from '../i18n/locales';
-import { scenarios, scenarioPath } from '../lib/seo/scenarios';
 
-interface Props { locale: Locale }
+interface Props { locale: Locale; alternateHref?: string }
 const { locale } = Astro.props;
 const text = ui[locale];
-const tools = getTools(locale);
-const guides = scenarios[locale].slice(0, 8);
-const legal = locale === 'tr'
-  ? [['/hakkimizda', text.links.about], ['/guvenlik', text.links.security], ['/gizlilik', text.links.privacy], ['/kullanim-sartlari', text.links.terms], ['/iletisim', text.links.contact]]
-  : [['/en/about', text.links.about], ['/en/security', text.links.security], ['/en/privacy', text.links.privacy], ['/en/terms', text.links.terms], ['/en/contact', text.links.contact]];
+const tools = getTools(locale).filter((tool) => suggestedToolIds.includes(tool.id));
 const hub = localePath(locale, locale === 'tr' ? '/kullanim/' : '/use-cases/');
+const alternateHref = Astro.props.alternateHref ?? (locale === 'tr'
+  ? Astro.url.pathname.replace(/^\/tr\/?/, '/')
+  : `/tr${Astro.url.pathname}`);
+const securityLegal = locale === 'tr'
+  ? [['/guvenlik', text.links.security], ['/gizlilik', text.links.privacy], ['/kullanim-sartlari', text.links.terms]]
+  : [['/security', text.links.security], ['/privacy', text.links.privacy], ['/terms', text.links.terms]];
+const contactLinks = locale === 'tr'
+  ? [['/hakkimizda', text.links.about], ['/iletisim', text.links.contact]]
+  : [['/about', text.links.about], ['/contact', text.links.contact]];
 ---
-<footer class="mt-20 border-t border-border bg-surface/80 pt-16 pb-12">
-  <div class="mx-auto max-w-[1200px] px-10 max-[1180px]:px-7 max-[540px]:px-4">
-    <div class="grid grid-cols-1 gap-10 md:grid-cols-12 lg:gap-12">
-      <div class="md:col-span-12 lg:col-span-3">
-        <Logo href={localePath(locale, '/')} locale={locale} />
-        <p class="mt-4 text-sm leading-relaxed text-text-soft">{text.footer.about}</p>
-        <p class="mt-4 text-xs font-medium text-text-muted">{text.footer.retention}</p>
-      </div>
-      <nav class="md:col-span-4 lg:col-span-3" aria-label={text.footer.popular}>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-text">{text.footer.popular}</h3>
-        <ul class="mt-4 space-y-2.5 text-sm">
-          {tools.map((tool) => <li><a href={localePath(locale, `/${tool.id}`)} class="text-text-soft transition-colors hover:text-accent">{tool.name}</a></li>)}
-        </ul>
-      </nav>
-      <nav class="md:col-span-5 lg:col-span-4" aria-label={text.footer.guides}>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-text">{text.footer.guides}</h3>
-        <ul class="mt-4 space-y-2.5 text-sm">
-          {guides.map((guide) => <li><a href={scenarioPath(locale, guide.slug)} class="text-text-soft transition-colors hover:text-accent">{guide.title}</a></li>)}
-          <li><a href={hub} class="font-semibold text-accent hover:underline">{text.footer.allGuides} →</a></li>
-        </ul>
-      </nav>
-      <div class="md:col-span-3 lg:col-span-2">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-text">{text.footer.info}</h3>
-        <ul class="mt-4 space-y-2.5 text-sm">
-          {legal.map(([href, label]) => <li><a href={href} class="text-text-soft transition-colors hover:text-accent">{label}</a></li>)}
-          <li><a href="mailto:destek@doctorconverter.com" class="text-text-soft transition-colors hover:text-accent">destek@doctorconverter.com</a></li>
-        </ul>
-      </div>
+<footer class="site-footer mt-14 border-t border-white/15 bg-brand-navy pt-8 pb-6">
+  <div class="page-container">
+    <div class="pb-5">
+        <Logo href={localePath(locale, '/')} locale={locale} inverse />
+        <p class="mt-3 max-w-lg text-sm leading-relaxed text-text-soft">{text.footer.about}</p>
     </div>
-    <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-xs text-text-muted sm:flex-row">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-6 py-5 lg:grid-cols-4">
+      <nav aria-label={text.footer.popular}>
+        <h3 class="text-[13px] font-semibold uppercase tracking-wide text-text">{text.footer.popular}</h3>
+        <ul class="mt-2 space-y-0 text-sm">
+          {tools.map((tool) => <li><a href={localePath(locale, `/${tool.id}`)} class="inline-flex min-h-11 items-center text-text-soft transition-colors hover:text-accent">{tool.name}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={text.footer.guides}>
+        <h3 class="text-[13px] font-semibold uppercase tracking-wide text-text">{text.footer.guides}</h3>
+        <ul class="mt-2 space-y-0 text-sm">
+          <li><a href={`${localePath(locale, '/')}#faq`} class="inline-flex min-h-11 items-center text-text-soft transition-colors hover:text-accent">{text.links.faq}</a></li>
+          <li><a href={hub} class="inline-flex min-h-11 items-center font-semibold text-accent hover:underline">{text.footer.allGuides} →</a></li>
+        </ul>
+      </nav>
+      <nav aria-label={text.footer.info}>
+        <h3 class="text-[13px] font-semibold uppercase tracking-wide text-text">{text.footer.info}</h3>
+        <ul class="mt-2 space-y-0 text-sm">
+          {securityLegal.map(([href, label]) => <li><a href={localePath(locale, href)} class="inline-flex min-h-11 items-center text-text-soft transition-colors hover:text-accent">{label}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={text.footer.contact}>
+        <h3 class="text-[13px] font-semibold uppercase tracking-wide text-text">{text.footer.contact}</h3>
+        <ul class="mt-2 space-y-0 text-sm">
+          {contactLinks.map(([href, label]) => <li><a href={localePath(locale, href)} class="inline-flex min-h-11 items-center text-text-soft transition-colors hover:text-accent">{label}</a></li>)}
+          <li><a href="mailto:destek@doctorconverter.com" class="inline-flex min-h-11 items-center text-text-soft transition-colors hover:text-accent [overflow-wrap:anywhere]">destek@doctorconverter.com</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="flex flex-col items-start justify-between gap-4 border-t border-border pt-6 text-[13px] text-text-muted sm:flex-row sm:items-center">
       <p>© {brand.year} {brand.name} ({brand.domain}). {text.footer.rights}</p>
       <div class="flex flex-wrap items-center gap-4 sm:gap-6">
-        <a href={locale === 'tr' ? '/en/' : '/'} hreflang={locale === 'tr' ? 'en' : 'tr'} onclick={`try{localStorage.setItem('dc-locale','${locale === 'tr' ? 'en' : 'tr'}')}catch(e){}`} class="transition-colors hover:text-text">{text.switchTo}</a>
-        {legal.map(([href, label]) => <a href={href} class="transition-colors hover:text-text">{label}</a>)}
+        <LanguageSwitch href={alternateHref} {locale} client:load />
         <AnalyticsConsent client:load {locale} />
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .site-footer :global(nav a),
+  .site-footer :global(.page-container > div > p),
+  .site-footer :global(a[hreflang]),
+  .site-footer :global(button[aria-controls="analytics-preferences"]) { color: var(--color-footer-text); }
+  .site-footer :global(nav h3) { color: white; }
+  .site-footer :global(nav a:hover),
+  .site-footer :global(a[hreflang]:hover),
+  .site-footer :global(button[aria-controls="analytics-preferences"]:hover) { color: var(--color-footer-accent); }
+  .site-footer :global(nav a.font-semibold) { color: var(--color-footer-accent); }
+  .site-footer :global(.border-t),
+  .site-footer :global(a[hreflang]) { border-color: rgb(255 255 255 / 15%); }
+  .site-footer :global(a:focus-visible),
+  .site-footer :global(button:focus-visible) { outline-color: var(--color-footer-accent); }
+</style>

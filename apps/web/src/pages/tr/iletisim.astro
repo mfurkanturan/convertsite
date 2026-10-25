@@ -1,35 +1,10 @@
 ---
 import LegalLayout from '../../layouts/legal-layout.astro';
 ---
-
-<LegalLayout
-  title="İletişim & Destek"
-  description="DoctorConverter destek ekibine ulaşın. Soru, öneri ve geri bildirimleriniz için iletişim kanallarımız."
->
-  <p>
-    DoctorConverter hizmetleriyle ilgili her türlü soru, hata bildirimi, öneri ve iş birliği talebiniz için bizimle doğrudan iletişime geçebilirsiniz. Kullanıcı deneyimini sürekli iyileştirmek için geri bildirimlerinize büyük önem veriyoruz.
-  </p>
-
-  <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-    <div class="rounded-xl border border-border bg-surface p-6 shadow-sm">
-      <h3 class="text-base font-bold text-text">E-Posta Desteği</h3>
-      <p class="mt-2 text-sm text-text-soft">Teknik destek, hata bildirimleri veya genel sorularınız için:</p>
-      <a href="mailto:destek@doctorconverter.com" class="mt-4 inline-block font-semibold text-accent hover:underline">
-        destek@doctorconverter.com
-      </a>
-    </div>
-
-    <div class="rounded-xl border border-border bg-surface p-6 shadow-sm">
-      <h3 class="text-base font-bold text-text">Çalışma Saatleri</h3>
-      <p class="mt-2 text-sm text-text-soft">Online araçlarımız 7/24 kesintisiz çalışmaktadır. E-posta bildirimleri en geç 24 saat içinde yanıtlanır.</p>
-      <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-success">
-        <span class="h-2 w-2 rounded-full bg-success"></span> Sistem Durumu: Aktif & Operasyonel
-      </span>
-    </div>
-  </div>
-
-  <h2 class="mt-12">Sıkça Sorulan Sorulara Göz Attınız mı?</h2>
-  <p>
-    En sık karşılaşılan sorular ve kullanım detayları için ana sayfamızdaki <a href="/#faq" class="text-accent underline font-medium">Sıkça Sorulan Sorular</a> bölümünü inceleyebilirsiniz.
-  </p>
+<LegalLayout locale="tr" title="İletişim ve destek" description="Soru, öneri ve hata bildirimleri için DoctorConverter iletişim adresi.">
+  <p>Soru, öneri veya hata bildirimin için <a href="mailto:destek@doctorconverter.com" class="text-accent underline">destek@doctorconverter.com</a> adresine yaz.</p>
+  <h2>Hata bildirirken</h2>
+  <p>Kullandığın aracı, tarayıcıyı, izlediğin adımları, yaklaşık tarih ve saati, ekrandaki hata mesajını belirt. Belge ekleme; belge içeriği, parola veya kişisel bilgi gönderme.</p>
+  <h2>Kullanım bilgileri</h2>
+  <p><a href="/tr/#faq" class="text-accent underline">Sık sorulan sorular</a> ve <a href="/tr/kullanim/" class="text-accent underline">kullanım rehberleri</a> üzerinden araçların nasıl çalıştığını inceleyebilirsin.</p>
 </LegalLayout>

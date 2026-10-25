@@ -6,9 +6,9 @@ import { brand } from '../lib/brand';
 import { homeGraph } from '../lib/seo/structured-data';
 ---
 <AppLayout locale="en" title="Free PDF Converter – Merge, Compress, PDF to Word | DoctorConverter"
-  description="Free online PDF tools: merge PDF, compress PDF, convert PDF to Word and Excel, JPG to PDF and OCR. No sign-up, works in your browser, files deleted automatically."
+  description="Free online PDF tools: merge, compress, convert PDF to Word or Excel, create PDFs from images, and run OCR. No account required; files are temporarily stored and expire according to the active service policy."
   alternates={{ en: '/', tr: '/tr/' }} keywords={['pdf converter', 'merge pdf', 'compress pdf', 'pdf to word', 'pdf to excel', 'jpg to pdf', 'ocr', brand.name]}
   jsonLd={homeGraph('en')}>
-  <AdSlot placement="home-after-tools" locale="en" />
+  <AdSlot slot="home" placement="home-after-tools" locale="en" />
   <HomeGuides slot="home" locale="en" />
 </AppLayout>

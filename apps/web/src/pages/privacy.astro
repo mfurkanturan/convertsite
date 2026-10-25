@@ -1,28 +1,44 @@
 ---
 import LegalLayout from '../layouts/legal-layout.astro';
 ---
-<LegalLayout locale="en" title="Privacy Policy" description="How DoctorConverter handles uploaded files: temporary storage, automatic deletion, session-only access and minimal technical data.">
-  <p>DoctorConverter (<strong>doctorconverter.com</strong>) is built to process your documents and then forget them. This policy explains what happens to your files and data.</p>
-  <h2>1. Temporary storage only</h2>
+
+<LegalLayout locale="en" title="Privacy Policy" description="Temporary file retention, session access, analytics and advertising providers used by DoctorConverter.">
+  <p>This policy explains what is processed when you visit DoctorConverter and use its document tools. No account is required.</p>
+
+  <nav aria-label="On this page" class="mb-8 border-y border-border py-4">
+    <h2 class="mb-2 text-sm font-semibold text-text">On this page</h2>
+    <ol class="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#files">Files and retention</a></li>
+      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#session">Session and technical data</a></li>
+      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#measurement">Site measurement</a></li>
+      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#advertising">Advertising</a></li>
+      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#contact">Contact</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="files">Files and retention</h2>
   <ul>
-    <li><strong>Automatic expiry:</strong> Uploaded files and results are kept for a limited retention period (60 minutes by default) and are then deleted automatically.</li>
-    <li><strong>Delete any time:</strong> The “Delete files” button closes access immediately; physical deletion follows in the background after a short grace period.</li>
-    <li><strong>No content review:</strong> We do not read your documents, share them or use them to train AI models.</li>
+    <li>Files upload only when you start a tool. After type and size checks, the API stores accepted content in private temporary storage; file bytes are not stored in the application database or queue messages.</li>
+    <li>Retention is configurable and defaults to 60 minutes. The tool panel displays the active period reported by the API. When files expire they become inaccessible and the cleanup process performs physical deletion.</li>
+    <li>A “Delete files” request immediately closes access. Deleted bytes are held through a 2-minute cleanup grace period, then removed by a periodic cleanup run; active file use can extend this. The request does not mean physical deletion has already finished.</li>
+    <li>Conversion does not send document contents to an external conversion or AI service. This is separate from technical request data processed by hosting, CDN/network or measurement providers.</li>
   </ul>
-  <h2>2. What we collect</h2>
+
+  <h2 id="session">Session and technical data</h2>
   <ul>
-    <li><strong>No account data:</strong> No sign-up, so we never ask for your name, email or phone number.</li>
-    <li><strong>Session cookie:</strong> A signed, anonymous session cookie links your uploads to your browser so nobody else can access them. It expires after 24 hours.</li>
-    <li><strong>Technical data:</strong> Standard request logs and a keyed hash of your network address are used for rate limiting and abuse prevention. File names and contents are not stored in metadata or logs.</li>
-    <li><strong>Visit statistics:</strong> We use Cloudflare Web Analytics, which sets no cookies and builds no personal profiles, to count page views and measure speed. File contents and names are never part of it.</li>
-    <li><strong>Language preference:</strong> If you switch language, your choice is stored in your browser’s local storage.</li>
+    <li>We do not ask for your name, phone or email to create an account. If you email us, we use the contact details you provide to reply.</li>
+    <li>A signed, anonymous session cookie links API uploads and jobs to the same browser session; it expires after 24 hours. It does not contain document content.</li>
+    <li>The application derives a keyed hash from the network address for request limiting and abuse prevention. Hosting, DNS/CDN and network providers may separately process IP and connection data to deliver and protect requests.</li>
+    <li>Your interface language choice is stored in browser local storage.</li>
   </ul>
-  <h2>3. Transfer security</h2>
-  <p>All traffic between your browser and our servers is encrypted with HTTPS (TLS).</p>
-  <h2>4. Third parties and advertising</h2>
-  <p>Google AdSense may display ads on the home page. When the ad is loaded, Google and its partners may process technical data such as your browser, device, IP address and ad interactions, and may use cookies or similar technologies for ad delivery and measurement. See <a href="https://policies.google.com/technologies/ads" rel="nofollow">Google’s advertising technology information</a> and <a href="https://policies.google.com/privacy" rel="nofollow">Google’s Privacy Policy</a> for details and available controls. We do not sell or share uploaded files, file contents or conversion metadata with advertisers or data brokers. Hosting and network providers also process traffic to deliver the service.</p>
-  <h2>Optional product analytics</h2>
-  <p>Only after you allow analytics, we use PostHog EU to measure page and tool visits, upload completion, processing states observed by your browser, download clicks and generic error categories. PostHog receives an anonymous analytics identifier, browser/device information and the network address needed to receive requests. This identifier is separate from your file-access session. Analytics identifiers are stored in browser local storage. We exclude file names, document contents, passwords, file/job identifiers, URL query strings and download links. Session replay, automatic click capture and raw error/console collection are disabled. You can decline or withdraw permission using “Analytics preferences” in the footer; tools remain available. Do Not Track and Global Privacy Control signals disable collection. This preference applies to PostHog and does not control Google advertising or Cloudflare analytics. See <a href="https://posthog.com/privacy" rel="nofollow">PostHog’s privacy policy</a>.</p>
-  <h2>5. Contact</h2>
-  <p>Questions about privacy? Email <a href="mailto:destek@doctorconverter.com" class="text-accent underline">destek@doctorconverter.com</a>.</p>
+
+  <h2 id="measurement">Site measurement</h2>
+  <p>Cloudflare adds Cloudflare Web Analytics to the live domain for page-view and performance measurement. Cloudflare also handles requests as the CDN/network provider. The analytics preference control does not change Cloudflare configuration.</p>
+  <p>PostHog EU loads only after you explicitly allow it. It may measure page and tool visits, API-accepted uploads, processing states observed by the browser, download clicks and fixed error categories. PostHog receives technical request data and an anonymous analytics identifier separate from file-access sessions. File names/content, passwords, file/job IDs and download URLs are excluded from analytics events. Session replay, automatic click capture and raw error/console collection are disabled. You can withdraw permission using “Analytics preferences” in the footer; this preference does not turn off advertising or Cloudflare Web Analytics. See <a href="https://posthog.com/privacy" rel="nofollow">PostHog’s Privacy Policy</a>.</p>
+
+  <h2 id="advertising">Advertising</h2>
+  <p>A Google AdSense ad may appear on the home page. When an ad loads, Google and its partners may process data such as browser/device details, IP address and ad interactions, and may use cookies or similar technologies for ad delivery. See <a href="https://policies.google.com/technologies/ads" rel="nofollow">Google’s advertising technology information</a> and <a href="https://policies.google.com/privacy" rel="nofollow">Google’s Privacy Policy</a> for details and controls. Uploaded document files and contents are not sent in advertising events.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>For privacy questions, email <a href="mailto:destek@doctorconverter.com" class="text-accent underline">destek@doctorconverter.com</a>.</p>
 </LegalLayout>

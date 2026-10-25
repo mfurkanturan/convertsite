@@ -3,45 +3,30 @@ import LegalLayout from '../../layouts/legal-layout.astro';
 ---
 
 <LegalLayout
-  title="Güvenlik ve Veri Gizliliği Taahhüdü"
-  description="DoctorConverter güvenlik standartları: Kurumsal düzeyde şifreleme, sıfır kalıcı depolama ve otomatik veri imhası ilkelerimiz."
+  title="Güvenlik ve dosya işleme"
+  description="Dosyaların DoctorConverter’da nasıl yüklendiği, işlendiği, oturumla korunduğu ve silindiği hakkında teknik bilgiler."
 >
-  <p>
-    DoctorConverter olarak kullanıcılarımızın belge ve veri güvenliğini en temel önceliğimiz olarak kabul ediyoruz. Platformumuz, kullanıcı belgelerinin gizliliğini korumak ve güvenli bir işlem deneyimi sunmak amacıyla uluslararası güvenlik ilkelerine uygun olarak tasarlanmıştır.
-  </p>
+  <p>Bu sayfa, DoctorConverter uygulama akışında kullanılan güvenlik kontrollerini ve dosya yaşam döngüsünü açıklar. Bu kontroller hosting, ağ ve üretim yapılandırmasıyla birlikte çalışır.</p>
 
-  <h2>1. Veri İletim Güvenliği</h2>
-  <p>
-    Sitemize yüklediğiniz ve dönüştürdüğünüz tüm dosyalar, tarayıcınız ile sunucularımız arasında endüstri standardı <strong>256-bit SSL / HTTPS</strong> şifreleme protokolü üzerinden aktarılır. Aktarım esnasında verilerinizin üçüncü şahıslar tarafından izlenmesi veya müdahale edilmesi engellenir.
-  </p>
+  <ol class="processing-rail list-none p-0" aria-label="Dosyanın işlem aşamaları">
+    <li>Tarayıcıda seç</li>
+    <li>Türünü ve sınırlarını doğrula</li>
+    <li>Geçici olarak işle</li>
+    <li>İş bitince veya süre dolunca erişimi kapat</li>
+  </ol>
 
-  <h2>2. Sıfır Kalıcı Depolama ve Otomatik İmha</h2>
-  <p>
-    DoctorConverter bir dosya depolama platformu değildir. Dosyalarınız yalnızca talep ettiğiniz dönüştürme veya düzenleme işleminin gerçekleştirilmesi amacıyla geçici olarak işleme alınır:
-  </p>
-  <ul>
-    <li><strong>Otomatik Süre Dolumu:</strong> İşlemi tamamlanan tüm dosyalar en geç <strong>60 dakika</strong> içerisinde sistemlerimizden kalıcı olarak silinir.</li>
-    <li><strong>Kullanıcı Kontrollü Silme:</strong> Dönüştürme bittiğinde sonuç ekranında bulunan <em>"Dosyaları sil"</em> butonuna basarak belgelerinizi beklemeden anında silebilirsiniz.</li>
-    <li><strong>Veri Tabanı İzolasyonu:</strong> Belgelerinizin içeriği hiçbir kalıcı veri tabanında saklanmaz.</li>
-  </ul>
+  <h2>Aktarım ve oturum erişimi</h2>
+  <p>Canlı siteye HTTPS üzerinden bağlanırsın. API, yüklemeleri anonim ve imzalı bir oturum çereziyle ilişkilendirir. Dosya, iş durumu, önizleme, indirme ve silme istekleri bu oturumun sahipliğine göre kontrol edilir. Oturum çerezi 24 saat sonra sona erer.</p>
 
-  <h2>3. Veri Mahremiyeti ve Yapay Zeka Politikası</h2>
-  <p>
-    Kullanıcılarımızın belgeleri üzerinde tam kontrol hakkı saklıdır:
-  </p>
-  <ul>
-    <li>Belgelerinizin içeriği hiçbir koşulda personelimiz veya yetkisiz üçüncü şahıslar tarafından görüntülenemez ve denetlenemez.</li>
-    <li>Dosyalarınız hiçbir yapay zeka veya makine öğrenimi modelinin eğitimi için kullanılmaz.</li>
-    <li>Verileriniz üçüncü taraf reklam ağları veya ticari kuruluşlarla asla paylaşılmaz ve satılmaz.</li>
-  </ul>
+  <h2>Dosya doğrulama ve işleme</h2>
+  <p>Dosyalar işlem başlatılana kadar tarayıcıdan gönderilmez. API tür imzasını, dosya boyutunu ve türe özgü yapısal sınırları denetler; kabul edilen baytlar uygulama veritabanından ayrı özel geçici depolamada tutulur. Veritabanı ve kuyruk dosya içeriğini değil, metadata ve iş kimliği gibi referansları taşır. Bir worker isteği yerel dönüşüm motorlarına iletir; dosya içeriği harici bir dönüşüm veya AI API’sine gönderilmez.</p>
 
-  <h2>4. İzole İşlem Standartları</h2>
-  <p>
-    Tüm belge dönüştürme süreçleri, birbirlerinden tamamen bağımsız ve dış erişime kapalı güvenli çalışma alanlarında yürütülür. Her kullanıcı yalnızca kendi oturumuna ait dosyalara erişebilir; kullanıcılar arası çapraz erişim kesin olarak engellenmiştir.
-  </p>
+  <h2>Süre dolumu ve silme</h2>
+  <p>Saklama süresi yapılandırılabilir; varsayılan 60 dakikadır ve etkin değer araç ekranında API’den alınarak gösterilir. “Dosyaları sil” isteği erişimi hemen kapatır. Backend, silinen dosyaları 2 dakikalık temizlik bekleme süresinden sonra periyodik temizlik turunda fiziksel olarak kaldırır; aktif dosya kullanımı süreyi uzatabilir. İstek, fiziksel silmenin o anda tamamlandığı anlamına gelmez.</p>
 
-  <h2>5. Güvenlik İletişimi ve Bildirim</h2>
-  <p>
-    Güvenlik politikalarımız veya olası bildirimler için teknik ekibimizle doğrudan <a href="mailto:destek@doctorconverter.com" class="text-accent underline font-medium">destek@doctorconverter.com</a> adresi üzerinden iletişime geçebilirsiniz.
-  </p>
+  <h2>Ağ ve analitik sağlayıcıları</h2>
+  <p>Cloudflare, canlı alan adının ağ/CDN katmanında trafik ve teknik bağlantı verilerini işler; Cloudflare Web Analytics sayfaya site yapılandırmasıyla eklenir. PostHog EU ürün analitiği yalnızca ziyaretçi izin verdiğinde yüklenir. Ana sayfada Google AdSense reklamı gösterilebilir; reklam ağının işlediği veriler analitik tercihinden ayrı yönetilir. Dosya işleme ve ölçüm ayrıntıları <a href="/tr/gizlilik" class="text-accent underline">Gizlilik Politikası</a> sayfasındadır.</p>
+
+  <h2>Güvenlik bildirimi</h2>
+  <p>Bir güvenlik sorunu bildirmek için <a href="mailto:destek@doctorconverter.com" class="text-accent underline font-medium">destek@doctorconverter.com</a> adresine yazabilirsin.</p>
 </LegalLayout>

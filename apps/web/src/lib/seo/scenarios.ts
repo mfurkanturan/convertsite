@@ -22,7 +22,7 @@ export interface Scenario {
   metaTitle: string;
   metaDescription: string;
   lead: string;
-  /** Searches this page targets; rendered on the page and used as keywords. */
+  /** Search terms used in metadata, not rendered as page content. */
   queries: string[];
   sections: { heading: string; body: string[] }[];
   steps: { title: string; text: string }[];

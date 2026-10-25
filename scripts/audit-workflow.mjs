@@ -10,6 +10,7 @@ const root = resolve('.qa/engine-audit');
 const project = 'docly-quality-audit';
 const config = resolve('.qa/engine-audit/compose.json');
 const api = 'http://127.0.0.1:3019';
+const webPort = Number(process.env.AUDIT_WEB_PORT || 4321);
 const image = 'docly-audit:local';
 const rows = [];
 function command(args) {
@@ -32,7 +33,7 @@ await writeFile(config, JSON.stringify({ services: {
 }, networks: { private: { internal: true }, edge: {} }, volumes: { files: {} } }, null, 2));
 let browser;
 const gateway = createServer((incoming, outgoing) => {
-  const upstream = proxyRequest({ hostname: '127.0.0.1', port: incoming.url.startsWith('/api/') ? 3019 : 4321, path: incoming.url, method: incoming.method, headers: { ...incoming.headers, host: '127.0.0.1' } }, response => {
+  const upstream = proxyRequest({ hostname: '127.0.0.1', port: incoming.url.startsWith('/api/') ? 3019 : webPort, path: incoming.url, method: incoming.method, headers: { ...incoming.headers, host: '127.0.0.1' } }, response => {
     outgoing.writeHead(response.statusCode, response.headers); response.pipe(outgoing);
   });
   upstream.on('error', () => { outgoing.writeHead(502); outgoing.end(); });
@@ -53,6 +54,9 @@ try {
   const created = column(['created_on', 'createdon']); const claimed = column(['started_on', 'startedon']); const completed = column(['completed_on', 'completedon']);
   browser = await chromium.launch({ headless: true });
   const cases = JSON.parse(await readFile(resolve(root, 'manifest.json'), 'utf8'));
+  if (!cases.some(scenario => scenario.tool === 'pdf-to-pdf-ocr')) {
+    cases.push({ id: 'pdf-to-pdf-ocr/scanned', tool: 'pdf-to-pdf-ocr', inputs: ['scanned.pdf'], options: { language: 'tur+eng' }, error: null, expect: { searchable: true } });
+  }
   for (const tool of (process.env.AUDIT_LIFECYCLE_ONLY ? [] : [...new Set(cases.map(c => c.tool))])) {
     const scenario = cases.find(c => c.tool === tool && (tool !== 'pdf-to-excel' || c.inputs[0] === 'table.pdf'));
     const context = await browser.newContext({ locale: 'tr-TR', acceptDownloads: true });
@@ -73,7 +77,7 @@ try {
       await page.locator('input[type=file]').setInputFiles(scenario.inputs.map(name => resolve(root, 'corpus', name)));
       if (['protect-pdf', 'unlock-pdf'].includes(tool)) await page.locator('#pdf-password').fill('AuditSecret123');
       if (tool === 'watermark-pdf') await page.locator('#pdf-watermark').fill('GİZLİ ŞİRKET ÖĞÜT');
-      const start = page.getByRole('button', { name: /^(Dönüştürmeyi başlat|PDF’leri birleştir)$/ });
+      const start = page.locator('button.job-start');
       await start.waitFor(); await start.click({ timeout: 10000 });
       // The UI sends the requests; no context.execute or internal database job execution.
       for (let attempt = 0; attempt < 115; attempt++) {

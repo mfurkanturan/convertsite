@@ -4,11 +4,16 @@
 
   --color-bg: #f8fafc;
   --color-surface: #ffffff;
+  --color-brand-navy: #132047;
+  --color-footer-text: #cbd5e1;
+  --color-footer-accent: #60a5fa;
   --color-text: #0f172a;
   --color-text-soft: #475569;
-  --color-text-muted: #64748b;
+  --color-text-muted: #5b677a;
   --color-border: #e2e8f0;
   --color-border-strong: #cbd5e1;
+  --color-upload-border: #8492a6;
+  --color-focus: #1d4ed8;
 
   --color-accent: #2563eb;
   --color-accent-strong: #1d4ed8;
@@ -21,31 +26,37 @@
   --color-danger: #b91c1c;
   --color-danger-soft: #fef2f2;
 
-  --color-tool-blue: #3564f4;
+  --color-tool-blue: #2563eb;
   --color-tool-blue-soft: #edf2ff;
-  --color-tool-coral: #e26c60;
-  --color-tool-coral-soft: #fff0ed;
-  --color-tool-violet: #8a5bd6;
+  --color-tool-violet: #6b4bb2;
   --color-tool-violet-soft: #f2edfd;
-  --color-tool-mint: #27a48b;
-  --color-tool-mint-soft: #eaf8f3;
-  --color-tool-green: #3c9b68;
-  --color-tool-green-soft: #edf7ef;
-  --color-tool-teal: #249a98;
+  --color-tool-teal: #167a78;
   --color-tool-teal-soft: #eaf7f7;
-  --color-tool-amber: #d79b37;
-  --color-tool-amber-soft: #fff6e7;
-  --color-tool-pink: #d270a0;
-  --color-tool-pink-soft: #fceef5;
-  --color-tool-purple: #9a72cd;
+  --color-tool-purple: #7554a3;
   --color-tool-purple-soft: #f5effb;
-  --color-tool-indigo: #6379ce;
+  --color-tool-indigo: #4f60a4;
   --color-tool-indigo-soft: #eef1fc;
 
   --radius-control: 8px;
   --radius-card: 12px;
-  --radius-panel: 16px;
+  --radius-panel: 12px;
 
-  --shadow-card: 0 8px 24px rgb(47 76 136 / 0.06);
-  --shadow-float: 0 12px 30px rgb(50 78 134 / 0.1);
+  --spacing-content: 1200px;
+  --page-gutter: 16px;
+  --section-space: 40px;
+  --section-content-gap: 24px;
+  --motion-duration: 160ms;
+  --text-hero: clamp(32px, 4vw, 48px);
+  --text-section: clamp(24px, 2.2vw, 28px);
+  --text-category: 18px;
+  --text-tool: 15px;
+  --text-metadata: 13px;
+  --text-caption: 0.8125rem;
+  --text-body: 1rem;
+  --text-subheading: 1.25rem;
+  --text-heading: 2rem;
+  --text-display: 2.5rem;
+
+  --shadow-card: 0 6px 20px rgb(15 23 42 / 0.055);
+  --shadow-float: 0 12px 30px rgb(15 23 42 / 0.14);
 }

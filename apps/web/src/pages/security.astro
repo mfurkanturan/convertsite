@@ -1,19 +1,29 @@
 ---
 import LegalLayout from '../layouts/legal-layout.astro';
 ---
-<LegalLayout locale="en" title="Security" description="How DoctorConverter protects your documents: encrypted transfer, isolated processing, session-only access and automatic deletion.">
-  <p>Your documents are often personal: resumes, passports, contracts, bank statements. Here is how we protect them.</p>
-  <h2>1. Encrypted transfer</h2>
-  <p>Files travel between your browser and our servers over HTTPS (TLS).</p>
-  <h2>2. Session-only access</h2>
-  <p>Every upload is tied to an anonymous, signed session. Other visitors cannot see, download or delete your files or jobs.</p>
-  <h2>3. Controlled processing</h2>
-  <p>Documents are processed by fixed, resource-limited conversion engines with strict file checks. Macros, embedded binaries and external links in Office files are rejected, and password-protected or malformed files are refused.</p>
-  <h2>4. Automatic deletion</h2>
-  <ul>
-    <li>Files and results expire automatically after the retention period.</li>
-    <li>“Delete files” closes access immediately; physical deletion completes in the background shortly after.</li>
-  </ul>
-  <h2>5. Reporting</h2>
-  <p>Found a security issue? Contact <a href="mailto:destek@doctorconverter.com" class="text-accent underline font-medium">destek@doctorconverter.com</a>.</p>
+
+<LegalLayout locale="en" title="Security and file processing" description="How files are uploaded, processed, tied to a session and deleted by DoctorConverter.">
+  <p>This page describes security controls in the DoctorConverter application and its file lifecycle. These controls work alongside hosting, network and production configuration.</p>
+
+  <ol class="processing-rail list-none p-0" aria-label="File processing stages">
+    <li>Select in your browser</li>
+    <li>Validate type and limits</li>
+    <li>Process temporarily</li>
+    <li>Close access when the job ends or expires</li>
+  </ol>
+
+  <h2>Transport and session access</h2>
+  <p>The live site is accessed over HTTPS. The API associates uploads with an anonymous, signed session cookie. File, job-status, preview, download and delete requests are checked against that session’s ownership. The session cookie expires after 24 hours.</p>
+
+  <h2>File validation and processing</h2>
+  <p>Files stay in the browser until processing starts. The API checks file signatures, size and type-specific structural limits. Accepted file bytes are held in private temporary storage separate from the application database. The database and queue carry metadata and references such as job IDs, not file contents. A worker calls local conversion engines; document contents are not sent to an external conversion or AI API.</p>
+
+  <h2>Expiry and deletion</h2>
+  <p>Retention is configurable; the default is 60 minutes, and the active value is fetched from the API and shown in the tool panel. A “Delete files” request closes access immediately. The backend holds deleted bytes for a 2-minute cleanup grace period, then a cleanup run removes them; active file use can extend that time. The request is not confirmation that physical deletion has already finished.</p>
+
+  <h2>Network and analytics providers</h2>
+  <p>Cloudflare processes traffic and technical connection data at the live domain’s network/CDN layer; Cloudflare Web Analytics is added to the page through site configuration. PostHog EU product analytics loads only after visitor consent. Google AdSense may show an ad on the home page, and ad-network data processing is separate from analytics preferences. See the <a href="/privacy" class="text-accent underline">Privacy Policy</a> for details about file processing and measurement.</p>
+
+  <h2>Security reporting</h2>
+  <p>To report a security issue, email <a href="mailto:destek@doctorconverter.com" class="text-accent underline font-medium">destek@doctorconverter.com</a>.</p>
 </LegalLayout>

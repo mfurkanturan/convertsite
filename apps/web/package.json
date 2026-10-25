@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev --host 127.0.0.1 --port 4321",
-    "build": "astro build",
+    "dev": "node ../../scripts/copy-pdfjs-assets.mjs && astro dev --host 127.0.0.1 --port 4321",
+    "build": "node ../../scripts/copy-pdfjs-assets.mjs && astro build",
     "check": "astro check && svelte-check --tsconfig ./tsconfig.json",
     "preview": "astro preview --host 127.0.0.1 --port 4321"
   },

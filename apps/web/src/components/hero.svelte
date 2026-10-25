@@ -1,217 +1,189 @@
 <script lang="ts">
+  import { onMount, tick } from 'svelte';
   import Icon from './icon.svelte';
-  import Button from './button.svelte';
-  import { useUi, useLocale } from '../i18n/context';
-  import { formatBytes } from '../lib/file-selection';
-  import type { ToolId } from '@convertsite/contracts';
+  import FileDropzone from './file-dropzone.svelte';
+  import { useLocale, useUi } from '../i18n/context';
+  import { formatBytes, selectionMaxBytes } from '../lib/file-selection';
+  import { apiFor } from '../lib/api-client';
+  import type { Capabilities, ToolId } from '@convertsite/contracts';
 
   export let onselecttool: ((toolId: ToolId, file?: File) => void) | undefined = undefined;
 
   const locale = useLocale();
-  const text = useUi().hero;
+  const ui = useUi();
+  const text = ui.hero;
+  const api = apiFor(locale);
+  const quickDropAccept = '.pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png';
+  const toolByExtension: Partial<Record<string, ToolId>> = {
+    docx: 'word-to-pdf',
+    xlsx: 'excel-to-pdf',
+    pptx: 'pptx-to-pdf',
+    jpg: 'images-to-pdf',
+    jpeg: 'images-to-pdf',
+    png: 'images-to-pdf',
+  };
+  const pdfActions = [
+    { id: 'pdf-to-word', key: 'word' },
+    { id: 'pdf-to-excel', key: 'excel' },
+    { id: 'pdf-to-images', key: 'images' },
+    { id: 'compress-pdf', key: 'compress' },
+    { id: 'edit-pdf-pages', key: 'organize' },
+    { id: 'merge-pdf', key: 'merge' },
+    { id: 'ocr', key: 'text' },
+    { id: 'pdf-to-pdf-ocr', key: 'searchable' },
+    { id: 'protect-pdf', key: 'protect' },
+    { id: 'unlock-pdf', key: 'unlock' },
+    { id: 'page-numbers', key: 'pageNumbers' },
+    { id: 'watermark-pdf', key: 'watermark' },
+  ] as const satisfies ReadonlyArray<{ id: ToolId; key: keyof typeof text.pdfActions }>;
 
-  let isDragging = false;
   let selectedFile: File | null = null;
-  let fileInput: HTMLInputElement;
+  let error = '';
+  let policy: Capabilities | null = null;
+  let policyLoaded = false;
+  let selectionTitle: HTMLHeadingElement;
+  $: fileLimit = policy?.maxFileBytes ?? selectionMaxBytes;
+  $: availablePdfActions = policy ? pdfActions.filter((action) => policy!.enabledTools.includes(action.id)) : [];
 
-  const pdfActions: { id: ToolId; label: string; desc: string; icon: string }[] = locale === 'tr' ? [
-    { id: 'pdf-to-word', label: 'Word’e Dönüştür', desc: 'Düzenlenebilir DOCX', icon: 'word' },
-    { id: 'compress-pdf', label: 'PDF Sıkıştır', desc: 'Boyutu küçült', icon: 'compress' },
-    { id: 'edit-pdf-pages', label: 'Sayfaları Sırala', desc: 'Düzenle / Döndür / Sil', icon: 'scissors' },
-    { id: 'pdf-to-excel', label: 'Excel’e Aktar', desc: 'Tabloları çek', icon: 'excel' },
-    { id: 'pdf-to-images', label: 'JPG / Görsel Yap', desc: 'Görsellere çevir', icon: 'image' },
-    { id: 'page-numbers', label: 'Sayfa Numarası', desc: 'Numara bas', icon: 'layers' },
-    { id: 'watermark-pdf', label: 'Filigran Ekle', desc: 'Metin bas', icon: 'scan' },
-    { id: 'protect-pdf', label: 'PDF Şifrele', desc: 'Parola ile kilitle', icon: 'shield' },
-  ] : [
-    { id: 'pdf-to-word', label: 'PDF to Word', desc: 'Editable DOCX', icon: 'word' },
-    { id: 'compress-pdf', label: 'Compress PDF', desc: 'Reduce file size', icon: 'compress' },
-    { id: 'edit-pdf-pages', label: 'Organize Pages', desc: 'Reorder / Rotate / Split', icon: 'scissors' },
-    { id: 'pdf-to-excel', label: 'PDF to Excel', desc: 'Extract tables', icon: 'excel' },
-    { id: 'pdf-to-images', label: 'PDF to JPG', desc: 'Export as images', icon: 'image' },
-    { id: 'page-numbers', label: 'Page Numbers', desc: 'Stamp numbers', icon: 'layers' },
-    { id: 'watermark-pdf', label: 'Add Watermark', desc: 'Stamp text watermark', icon: 'scan' },
-    { id: 'protect-pdf', label: 'Protect PDF', desc: 'Encrypt with password', icon: 'shield' },
-  ];
-
-  function handleDragOver(e: DragEvent) {
-    e.preventDefault();
-    isDragging = true;
-  }
-
-  function handleDragLeave() {
-    isDragging = false;
-  }
-
-  function handleDrop(e: DragEvent) {
-    e.preventDefault();
-    isDragging = false;
-    const file = e.dataTransfer?.files?.[0];
-    if (file) processIncomingFile(file);
-  }
-
-  function handleFileInput(e: Event) {
-    const target = e.target as HTMLInputElement;
-    const file = target.files?.[0];
-    if (file) processIncomingFile(file);
-  }
-
-  function processIncomingFile(file: File) {
-    const ext = file.name.split('.').pop()?.toLowerCase() || '';
-
-    if (ext === 'docx' || ext === 'doc') {
-      routeToTool('word-to-pdf', file);
-    } else if (ext === 'pptx' || ext === 'ppt') {
-      routeToTool('pptx-to-pdf', file);
-    } else if (ext === 'xlsx' || ext === 'xls') {
-      routeToTool('excel-to-pdf', file);
-    } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
-      routeToTool('images-to-pdf', file);
-    } else if (ext === 'pdf') {
-      selectedFile = file;
-    } else {
-      selectedFile = file;
+  async function loadPolicy() {
+    policyLoaded = false;
+    try {
+      policy = await api.capabilities();
+    } catch {
+      policy = null;
+    } finally {
+      policyLoaded = true;
     }
   }
 
-  function routeToTool(toolId: ToolId, file?: File) {
-    if (onselecttool) {
-      onselecttool(toolId, file || selectedFile || undefined);
+  onMount(() => { void loadPolicy(); });
+
+  function handleIncomingFiles(files: File[]) {
+    if (files.length > 1) {
+      error = text.oneFile;
+      return;
     }
+    if (files[0]) void processIncomingFile(files[0]);
+  }
+
+  async function processIncomingFile(file: File) {
+    error = '';
+    const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
+    if (extension !== 'pdf' && !toolByExtension[extension]) {
+      error = text.invalidType;
+      return;
+    }
+    if (file.size === 0) {
+      error = text.emptyFile;
+      return;
+    }
+    if (file.size > fileLimit) {
+      error = text.tooLarge(formatBytes(fileLimit));
+      return;
+    }
+
+    if (extension === 'pdf') {
+      selectedFile = file;
+      await tick();
+      selectionTitle?.focus();
+      return;
+    }
+
+    const tool = toolByExtension[extension];
+    if (tool) routeToTool(tool, file);
+  }
+
+  function routeToTool(toolId: ToolId, file = selectedFile ?? undefined) {
+    if (file) onselecttool?.(toolId, file);
     selectedFile = null;
+    error = '';
+  }
+
+  async function clearSelectedFile() {
+    selectedFile = null;
+    await tick();
+    document.getElementById('hero-file-picker')?.focus();
   }
 </script>
 
-<section class="relative overflow-hidden rounded-panel border border-border bg-gradient-to-br from-accent-soft/80 via-surface to-surface shadow-sm" aria-labelledby="hero-title">
-  <div class="grid lg:grid-cols-[1.1fr_0.9fr] items-center gap-8 p-6 sm:p-10">
-    <!-- Left Column: Title & Trust -->
+<section class="border-b border-border" aria-labelledby="hero-title">
+  <div class="hero-layout">
     <div class="min-w-0">
-      <span class="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent border border-accent/20">
-        <span class="h-1.5 w-1.5 rounded-full bg-accent animate-pulse"></span>
-        {text.eyebrow}
-      </span>
 
-      <h1 id="hero-title" class="mt-4 font-display text-[clamp(28px,3.5vw,44px)] font-bold leading-[1.12] tracking-[-0.03em] text-text">
-        {text.titleA}<br />
-        <span class="text-accent">{text.titleB}</span>
+      <h1 id="hero-title" class="hero-title">
+        {text.titleA}<br />{text.titleB}
       </h1>
-
-      <p class="mt-3.5 max-w-lg text-[15px] sm:text-base leading-relaxed text-text-soft">
-        {text.lead}
-      </p>
-
-      <div class="mt-6 flex flex-wrap items-center gap-4">
-        <Button href="#tools" className="whitespace-nowrap font-medium">{text.cta} <Icon name="arrow" size={17} /></Button>
-        <span class="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-text-muted">
-          <span class="text-success"><Icon name="check" size={16} /></span>
-          {text.noSignup}
-        </span>
-      </div>
+      <p class="hero-description">{text.lead}</p>
+      <a href="#tools" class="hero-link">
+        {text.cta}<Icon name="arrow" size={16} />
+      </a>
     </div>
 
-    <!-- Right Column: Universal Fast Dropzone -->
     <div class="min-w-0">
-      <input
-        type="file"
-        class="hidden"
-        bind:this={fileInput}
-        accept=".pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png"
-        onchange={handleFileInput}
-      />
-
-      {#if selectedFile && selectedFile.name.toLowerCase().endsWith('.pdf')}
-        <!-- PDF Action Matrix Sheet -->
-        <div class="rounded-2xl border border-accent/40 bg-surface p-5 shadow-lg relative animate-in fade-in zoom-in-95 duration-200">
-          <div class="flex items-center justify-between pb-3 border-b border-border mb-3.5">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 font-bold text-xs">
-                PDF
-              </span>
-              <div class="min-w-0">
-                <strong class="block truncate text-xs sm:text-sm font-semibold text-text" title={selectedFile.name}>
-                  {selectedFile.name}
-                </strong>
-                <span class="block text-[11px] text-text-muted">{formatBytes(selectedFile.size)}</span>
-              </div>
+      {#if selectedFile}
+        <section class="rounded-panel border border-border-strong bg-surface p-5 sm:p-6" aria-labelledby="pdf-actions-title">
+          <div class="flex items-start gap-3 border-b border-border pb-4">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-card bg-danger-soft font-bold text-danger">PDF</span>
+            <div class="min-w-0 flex-1">
+              <p class="mb-1 flex items-center gap-1.5 text-[13px] font-medium text-success" role="status"><Icon name="check" size={15} />{text.fileSelected}</p>
+              <h2 id="pdf-actions-title" bind:this={selectionTitle} tabindex="-1" class="text-base font-semibold text-text">{text.choosePdfAction}</h2>
+              <p class="mt-1 truncate text-sm text-text-soft" title={selectedFile.name}>{selectedFile.name}</p>
+              <p class="text-[13px] text-text-muted">PDF · {formatBytes(selectedFile.size)}</p>
             </div>
-
-            <button
-              type="button"
-              class="h-7 w-7 rounded-lg flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger-soft transition-colors"
-              title={locale === 'tr' ? 'Vazgeç' : 'Cancel'}
-              onclick={() => selectedFile = null}
-            >
-              <Icon name="close" size={15} />
-            </button>
           </div>
 
-          <p class="text-xs font-semibold uppercase tracking-wider text-text-muted mb-2.5">
-            {locale === 'tr' ? 'Ne yapmak istersiniz?' : 'What would you like to do?'}
-          </p>
+          {#if !policyLoaded}
+            <p class="mt-4 rounded-lg bg-bg px-3 py-3 text-sm text-text-soft" role="status">{text.checkingActions}</p>
+          {:else if !policy}
+            <div class="mt-4 rounded-lg border border-warning/20 bg-warning-soft px-3 py-3 text-sm text-warning" role="alert">
+              <p>{text.actionsUnavailable}</p>
+              <button type="button" class="mt-2 inline-flex min-h-11 items-center font-semibold underline underline-offset-2" onclick={() => void loadPolicy()}>{text.checkAgain}</button>
+            </div>
+          {:else if availablePdfActions.length === 0}
+            <p class="mt-4 rounded-lg bg-bg px-3 py-3 text-sm text-text-soft" role="status">{text.noAvailableActions}</p>
+          {:else}
+            <ul class="mt-4 grid grid-cols-1 gap-2 min-[480px]:grid-cols-2" aria-label={text.choosePdfAction}>
+              {#each availablePdfActions as action}
+                {@const actionText = text.pdfActions[action.key]}
+                <li>
+                  <button
+                    type="button"
+                    class="flex min-h-[58px] w-full items-start gap-2.5 rounded-lg border border-border px-3 py-3 text-left transition-colors hover:border-accent/50 hover:bg-accent-soft/50 focus-visible:outline-offset-1"
+                    onclick={() => routeToTool(action.id)}
+                  >
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent"><Icon name={actionText.icon} size={17} /></span>
+                    <span class="min-w-0"><span class="block text-sm font-semibold leading-snug text-text">{actionText.label}</span><span class="mt-0.5 block text-[13px] leading-snug text-text-muted">{actionText.desc}</span></span>
+                  </button>
+                </li>
+              {/each}
+            </ul>
+          {/if}
 
-          <div class="grid grid-cols-2 gap-2">
-            {#each pdfActions as action}
-              <button
-                type="button"
-                class="flex flex-col items-start rounded-xl border border-border/70 bg-bg p-2.5 text-left transition-all hover:border-accent hover:bg-accent-soft/30 hover:scale-[1.01] group cursor-pointer"
-                onclick={() => routeToTool(action.id)}
-              >
-                <div class="flex items-center gap-1.5 text-xs font-bold text-text group-hover:text-accent">
-                  <Icon name={action.icon} size={14} />
-                  <span>{action.label}</span>
-                </div>
-                <span class="mt-0.5 text-[10px] text-text-muted truncate w-full">{action.desc}</span>
-              </button>
-            {/each}
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
+            <button type="button" class="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-text-soft hover:bg-bg hover:text-text" onclick={() => document.getElementById('hero-file-picker')?.click()}>{text.changeFile}</button>
+            <button type="button" class="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-danger hover:bg-danger-soft" onclick={clearSelectedFile}><Icon name="close" size={15} />{text.removeFile}</button>
           </div>
-        </div>
+        </section>
       {:else}
-        <!-- Universal Drag & Drop Card -->
-        <button
-          type="button"
-          aria-label={text.dropTitle}
-          class="relative flex w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed p-7 sm:p-9 text-center transition-all duration-200 cursor-pointer bg-surface/80 hover:bg-surface {isDragging ? 'border-accent bg-accent-soft/40 scale-[1.02] shadow-md ring-2 ring-accent/30' : 'border-border/80 hover:border-accent/60 hover:shadow-sm'}"
-          ondragover={handleDragOver}
-          ondragleave={handleDragLeave}
-          ondrop={handleDrop}
-          onclick={() => fileInput.click()}
-        >
-          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-soft text-accent mb-3 shadow-xs transition-transform group-hover:scale-110">
-            <Icon name="upload" size={24} />
-          </div>
-
-          <strong class="text-sm sm:text-base font-semibold text-text">
-            {text.dropTitle}
-          </strong>
-
-          <p class="mt-1 text-xs sm:text-[13px] text-text-muted max-w-[260px]">
-            {text.dropSub}
-          </p>
-
-          <span class="mt-3.5 inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-accent-strong transition-colors">
-            {text.dropPick}
-          </span>
-
-          <!-- Format chips -->
-          <div class="mt-4 flex flex-wrap items-center justify-center gap-1.5 opacity-80">
-            <span class="rounded bg-bg px-1.5 py-0.5 text-[10px] font-semibold text-text-muted border border-border/70">PDF</span>
-            <span class="rounded bg-bg px-1.5 py-0.5 text-[10px] font-semibold text-text-muted border border-border/70">Word</span>
-            <span class="rounded bg-bg px-1.5 py-0.5 text-[10px] font-semibold text-text-muted border border-border/70">PowerPoint</span>
-            <span class="rounded bg-bg px-1.5 py-0.5 text-[10px] font-semibold text-text-muted border border-border/70">Excel</span>
-            <span class="rounded bg-bg px-1.5 py-0.5 text-[10px] font-semibold text-text-muted border border-border/70">JPG / PNG</span>
-          </div>
-        </button>
+        <FileDropzone
+          variant="hero"
+          accept={quickDropAccept}
+          multiple={false}
+          title={text.dropTitle}
+          description={policy ? text.dropSub(formatBytes(fileLimit)) : text.policyPending}
+          buttonLabel={text.dropPick}
+          draggingLabel={text.dragActive}
+          formats={['PDF', 'DOCX', 'XLSX', 'PPTX', 'JPG', 'PNG']}
+          formatsLabel={text.fileFormats}
+          buttonId="hero-file-picker"
+          onfiles={handleIncomingFiles}
+        />
       {/if}
+
+      <p class="mt-3 flex items-center justify-center gap-2 text-center text-[13px] text-text-soft" role="note">
+        <Icon name="lock" size={15} /><span>{text.uploadLater}</span>
+      </p>
+      {#if error}<p class="mt-3 rounded-lg border border-danger/20 bg-danger-soft px-3 py-2.5 text-sm text-danger" role="alert">{error}</p>{/if}
     </div>
   </div>
 </section>
-
-<!-- 3 Architecture Trust Pillars -->
-<ul class="mt-4 grid grid-cols-3 gap-3 max-[760px]:grid-cols-1 max-[760px]:gap-2" aria-label={text.highlights}>
-  {#each text.features as item}
-    <li class="flex items-center gap-3 rounded-card border border-border bg-surface px-4 py-3">
-      <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name={item.icon} size={18} /></span>
-      <span class="min-w-0 leading-snug"><strong class="block text-sm font-semibold text-text">{item.title}</strong><span class="block text-[13px] text-text-muted">{item.text}</span></span>
-    </li>
-  {/each}
-</ul>

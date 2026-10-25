@@ -1,37 +1,36 @@
 ---
 import LegalLayout from '../../layouts/legal-layout.astro';
 ---
-
-<LegalLayout
-  title="Kullanım Şartları"
-  description="DoctorConverter web sitesi kullanım koşulları, yasal sorumluluklar ve hizmet standartları."
->
-  <p>
-    DoctorConverter (<strong>doctorconverter.com</strong>) web sitesini ve sunduğu belge dönüştürme araçlarını kullanarak aşağıdaki şart ve koşulları kabul etmiş sayılırsınız.
-  </p>
-
-  <h2>1. Hizmetin Niteliği</h2>
-  <p>
-    DoctorConverter; PDF, DOCX, XLSX, JPG, PNG ve benzeri dijital dosya formatları arasında dönüştürme, sıkıştırma, birleştirme ve düzenleme imkanı tanıyan ücretsiz bir online yazılım aracıdır. Hizmet "olduğu gibi" (as-is) sunulur.
-  </p>
-
-  <h2>2. Kullanım Standartları</h2>
-  <p>
-    Kullanıcılar, platformu yalnızca yasalara ve dürüstlük kurallarına uygun amaçlarla kullanmayı; hizmetin altyapısını veya diğer kullanıcıların deneyimini aksatacak faaliyetlerde bulunmamayı kabul eder. Yüklenen belgelerin yasal uygunluğuna ilişkin sorumluluk tamamen kullanıcıya aittir.
-  </p>
-
-  <h2>3. Fikri Mülkiyet Hakları</h2>
-  <p>
-    Yüklediğiniz tüm belgelerin mülkiyeti, telif ve fikri hakları tamamen size aittir. DoctorConverter yüklenen dosyalar üzerinde hiçbir hak veya lisans iddia etmez. Sistemimiz dosyaları yalnızca talep ettiğiniz teknik işlemi yürütmek için geçici süreyle işler.
-  </p>
-
-  <h2>4. Sorumluluk Sınırı</h2>
-  <p>
-    DoctorConverter, dönüştürme işlemlerinin her belgede %100 biçimlendirme doğruluğuyla tamamlanacağını garanti etmez (örneğin taranmış karmaşık tablolar veya bozuk dosyalar). Sistemimizdeki geçici kesintilerden veya dosya dönüştürme hatalarından kaynaklanabilecek doğrudan veya dolaylı veri/iş kayıplarından DoctorConverter sorumlu tutulamaz. Kullanıcıların orijinal dosyalarının birer yedeğini saklamaları tavsiye edilir.
-  </p>
-
-  <h2>5. Şartların Değiştirilmesi</h2>
-  <p>
-    DoctorConverter, bu kullanım şartlarını dilediği zaman güncelleme hakkını saklı tutar. Değişiklikler bu sayfada yayınlandığı andan itibaren geçerlilik kazanır.
-  </p>
+<LegalLayout  title="Kullanım Şartları"  description="DoctorConverter web sitesi kullanım koşulları, yasal sorumluluklar ve hizmet standartları.">
+  <nav aria-label="Sayfa bölümleri" class="mb-8 border-y border-border py-4">
+    <p class="mb-2 text-sm font-semibold text-text">Sayfa bölümleri</p>
+    <ol class="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#hizmet">Hizmetin Niteliği</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#kullanim">Kullanım Standartları</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#haklar">Fikri Mülkiyet Hakları</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#sorumluluk">Sorumluluk Sınırı</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#degisiklikler">Şartların Değiştirilmesi</a>
+      </li>
+    </ol>
+  </nav>
+  <p>    DoctorConverter (<strong>doctorconverter.com</strong>) web sitesini ve sunduğu belge dönüştürme araçlarını kullanarak aşağıdaki koşulları kabul edersin.  </p>
+  <h2 id="hizmet">1. Hizmetin Niteliği</h2>
+  <p>    DoctorConverter, PDF ve ofis dosyalarını dönüştürmek, sıkıştırmak, birleştirmek ve düzenlemek için ücretsiz çevrimiçi araçlar sunar. Araçlara göre PDF, DOCX, XLSX, PPTX, JPG ve PNG kabul edilir. Hizmet "olduğu gibi" (as-is) sunulur.  </p>
+  <h2 id="kullanim">2. Kullanım Standartları</h2>
+  <p>    Kullanıcılar, platformu yalnızca yasalara ve dürüstlük kurallarına uygun amaçlarla kullanmayı; hizmetin altyapısını veya diğer kullanıcıların deneyimini aksatacak faaliyetlerde bulunmamayı kabul eder. Yüklenen belgelerin yasal uygunluğuna ilişkin sorumluluk tamamen kullanıcıya aittir.  </p>
+  <h2 id="haklar">3. Fikri Mülkiyet Hakları</h2>
+  <p>    Yüklediğin tüm belgelerin mülkiyeti, telif ve fikri hakları tamamen sana aittir. DoctorConverter yüklenen dosyalar üzerinde hiçbir hak veya lisans iddia etmez. Sistemimiz dosyaları yalnızca talep ettiğin teknik işlemi yürütmek için geçici süreyle işler.  </p>
+  <h2 id="sorumluluk">4. Sorumluluk Sınırı</h2>
+  <p>    DoctorConverter, dönüştürme işlemlerinin her belgede %100 biçimlendirme doğruluğuyla tamamlanacağını garanti etmez (örneğin taranmış karmaşık tablolar veya bozuk dosyalar). Sistemimizdeki geçici kesintilerden veya dosya dönüştürme hatalarından kaynaklanabilecek doğrudan veya dolaylı veri/iş kayıplarından DoctorConverter sorumlu tutulamaz. Kullanıcıların orijinal dosyalarının birer yedeğini saklamaları tavsiye edilir.  </p>
+  <h2 id="degisiklikler">5. Şartların Değiştirilmesi</h2>
+  <p>    DoctorConverter, bu kullanım şartlarını dilediği zaman güncelleme hakkını saklı tutar. Değişiklikler bu sayfada yayınlandığı andan itibaren geçerlilik kazanır.  </p>
 </LegalLayout>

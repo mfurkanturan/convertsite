@@ -1,9 +1,4 @@
-import * as pdfjsLib from 'pdfjs-dist';
-
-// Configure the worker via CDN matching the installed pdfjs-dist version
-if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-}
+import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
 export interface PdfPagePreview {
   pageNumber: number; // 1-indexed
@@ -13,8 +8,14 @@ export interface PdfPagePreview {
   rotation: number;
 }
 
-const cMapUrl = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/cmaps/`;
-const standardFontDataUrl = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`;
+let pdfjs: Promise<typeof import('pdfjs-dist')> | undefined;
+async function loadPdfJs() {
+  pdfjs ??= import('pdfjs-dist').then((module) => {
+    module.GlobalWorkerOptions.workerSrc = workerUrl;
+    return module;
+  });
+  return pdfjs;
+}
 
 /**
  * Render a single page of a PDF file to a base64 JPEG data URL.
@@ -25,12 +26,13 @@ export async function renderPdfPage(
   targetWidth = 240
 ): Promise<string | null> {
   try {
+    const pdfjsLib = await loadPdfJs();
     const arrayBuffer = await file.arrayBuffer();
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(arrayBuffer),
-      cMapUrl,
+      cMapUrl: '/pdfjs/cmaps/',
       cMapPacked: true,
-      standardFontDataUrl,
+      standardFontDataUrl: '/pdfjs/standard_fonts/',
     });
     const pdf = await loadingTask.promise;
     if (pageIndex > pdf.numPages) return null;
@@ -71,12 +73,13 @@ export async function renderAllPdfPages(
   targetWidth = 240
 ): Promise<PdfPagePreview[]> {
   try {
+    const pdfjsLib = await loadPdfJs();
     const arrayBuffer = await file.arrayBuffer();
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(arrayBuffer),
-      cMapUrl,
+      cMapUrl: '/pdfjs/cmaps/',
       cMapPacked: true,
-      standardFontDataUrl,
+      standardFontDataUrl: '/pdfjs/standard_fonts/',
     });
     const pdf = await loadingTask.promise;
     const results: PdfPagePreview[] = [];

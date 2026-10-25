@@ -1,19 +1,14 @@
 ---
 import LegalLayout from '../layouts/legal-layout.astro';
 ---
-<LegalLayout locale="en" title="About Us" description="Who is behind DoctorConverter? Our approach to free, no-sign-up PDF and document tools, the open-source engines we use and how we handle your files.">
-  <p><strong>DoctorConverter</strong> is a free online toolkit built to solve everyday document tasks quickly and simply. From merging PDFs to extracting text from scans, ten tools live in a single workspace, with no account required.</p>
-  <h2>Why we built it</h2>
-  <p>Students combine lecture notes before finals, lawyers squeeze exhibits under e-filing limits, job seekers shrink their resumes and visa applicants gather documents into one PDF. We want these jobs done in a few clicks, without ad clutter, forced sign-ups or confusing menus.</p>
-  <h2>How it works</h2>
-  <ul>
-    <li>Conversions run on our own servers in resource-limited, isolated processes; documents are not sent to third-party processing services.</li>
-    <li>We rely on proven open-source engines: QPDF, Poppler, LibreOffice, Tesseract OCR and Python document libraries.</li>
-    <li>Files are reachable only from the session that uploaded them, expire automatically and can be deleted immediately.</li>
-    <li>Page, size and support limits are stated in each tool’s panel; we do not pretend to do what we cannot.</li>
-  </ul>
-  <h2>Who it is for</h2>
-  <p>Anyone who works with documents, from students and lawyers to accountants and visa applicants. See our step-by-step <a href="/use-cases/" class="text-accent underline font-medium">use-case guides</a>.</p>
-  <h2>Contact</h2>
-  <p>Ideas, bug reports or partnerships: <a href="mailto:destek@doctorconverter.com" class="text-accent underline font-medium">destek@doctorconverter.com</a>.</p>
+<LegalLayout locale="en" title="About DoctorConverter" description="DoctorConverter document tools, file processing and support limits.">
+  <p><strong>DoctorConverter</strong> provides online tools to convert, combine and edit PDF and office files. Core tools are currently free and do not require an account.</p>
+  <h2>Choosing a tool</h2>
+  <p>Different tools handle PDF, DOCX, XLSX, PPTX, JPG and PNG files; not every tool accepts every format. Each tool page shows accepted files, available options and active limits returned by the API.</p>
+  <h2>How files are processed</h2>
+  <p>Files upload to the server when you start processing. Local document engines process them; document contents are not sent to an external conversion API. Results are available from the same browser session. Files are stored temporarily; a delete request closes access and physical cleanup follows in the background.</p>
+  <p>See the <a href="/security" class="text-accent underline">security</a> and <a href="/privacy" class="text-accent underline">privacy</a> pages for details.</p>
+  <h2>Check the result</h2>
+  <p>Results depend on the document. Fonts, tables and page layouts may change. Compare important information with the source before using it, and keep the original file.</p>
+  <p>Follow the <a href="/use-cases/" class="text-accent underline">use-case guides</a> for task-specific steps. For questions and bug reports, use the <a href="/contact" class="text-accent underline">contact page</a>.</p>
 </LegalLayout>

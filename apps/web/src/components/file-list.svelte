@@ -117,7 +117,7 @@
       </span>
       {#if reorder}
         <span class="hidden sm:inline-block text-xs text-text-muted">
-          ({locale === 'tr' ? 'Sıralamak için kartları tutup sürükleyin' : 'Drag cards to reorder'})
+          ({locale === 'tr' ? 'Sıralamak için kartları sürükle veya okları kullan' : 'Drag cards to reorder'})
         </span>
       {/if}
     </div>
@@ -126,7 +126,9 @@
     <div class="flex items-center gap-1 rounded-lg border border-border bg-bg p-0.5">
       <button
         type="button"
-        class="flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors {viewMode === 'grid' ? 'bg-surface text-accent font-semibold shadow-2xs' : 'text-text-muted hover:text-text'}"
+        class="flex h-11 w-11 items-center justify-center rounded-md text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus {viewMode === 'grid' ? 'bg-surface text-accent font-semibold shadow-2xs' : 'text-text-muted hover:text-text'}"
+        aria-label={locale === 'tr' ? 'Kart görünümü' : 'Grid view'}
+        aria-pressed={viewMode === 'grid'}
         title={locale === 'tr' ? 'Görsel Kart Görünümü' : 'Visual Grid View'}
         onclick={() => viewMode = 'grid'}
       >
@@ -134,7 +136,9 @@
       </button>
       <button
         type="button"
-        class="flex h-7 w-7 items-center justify-center rounded-md text-xs transition-colors {viewMode === 'list' ? 'bg-surface text-accent font-semibold shadow-2xs' : 'text-text-muted hover:text-text'}"
+        class="flex h-11 w-11 items-center justify-center rounded-md text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus {viewMode === 'list' ? 'bg-surface text-accent font-semibold shadow-2xs' : 'text-text-muted hover:text-text'}"
+        aria-label={locale === 'tr' ? 'Liste görünümü' : 'List view'}
+        aria-pressed={viewMode === 'list'}
         title={locale === 'tr' ? 'Kompakt Liste Görünümü' : 'Compact List View'}
         onclick={() => viewMode = 'list'}
       >
@@ -170,7 +174,7 @@
               <!-- Quick look / Preview button -->
               <button
                 type="button"
-                class="flex h-6 w-6 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors"
+                class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 title={locale === 'tr' ? 'Tam sayfa incele' : 'Preview file'}
                 onclick={() => openPreview(file)}
               >
@@ -180,7 +184,7 @@
               <!-- Remove button -->
               <button
                 type="button"
-                class="flex h-6 w-6 items-center justify-center rounded-md text-text-muted hover:bg-danger-soft hover:text-danger transition-colors disabled:opacity-40"
+                class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-danger-soft hover:text-danger transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
                 title={text.remove(file.name)}
                 {disabled}
                 onclick={() => onremove(index)}
@@ -284,7 +288,7 @@
           <!-- Preview eye button -->
           <button
             type="button"
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors"
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
             title={locale === 'tr' ? 'Önizle' : 'Preview'}
             onclick={() => openPreview(file)}
           >
@@ -293,7 +297,7 @@
 
           {#if reorder}
             <button
-              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-text-soft transition-colors hover:bg-accent-soft hover:text-accent disabled:opacity-40"
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-soft transition-colors hover:bg-accent-soft hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
               aria-label={text.up(file.name)}
               disabled={disabled || index === 0}
               onclick={() => onmove(index, -1)}
@@ -301,7 +305,7 @@
               <Icon name="up" size={15} />
             </button>
             <button
-              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-text-soft transition-colors hover:bg-accent-soft hover:text-accent disabled:opacity-40"
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-soft transition-colors hover:bg-accent-soft hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
               aria-label={text.down(file.name)}
               disabled={disabled || index === files.length - 1}
               onclick={() => onmove(index, 1)}
@@ -311,7 +315,7 @@
           {/if}
 
           <button
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-danger-soft hover:text-danger disabled:opacity-40"
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-danger-soft hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
             aria-label={text.remove(file.name)}
             {disabled}
             onclick={() => onremove(index)}
@@ -400,7 +404,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-border px-5 py-3 bg-bg/40 text-xs text-text-muted">
-        <span>{locale === 'tr' ? 'Kapatmak için Esc tuşuna veya dışarıya tıklayın' : 'Press Esc or click outside to close'}</span>
+        <span>{locale === 'tr' ? 'Kapatmak için Esc tuşuna bas veya dışarıya tıkla' : 'Press Esc or click outside to close'}</span>
         <button
           type="button"
           class="rounded-md bg-surface px-3 py-1 font-semibold text-text border border-border hover:border-accent transition-colors"

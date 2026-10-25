@@ -1,50 +1,47 @@
 ---
 import LegalLayout from '../../layouts/legal-layout.astro';
 ---
-
-<LegalLayout
-  title="Gizlilik Politikası"
-  description="DoctorConverter gizlilik politikası: Yüklenen dosyaların saklanma süreleri, verilerin otomatik imhası ve gizlilik standartlarımız."
->
-  <p>
-    DoctorConverter (<strong>doctorconverter.com</strong>) olarak kullanıcılarımızın gizliliğine ve kişisel belgelerinin güvenliğine en üst düzeyde önem veriyoruz. Bu Gizlilik Politikası, hizmetlerimizi kullanırken belgelerinizin ve verilerinizin nasıl işlendiğini, korunduğunu ve imha edildiğini açıklar.
-  </p>
-
-  <h2>1. Sıfır Kalıcı Depolama İlkesi</h2>
-  <p>
-    DoctorConverter, bir bulut depolama veya dosya arşivleme servisi değildir. Temel amacımız yalnızca dönüştürme ve düzenleme işlemlerinizi gerçekleştirmektir.
-  </p>
+<LegalLayout title="Gizlilik Politikası" description="DoctorConverter dosyalarının geçici saklanması, oturum erişimi, analitik ve reklam sağlayıcıları hakkında bilgi.">
+  <p>Bu politika DoctorConverter’ı ziyaret ettiğinde ve belge araçlarını kullandığında işlenen verileri açıklar. Üyelik gerekmez. </p>
+  <nav aria-label="Sayfa bölümleri" class="mb-8 border-y border-border py-4">
+    <p class="mb-2 text-sm font-semibold text-text">Sayfa bölümleri</p>
+    <ol class="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#dosyalar">Dosyalar ve saklama</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#oturum">Oturum ve teknik veriler</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#olcum">Site ölçümü</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#reklam">Reklamlar</a>
+      </li>
+      <li>
+        <a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#iletisim">İletişim</a>
+      </li>
+    </ol>
+  </nav>
+  <h2 id="dosyalar">Dosyalar ve saklama</h2>
   <ul>
-    <li><strong>Otomatik İmha:</strong> Sisteme yüklediğiniz tüm orijinal dosyalar ve oluşturulan çıktı dosyaları, işlem tamamlandıktan sonra en geç <strong>60 dakika</strong> içinde sunucularımızdan fiziksel olarak kalıcı biçimde silinir.</li>
-    <li><strong>Manuel Silme:</strong> İşleminiz bittiğinde sonuç ekranındaki <em>"Dosyaları sil"</em> butonuna tıkladığınız anda dosyalarınız bekleme süresi olmaksızın derhal silinir.</li>
-    <li><strong>İçerik İncelemesi Yoktur:</strong> Dosyalarınızın içeriği otomatik veya manuel olarak hiçbir personelimiz veya üçüncü taraf tarafından görüntülenmez, okunmaz ve yapay zeka modelleri eğitmek için kullanılmaz.</li>
+    <li>Dosyalar yalnızca bir araçta işlemi başlattığında yüklenir. API, tür ve boyut kontrollerinden sonra kabul edilen içeriği özel geçici depolamada tutar; dosya baytları uygulama veritabanında veya kuyruk mesajında saklanmaz.</li>
+    <li>Saklama süresi yapılandırılabilir; varsayılan 60 dakikadır. Araç panelinde API’nin bildirdiği geçerli süre gösterilir. İş dosyaları bu süre sonunda erişilemez olur ve temizlik süreci fiziksel silmeyi yürütür.</li>
+    <li>“Dosyaları sil” isteği dosyalara erişimi hemen kapatır. Silinen baytlar 2 dakikalık temizlik bekleme süresinden sonra periyodik temizlik turunda kaldırılır; aktif dosya kullanımı bu süreyi uzatabilir. İstek fiziksel silmenin tamamlandığı anlamına gelmez.</li>
+    <li>Dönüşüm dosya içeriğini harici dönüşüm veya AI servisine göndermez. Bu, hosting, CDN/ağ veya ölçüm sağlayıcılarının teknik istek verisi işlemesinden ayrıdır.</li>
   </ul>
-
-  <h2>2. Toplanan ve Toplanmayan Bilgiler</h2>
-  <p>
-    Hizmetimiz üyelik veya hesap oluşturma gerektirmez:
-  </p>
+  <h2 id="oturum">Oturum ve teknik veriler</h2>
   <ul>
-    <li><strong>Kişisel Bilgiler:</strong> Ad, soyad, e-posta veya telefon gibi kimlik bilgilerinizi talep etmiyoruz.</li>
-    <li><strong>Oturum Çerezleri (Session Cookies):</strong> Yalnızca dosyalarınızın başkaları tarafından erişilmesini önlemek ve size ait dönüşümleri güvenle eşleştirmek amacıyla şifreli, geçici bir oturum çerezi kullanılır. Bu çerez hiçbir kişisel verinizi içermez ve 24 saat sonra kendiliğinden silinir.</li>
-    <li><strong>Ziyaret İstatistikleri:</strong> Sayfa görüntüleme ve hız ölçümü için çerez kullanmayan, kişisel profil oluşturmayan Cloudflare Web Analytics kullanılır. Dosya içerikleri ve dosya adları bu ölçüme dahil değildir.</li>
-    <li><strong>Teknik Loglar:</strong> Hizmet kalitesini ve siber güvenliği sürdürmek için standart sunucu erişim kayıtları (IP adresi, istek zamanı, dönüştürülen araç türü) tutulur; bu kayıtlar dosya içeriklerini barındırmaz.</li>
+    <li>İsmini, telefonunu veya e-posta adresini hesap açmak için istemeyiz. Bize e-posta gönderirsen yanıtlamak için gönderdiğin iletişim bilgilerini kullanırız.</li>
+    <li>İmzalı, anonim oturum çerezi API yüklemelerini ve işleri aynı tarayıcı oturumuna bağlar; 24 saat sonra sona erer. Bu çerez, dosya içeriğini taşımaz.</li>
+    <li>Uygulama, istek sınırlandırma ve kötüye kullanım önleme için ağ adresinden anahtarlı bir özet üretir. Barındırma, DNS/CDN ve ağ sağlayıcıları isteği iletebilmek ve koruyabilmek için IP adresi gibi bağlantı verilerini ayrıca işleyebilir.</li>
+    <li>Tarayıcıda seçtiğin arayüz dili yerel depolamada tutulur.</li>
   </ul>
-
-  <h2>3. Veri Güvenliği ve İletim</h2>
-  <p>
-    Tarayıcınız ile sunucularımız arasındaki tüm veri akışı endüstri standardı <strong>TLS / HTTPS (256-bit)</strong> şifreleme protokolü ile korunur. Dosyalarınız aktarım sırasında şifrelenir ve üçüncü taraflarca dinlenemez.
-  </p>
-
-  <h2>4. Üçüncü Taraflar ve Reklamlar</h2>
-  <p>
-    Ana sayfada Google AdSense reklamları gösterilebilir. Reklam yüklenirken Google ve iş ortakları; tarayıcı, cihaz, IP adresi ve reklam etkileşimleri gibi teknik verileri işleyebilir, reklam sunumu ve ölçümü için çerez veya benzer teknolojiler kullanabilir. Ayrıntılar ve kontroller için <a href="https://policies.google.com/technologies/ads" rel="nofollow">Google reklam teknolojileri</a> ve <a href="https://policies.google.com/privacy" rel="nofollow">Google Gizlilik Politikası</a> sayfalarını inceleyebilirsiniz. Yüklenen dosyaları, dosya içeriklerini veya dönüşüm meta verilerini reklamverenlere ya da veri komisyoncularına satmıyor veya paylaşmıyoruz. Barındırma ve ağ sağlayıcıları da hizmeti sunmak için trafiği işler.
-  </p>
-
-  <h2>İsteğe bağlı ürün analitiği</h2>
-  <p>Yalnızca analitiğe izin verirseniz PostHog EU ile sayfa ve araç ziyaretlerini, tamamlanan yüklemeleri, tarayıcınızın gözlemlediği işlem durumlarını, indirme tıklamalarını ve genel hata kategorilerini ölçeriz. PostHog anonim analitik kimliği, tarayıcı/cihaz bilgisi ve isteği alabilmek için gerekli ağ adresini işler. Analitik kimliği dosyaya erişim oturumundan ayrıdır ve tarayıcının yerel depolamasında tutulur. Dosya adı, belge içeriği, parola, dosya/iş kimliği, URL sorguları ve indirme bağlantıları gönderilmez. Oturum tekrarı, otomatik tıklama ve ham hata/konsol toplama kapalıdır. Alt bölümdeki “Analitik tercihleri” ile reddedebilir veya izninizi geri çekebilirsiniz; araçları kullanmaya devam edebilirsiniz. Do Not Track ve Global Privacy Control sinyalleri toplama işlemini durdurur. Bu tercih yalnızca PostHog içindir; Google reklamları ve Cloudflare ölçümünü yönetmez. Ayrıntılar için <a href="https://posthog.com/privacy" rel="nofollow">PostHog gizlilik politikası</a>.</p>
-  <h2>5. İletişim</h2>
-  <p>
-    Gizlilik politikamızla ilgili herhangi bir sorunuz veya talebiniz olması durumunda <a href="mailto:destek@doctorconverter.com" class="text-accent underline">destek@doctorconverter.com</a> e-posta adresi üzerinden bizimle iletişime geçebilirsiniz.
-  </p>
+  <h2 id="olcum">Site ölçümü</h2>
+  <p>Canlı alan adında Cloudflare Web Analytics sayfa görüntüleme ve performans ölçümü için Cloudflare tarafından sayfaya eklenir. Cloudflare ayrıca CDN/ağ sağlayıcısı olarak istekleri işler. Analitik tercih düğmesi Cloudflare yapılandırmasını değiştirmez.</p>
+  <p>PostHog EU yalnızca açıkça izin verdiğinde yüklenir. Sayfa ve araç ziyaretleri, yüklemenin API tarafından kabulü, tarayıcının gözlemlediği işlem durumu, indirme tıklaması ve sabit hata kategorileri ölçülebilir. PostHog teknik istek verilerini ve anonim analitik kimliğini alır; bu kimlik dosya erişim oturumundan ayrıdır. Dosya adı/içeriği, parola, dosya/iş kimliği ve indirme adresi analitik olaylarına gönderilmez. Oturum kaydı, otomatik tıklama yakalama ve ham hata/konsol toplama kapalıdır. Tercihini alt bölümdeki “Analitik tercihleri” ile geri çekebilirsin; bu tercih reklamları veya Cloudflare Web Analytics’i kapatmaz. Ayrıntı: <a href="https://posthog.com/privacy" rel="nofollow">PostHog Gizlilik Politikası</a>.</p>
+  <h2 id="reklam">Reklamlar</h2>
+  <p>Ana sayfada Google AdSense reklamı gösterilebilir. Reklam yüklendiğinde Google ve iş ortakları cihaz/tarayıcı, IP adresi ve reklam etkileşimi gibi verileri işleyebilir; reklam sunumu için çerez veya benzer teknolojiler kullanabilir. Kullanıcı ayarları ve ayrıntılar için <a href="https://policies.google.com/technologies/ads" rel="nofollow">Google reklam teknolojileri</a> ve <a href="https://policies.google.com/privacy" rel="nofollow">Google Gizlilik Politikası</a> sayfalarına bak. Yüklenen belge dosyaları veya içerikleri reklam olaylarına gönderilmez.</p>
+  <h2 id="iletisim">İletişim</h2>
+  <p>Gizlilikle ilgili soruların için <a href="mailto:destek@doctorconverter.com" class="text-accent underline">destek@doctorconverter.com</a> adresine yazabilirsin.</p>
 </LegalLayout>

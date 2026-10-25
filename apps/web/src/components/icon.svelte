@@ -32,7 +32,10 @@
     ArrowLeft,
     Download,
     Info,
-    Stethoscope
+    Stethoscope,
+    Presentation,
+    LockOpen,
+    Stamp
   } from '@lucide/svelte';
   import type { Component } from 'svelte';
 
@@ -78,6 +81,9 @@
     compress: Minimize2,
     excel: FileSpreadsheet,
     table: FileSpreadsheet,
+    presentation: Presentation,
+    unlock: LockOpen,
+    stamp: Stamp,
     image: FileImage,
     images: Images,
     scissors: SquareScissors,
