@@ -4,7 +4,7 @@ import { ui } from '../../i18n/ui';
 import type { ToolSeoData } from '../tool-seo';
 import type { Scenario } from './scenarios';
 
-const lang: Record<Locale, string> = { tr: 'tr-TR', en: 'en-US', es: 'es-ES', hi: 'hi-IN' };
+const lang: Record<Locale, string> = { tr: 'tr-TR', en: 'en-US', es: 'es-ES', hi: 'hi-IN', fr: 'fr-FR' };
 const websiteId = `${siteUrl}/#website`;
 const orgId = `${siteUrl}/#organization`;
 
@@ -15,7 +15,7 @@ function app(name: string, description: string, url: string, locale: Locale) {
   return {
     '@type': 'WebApplication', name, url, description, inLanguage: lang[locale],
     applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript',
-    isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: locale === 'tr' ? 'TRY' : locale === 'hi' ? 'INR' : 'USD' },
+    isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: locale === 'tr' ? 'TRY' : locale === 'hi' ? 'INR' : locale === 'fr' ? 'EUR' : 'USD' },
     publisher: { '@id': orgId },
   };
 }
@@ -27,7 +27,7 @@ export function homeGraph(locale: Locale) {
   const url = absoluteUrl(localePath(locale, '/'));
   return { '@context': 'https://schema.org', '@graph': [
     { '@type': 'Organization', '@id': orgId, name: brand.name, url: siteUrl, logo: absoluteUrl('/favicon.svg'), email: 'doctorconverter@doctorconverter.com' },
-    { '@type': 'WebSite', '@id': websiteId, url: siteUrl, name: brand.name, inLanguage: ['tr-TR', 'en-US', 'es-ES', 'hi-IN'], publisher: { '@id': orgId } },
+    { '@type': 'WebSite', '@id': websiteId, url: siteUrl, name: brand.name, inLanguage: ['tr-TR', 'en-US', 'es-ES', 'hi-IN', 'fr-FR'], publisher: { '@id': orgId } },
     app(brand.name, ui[locale].hero.lead, url, locale),
     faqPage(ui[locale].help.questions.map((item) => ({ q: item.title, a: item.text }))),
   ] };

@@ -1,8 +1,20 @@
-import type { ToolId, ToolOptions } from '@convertsite/contracts';
+import { ocrLanguageCodes, type ToolId, type ToolOptions } from '@convertsite/contracts';
 import type { Locale } from '../i18n/locales';
 export interface SettingOption { value: string; label: string; help: string }
-export interface Setting { key: keyof ToolOptions; label: string; options: SettingOption[] }
+export interface Setting { key: keyof ToolOptions; label: string; options: SettingOption[]; multiple?: boolean }
 const choice = (value: string, label: string, help: string): SettingOption => ({ value, label, help });
+function languageName(code: string, locale: string): string {
+  const normalized = code.startsWith('script/') ? code.slice(7).replaceAll('_', ' ') : code.replaceAll('_', '-');
+  try {
+    const name = new Intl.DisplayNames([locale], { type: 'language' }).of(normalized);
+    if (name && name !== normalized) return `${name} (${code})`;
+  } catch { /* Script-only traineddata codes have no BCP 47 display name. */ }
+  return `${code.startsWith('script/') ? 'Script' : 'Language'}: ${normalized}`;
+}
+function ocrSettings(locale: string, translated: { label: string; help: string }): Setting[] {
+  return [{ key: 'language', label: translated.label, multiple: true, options: ocrLanguageCodes
+    .map((code) => choice(code, languageName(code, locale), `${translated.help} (${code})`)) }];
+}
 const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
   tr: {
     'excel-to-pdf': [{ key: 'sheets', label: 'Çalışma sayfaları', options: [choice('all','Tüm çalışma sayfaları','Dosyadaki tüm çalışma sayfalarını PDF’e aktarır.'), choice('first','İlk çalışma sayfası','Yalnızca ilk çalışma sayfasını PDF’e aktarır.')] }],
@@ -21,8 +33,6 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
     'page-numbers': [
       { key: 'pageNumberPosition', label: 'Numara konumu', options: [choice('bottom-center','Alt orta','Numarayı her sayfanın alt orta kısmına ekler.'), choice('bottom-right','Alt sağ','Numarayı her sayfanın alt sağ kısmına ekler.'), choice('top-right','Üst sağ','Numarayı her sayfanın üst sağ kısmına ekler.')] },
     ],
-    ocr: [{ key: 'language', label: 'Belge dili', options: [choice('tur','Türkçe','Türkçe karakter ve sözcükleri tanımak için.'), choice('eng','İngilizce','İngilizce sözcükleri tanımak için.'), choice('tur+eng','Türkçe + İngilizce','İki dilin birlikte bulunduğu belgeler için.')] }],
-    'pdf-to-pdf-ocr': [{ key: 'language', label: 'Belge dili', options: [choice('tur','Türkçe','Türkçe karakter ve sözcükleri tanımak için.'), choice('eng','İngilizce','İngilizce sözcükleri tanımak için.'), choice('tur+eng','Türkçe + İngilizce','İki dilin birlikte bulunduğu belgeler için.')] }],
   },
   en: {
     'excel-to-pdf': [{ key: 'sheets', label: 'Worksheets', options: [choice('all','All worksheets','Exports every worksheet in the file to PDF.'), choice('first','First worksheet only','Exports only the first worksheet to PDF.')] }],
@@ -41,8 +51,6 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
     'page-numbers': [
       { key: 'pageNumberPosition', label: 'Number position', options: [choice('bottom-center','Bottom center','Places the number at the bottom center of each page.'), choice('bottom-right','Bottom right','Places the number at the bottom right of each page.'), choice('top-right','Top right','Places the number at the top right of each page.')] },
     ],
-    ocr: [{ key: 'language', label: 'Document language', options: [choice('eng','English','For recognizing English words.'), choice('tur','Turkish','For recognizing Turkish characters and words.'), choice('tur+eng','Turkish + English','For documents that contain both languages.')] }],
-    'pdf-to-pdf-ocr': [{ key: 'language', label: 'Document language', options: [choice('eng','English','For recognizing English words.'), choice('tur','Turkish','For recognizing Turkish characters and words.'), choice('tur+eng','Turkish + English','For documents that contain both languages.')] }],
   },
   es: {
     'excel-to-pdf': [{ key: 'sheets', label: 'Hojas de cálculo', options: [choice('all','Todas las hojas','Exporta todas las hojas del archivo a PDF.'), choice('first','Solo la primera hoja','Exporta únicamente la primera hoja a PDF.')] }],
@@ -59,8 +67,6 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
       { key: 'rotation', label: 'Girar páginas seleccionadas', options: [choice('0','Sin giro','Mantiene la orientación actual.'), choice('90','90° a la derecha','Gira las páginas seleccionadas 90° en sentido horario.'), choice('180','180°','Gira las páginas media vuelta.'), choice('270','90° a la izquierda','Gira las páginas seleccionadas 90° en sentido antihorario.')] },
     ],
     'page-numbers': [{ key: 'pageNumberPosition', label: 'Posición del número', options: [choice('bottom-center','Abajo, centrado','Coloca el número en el centro del pie de página.'), choice('bottom-right','Abajo, a la derecha','Coloca el número en la esquina inferior derecha.'), choice('top-right','Arriba, a la derecha','Coloca el número en la esquina superior derecha.')] }],
-    ocr: [{ key: 'language', label: 'Idioma del documento', options: [choice('eng','Inglés','Para reconocer palabras en inglés.'), choice('tur','Turco','Para reconocer caracteres y palabras en turco.'), choice('tur+eng','Turco e inglés','Para documentos que contienen ambos idiomas.')] }],
-    'pdf-to-pdf-ocr': [{ key: 'language', label: 'Idioma del documento', options: [choice('eng','Inglés','Para reconocer palabras en inglés.'), choice('tur','Turco','Para reconocer caracteres y palabras en turco.'), choice('tur+eng','Turco e inglés','Para documentos que contienen ambos idiomas.')] }],
   },
   hi: {
     'excel-to-pdf': [{ key: 'sheets', label: 'वर्कशीट', options: [choice('all','सभी वर्कशीट','फ़ाइल की सभी वर्कशीट को PDF में निर्यात करता है।'), choice('first','केवल पहली वर्कशीट','केवल पहली वर्कशीट को PDF में निर्यात करता है।')] }],
@@ -77,12 +83,37 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
       { key: 'rotation', label: 'चुने हुए पृष्ठ घुमाएँ', options: [choice('0','न घुमाएँ','पृष्ठों की मौजूदा दिशा बनाए रखता है।'), choice('90','90° दाएँ','चुने हुए पृष्ठों को घड़ी की दिशा में 90° घुमाता है।'), choice('180','180°','चुने हुए पृष्ठों को आधा घुमाता है।'), choice('270','90° बाएँ','चुने हुए पृष्ठों को घड़ी की उलटी दिशा में 90° घुमाता है।')] },
     ],
     'page-numbers': [{ key: 'pageNumberPosition', label: 'संख्या की जगह', options: [choice('bottom-center','नीचे बीच में','हर पृष्ठ के नीचे बीच में संख्या रखता है।'), choice('bottom-right','नीचे दाएँ','हर पृष्ठ के नीचे दाएँ संख्या रखता है।'), choice('top-right','ऊपर दाएँ','हर पृष्ठ के ऊपर दाएँ संख्या रखता है।')] }],
-    // OCR engine currently supports English and Turkish only; do not offer Hindi here.
-    ocr: [{ key: 'language', label: 'दस्तावेज़ की भाषा', options: [choice('eng','अंग्रेज़ी','अंग्रेज़ी शब्द पहचानने के लिए।'), choice('tur','तुर्की','तुर्की अक्षर और शब्द पहचानने के लिए।'), choice('tur+eng','तुर्की + अंग्रेज़ी','दोनों भाषाओं वाले दस्तावेज़ों के लिए।')] }],
-    'pdf-to-pdf-ocr': [{ key: 'language', label: 'दस्तावेज़ की भाषा', options: [choice('eng','अंग्रेज़ी','अंग्रेज़ी शब्द पहचानने के लिए।'), choice('tur','तुर्की','तुर्की अक्षर और शब्द पहचानने के लिए।'), choice('tur+eng','तुर्की + अंग्रेज़ी','दोनों भाषाओं वाले दस्तावेज़ों के लिए।')] }],
+  },
+  fr: {
+    'excel-to-pdf': [{ key: 'sheets', label: 'Feuilles de calcul', options: [choice('all','Toutes les feuilles','Exporte toutes les feuilles du classeur en PDF.'), choice('first','Première feuille uniquement','Exporte uniquement la première feuille en PDF.')] }],
+    'pdf-to-images': [
+      { key: 'format', label: 'Format de l’image', options: [choice('jpg','JPG','Pour les photos et les fichiers plus légers ; la compression peut réduire les détails.'), choice('png','PNG','Pour le texte et les contours nets ; les fichiers peuvent être plus volumineux.')] },
+      { key: 'dpi', label: 'Qualité de l’image', options: [choice('100','Standard','Résolution plus faible et fichier généralement plus léger.'), choice('150','Élevée','Plus de détails et fichier généralement plus volumineux.')] },
+    ],
+    'images-to-pdf': [
+      { key: 'size', label: 'Format de page', options: [choice('a4','A4','Place les images sur des pages A4.'), choice('image','Adapté à l’image','Adapte chaque page aux dimensions de l’image.')] },
+      { key: 'orientation', label: 'Orientation', options: [choice('portrait','Portrait','Crée des pages en orientation portrait.'), choice('landscape','Paysage','Crée des pages en orientation paysage.')] },
+    ],
+    'edit-pdf-pages': [
+      { key: 'mode', label: 'Sortie', options: [choice('pdf','Pages sélectionnées dans un PDF','Réunit les pages sélectionnées dans un PDF.'), choice('zip','Un PDF par page (ZIP)','Crée un PDF par page sélectionnée et les regroupe dans un ZIP.')] },
+      { key: 'rotation', label: 'Pivoter les pages sélectionnées', options: [choice('0','Aucune rotation','Conserve l’orientation actuelle.'), choice('90','90° à droite','Pivote les pages de 90° dans le sens horaire.'), choice('180','180°','Pivote les pages d’un demi-tour.'), choice('270','90° à gauche','Pivote les pages de 90° dans le sens antihoraire.')] },
+    ],
+    'page-numbers': [{ key: 'pageNumberPosition', label: 'Position du numéro', options: [choice('bottom-center','En bas, au centre','Place le numéro au centre du bas de chaque page.'), choice('bottom-right','En bas à droite','Place le numéro en bas à droite de chaque page.'), choice('top-right','En haut à droite','Place le numéro en haut à droite de chaque page.')] }],
   },
 };
-export function getSettings(id: ToolId, locale: Locale = 'tr'): Setting[] { return settings[locale][id] ?? []; }
+export function getSettings(id: ToolId, locale: Locale = 'tr'): Setting[] {
+  if (id === 'ocr' || id === 'pdf-to-pdf-ocr') {
+    const labels = {
+      tr: { label: 'Belge dilleri (en fazla 2)', help: 'Kurulu Tesseract dillerinden en fazla ikisini seç. İkinci dili seçmek için Ctrl (Mac’te ⌘) tuşunu basılı tut.' },
+      en: { label: 'Document languages (up to 2)', help: 'Choose up to two installed Tesseract languages. Hold Ctrl (⌘ on Mac) to select a second language.' },
+      es: { label: 'Idiomas del documento (hasta 2)', help: 'Elige hasta dos idiomas instalados de Tesseract. Mantén Ctrl (⌘ en Mac) para elegir el segundo.' },
+      fr: { label: 'Langues du document (2 maximum)', help: 'Choisissez jusqu’à deux langues Tesseract installées. Maintenez Ctrl (⌘ sur Mac) pour choisir la seconde.' },
+      hi: { label: 'दस्तावेज़ की भाषाएँ (अधिकतम 2)', help: 'इंस्टॉल किए गए Tesseract में से दो भाषाएँ चुनें। दूसरी भाषा चुनने के लिए Ctrl (Mac पर ⌘) दबाए रखें।' },
+    };
+    return ocrSettings(locale, labels[locale]);
+  }
+  return settings[locale][id] ?? [];
+}
 export function requestOptions(id: ToolId, selected: Record<string,string>, pages: string, locale: Locale = 'tr', customText?: string): ToolOptions {
   const entries = getSettings(id, locale).map((setting) => {
     const value = selected[setting.key] ?? setting.options[0].value;

@@ -198,9 +198,13 @@ describe('all ten real engines', () => {
     expect(left).toBeGreaterThan(0.03); expect(top).toBeGreaterThan(0.03); expect(right).toBeLessThan(0.97); expect(bottom).toBeLessThan(0.97);
     expect(right - left).toBeGreaterThan(0.3);
   });
+  it('stamps Hindi watermark text with an embedded Devanagari font', async () => {
+    const result = await execute('watermark-pdf', ['pages.pdf'], { watermarkText: 'नमस्ते भारत' });
+    const report = await watermarkReport(result.download.rawPayload);
+    expect(report.text.replace(/\\s+/g, ' ')).toContain('नमस्ते भारत');
+  });
   it('rejects a watermark that cannot be rendered legibly instead of returning a broken file', async () => {
     expect((await execute('watermark-pdf', ['pages.pdf'], { watermarkText: 'x'.repeat(80) }, 'failed')).job.error).toBe('INVALID_OPTIONS');
-    expect((await execute('watermark-pdf', ['pages.pdf'], { watermarkText: '中文' }, 'failed')).job.error).toBe('INVALID_OPTIONS');
   });
   it('renders selected PDF pages into ordered PNGs in a ZIP', async () => {
     const result = await execute('pdf-to-images', ['pages.pdf'], { pages: '3,1', format: 'png', dpi: 100 });
@@ -241,10 +245,20 @@ describe('all ten real engines', () => {
     expect(result.job.resultKind).toBe('txt');
     expect(result.download.rawPayload.toString('utf8')).toContain('MERHABA');
   });
+  it('recognizes Hindi text with the installed Hindi and English models', async () => {
+    const result = await execute('ocr', ['hindi.png'], { language: 'hin+eng' });
+    const text = result.download.rawPayload.toString('utf8');
+    expect(text).toContain('हिंदी दस्तावेज़ परीक्षण');
+    expect(text).toContain('नमस्ते भारत');
+  });
   it('adds a searchable text layer to a scanned PDF', async () => {
     const result = await execute('pdf-to-pdf-ocr', ['scanned.pdf'], { language: 'tur' });
     expect(result.job.resultKind).toBe('pdf');
     expect(await pdfText(result.download.rawPayload)).toContain('MERHABA');
+  });
+  it('adds searchable Hindi text to a scanned PDF', async () => {
+    const result = await execute('pdf-to-pdf-ocr', ['hindi-scanned.pdf'], { language: 'hin+eng' });
+    expect(await pdfText(result.download.rawPayload)).toContain('नमस्ते भारत');
   });
   it('does not invent tables or text for unsupported PDF content', async () => {
     expect((await execute('pdf-to-excel', ['pages.pdf'], {}, 'failed')).job.error).toBe('NO_TABLES');

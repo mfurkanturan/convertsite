@@ -21,9 +21,9 @@ Temel vaat: Aracını seç, dosyanı yükle, işlemi tamamla ve sonucu indir. D�
 | merge-pdf | PDF birleştir | En az iki PDF, kullanıcı tarafından belirlenen dosya sırası | PDF |
 | edit-pdf-pages | PDF böl ve sayfa düzenle | Sayfa seç, sil, sırala, döndür; tek PDF veya sayfa başına dosya | PDF veya ZIP |
 | compress-pdf | PDF sıkıştır | Kayıpsız optimizasyon; kayıplı profil yalnızca doğrulanmış motorla | PDF |
-| ocr | OCR / metin çıkar | PDF, JPG veya PNG; Türkçe ve İngilizce; düz metin çıkarma | UTF-8 TXT |
+| ocr | OCR / metin çıkar | PDF, JPG veya PNG; kurulu Tesseract dil modellerinden en fazla iki seçim; düz metin çıkarma | UTF-8 TXT |
 
-OCR (metin çıkar) aracı yalnızca düz metin üretir; aranabilir PDF için ayrı `pdf-to-pdf-ocr` aracı kullanılır. Özgün yerleşimi koruyan Word üretimi ilk sürümde söz verilmez. PDF → Word ve PDF → Excel araçları, kalite kapısını geçmeden halka açık olarak etkinleştirilmez. Kullanılamayan araç işlem kabul etmez ve çalışıyormuş gibi gösterilmez.
+OCR (metin çıkar) aracı yalnızca düz metin üretir; aranabilir PDF için ayrı `pdf-to-pdf-ocr` aracı kullanılır. OCR dili arayüz dilinden bağımsızdır; kurulu Tesseract modellerinden en fazla iki tanesi seçilebilir. Motor modeli bulunmayan dilleri veya tüm belgelerde aynı doğruluğu garanti etmez. Özgün yerleşimi koruyan Word üretimi ilk sürümde söz verilmez. PDF → Word ve PDF → Excel araçları, kalite kapısını geçmeden halka açık olarak etkinleştirilmez. Kullanılamayan araç işlem kabul etmez ve çalışıyormuş gibi gösterilmez.
 
 ## Güncel kayıtlı envanter
 
@@ -33,7 +33,7 @@ Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `
 
 Bu varsayımlar tasarım ve geliştirme başlangıcı içindir; geri döndürülemez ürün kararı değildir.
 
-- İngilizce arayüz kök URL'de; Türkçe `/tr/`, İspanyolca `/es/` ve Hintçe `/hi/` altında sunulur. OCR'ın desteklediği belge dilleri arayüz dillerinden bağımsızdır; mevcut motor kapsamı Türkçe ve İngilizcedir.
+- İngilizce arayüz kök URL'de; Türkçe `/tr/`, İspanyolca `/es/`, Fransızca `/fr/` ve Hintçe `/hi/` altında sunulur. OCR'ın desteklediği belge dilleri arayüz dillerinden bağımsızdır ve motor imajında kurulu Tesseract modellerine göre belirlenir.
 - Üyeliksiz kullanım; anonim ziyaretçi için güvenli sunucu oturumu ve işlem sahipliği.
 - Araç başına bir işlem oluşturma; çok dosyalı girdi yalnızca ilgili aracın gerektirdiği yerde.
 - PDF sıkıştırmada her dosyanın küçüleceği garanti edilmez.

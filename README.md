@@ -1,6 +1,6 @@
 # Docly — belge araçları
 
-Astro + Svelte arayüzü ve modüler Fastify backend. **15 araç için yerel motor handler'ı kayıtlıdır:** QPDF, Poppler, LibreOffice, Tesseract ve Python belge/görsel adaptörleri. Kayıtlı olmak uçtan uca destek veya üretim kalitesi onayı değildir; özellikle PPTX, şifreleme ve parola kaldırma akışlarının engelleri [motor incelemesinde](docs/ENGINE-AUDIT.md) belgelenir.
+Astro + Svelte arayüzü ve modüler Fastify backend. **16 araç için yerel motor handler'ı kayıtlıdır:** QPDF, Poppler, LibreOffice, Tesseract ve Python belge/görsel adaptörleri. OCR, Tesseract'ın kurulu 123 dil modelini destekler; doğruluk dile ve belgeye göre değişir. Kayıtlı olmak uçtan uca destek veya üretim kalitesi onayı değildir; özellikle PPTX, şifreleme ve parola kaldırma akışlarının engelleri [motor incelemesinde](docs/ENGINE-AUDIT.md) belgelenir.
 
 ## Yerel kurulum
 

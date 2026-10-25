@@ -40,7 +40,7 @@ Birden fazla sunucuya geçmeden önce S3 uyumlu nesne depolama adaptörü ekleni
 | Office motorunu HTTP ile sarmalama | İhtiyaç halinde Gotenberg | CLI'ya göre işletim faydası ve ek kaynak maliyeti |
 | PDF birleştirme/bölme/döndürme | QPDF | Sayfa sırası, döndürme, bozuk belge ve çıktı bütünlüğü |
 | PDF sıkıştırma | Önce QPDF kayıpsız profil; kayıplı motor ayrıca seçilir | Boyut/kalite karşılaştırması; her PDF'nin küçüleceği varsayılmaz |
-| OCR | Tesseract ve PDF için ayrı rasterizer | Türkçe/İngilizce doğruluk, DPI ve süre/bellek sınırları |
+| OCR | Tesseract ve PDF için ayrı rasterizer | Kurulu 123 dil modeli; dil başına doğruluk ve süre/bellek sınırları ayrıca ölçülür |
 | PDF rasterizasyonu / görsel → PDF | Poppler + Pillow/ReportLab seçildi | Sentetik örnekler doğrulandı; geniş corpus ve kapasite ölçümü sürüyor |
 | PDF → DOCX | pdf2docx + PyMuPDF + python-docx | Koordinat, font, görsel, tablo ve sütun analiziyle düzenlenebilir DOCX; birebir garanti yok. Bakım ve lisans koşulları ENGINE-SUPPORT içinde |
 | PDF → XLSX | pdfplumber + openpyxl | Algılanan tabloları aktarır; taranmış tablolar desteklenmez |

@@ -63,7 +63,7 @@ Motor gerçek ilerleme sağlamıyorsa sahte yüzde veya tahmini sıra numarası 
 | Birleştirme | PDF dosyalarını sıralama; en az iki girdi |
 | Sayfa düzenleme | Küçük resimler, seçme, silme, taşıma, 90 derece adımlarla döndürme; en az bir çıktı sayfası |
 | Sıkıştırma | Gerçekte desteklenen profil; sonuçta önceki/sonraki boyut |
-| OCR | Türkçe/İngilizce dil seçimi ve TXT çıktısı açıklaması |
+| OCR | Kurulu Tesseract dillerinden en fazla ikisini seçme ve TXT çıktısı açıklaması |
 
 Sayfa küçük resimleri oluşturma işlemi de kaynak sınırlarına tabidir. Önizleme oluşturulurken tam çözünürlüklü tüm sayfalar tarayıcı belleğine alınmaz.
 
@@ -78,11 +78,11 @@ Sayfa küçük resimleri oluşturma işlemi de kaynak sınırlarına tabidir. Ö
 
 ## Dil ve yerelleştirme
 
-- Uygulama arayüzü İngilizce (`/`), Türkçe (`/tr/`), İspanyolca (`/es/`) ve Hintçe (`/hi/`) sayfa gruplarını destekler. Hindi, Devanagari yazı sistemiyle ve standart `hi` dil koduyla sunulur; `hi-IN` Open Graph/structured-data bölge bilgisidir.
-- Ortak kontrol metinleri `apps/web/src/i18n/ui.ts` içindeki tipli arayüz sözlüğünde; yerel karşılıklar `ui-es.ts` ve `ui-hi.ts` dosyalarında tutulur. Araç ayarları, araç SEO içeriği ve kullanım rehberleri ayrı, yerelleştirilmiş veri kaynaklarıdır. Hiçbiri harici CMS'ten yüklenmez; metinler derleme sırasında uygulamaya girer.
+- Uygulama arayüzü İngilizce (`/`), Türkçe (`/tr/`), İspanyolca (`/es/`), Fransızca (`/fr/`) ve Hintçe (`/hi/`) sayfa gruplarını destekler. Fransızca `fr`/`fr-FR`, Hintçe Devanagari yazı sistemiyle `hi`/`hi-IN` olarak sunulur.
+- Ortak kontrol metinleri `apps/web/src/i18n/ui.ts` içindeki tipli arayüz sözlüğünde; yerel karşılıklar `ui-es.ts`, `ui-hi.ts` ve `ui-fr.ts` dosyalarında tutulur. Araç ayarları, araç SEO içeriği ve kullanım rehberleri ayrı, yerelleştirilmiş veri kaynaklarıdır. Hiçbiri harici CMS'ten yüklenmez; metinler derleme sırasında uygulamaya girer.
 - `pnpm --filter @convertsite/web check:i18n`, sözlük anahtarlarını/fonksiyon imzalarını, İngilizceye sessizce düşen metinleri ve yerelleştirilmiş araç/rehber kapsamını denetler.
-- Arayüz dili ile motorun belge tanıma dilleri farklı kavramlardır. OCR motoru İngilizce ve Türkçe destekler; Hintçe arayüzü Hintçe OCR desteği anlamına gelmez. Araç ekranı ve SEO metni bu sınırı açıkça söyler.
-- Hintçe başlangıç sürümünde 16 araç rotası, ortak sayfalar ve üç seçilmiş kullanım rehberi yerelleştirilmiştir. Sadece karşılığı bulunan sayfalara hreflang alternatifi eklenir; eksik Hintçe rehber URL'leri üretilmez.
+- Arayüz dili ile motorun belge tanıma dilleri farklı kavramlardır. OCR motoru İngilizce ve Türkçe destekler; Fransızca veya Hintçe arayüzü bu diller için OCR desteği anlamına gelmez. Araç ekranı ve SEO metni bu sınırı açıkça söyler.
+- Fransızca başlangıç sürümünde 16 araç rotası, ana sayfa, ortak/yasal sayfalar ve üç seçilmiş kullanım rehberi yerelleştirilmiştir. Hintçe rehber kapsamı ayrıca kendi kaynak listesinde tutulur. Sadece karşılığı bulunan sayfalara hreflang alternatifi eklenir; eksik rehber URL'leri üretilmez.
 
 ## Sprint 5 rehber ve güven anlatımı
 

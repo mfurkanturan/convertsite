@@ -18,7 +18,7 @@ interface Props {
   locale?: Locale;
 }
 
-const { title, description, locale = 'tr', updatedAt = locale === 'tr' ? '25 Ekim 2026' : locale === 'es' ? '25 de octubre de 2026' : locale === 'hi' ? '25 अक्टूबर 2026' : 'October 25, 2026' } = Astro.props;
+const { title, description, locale = 'tr', updatedAt = locale === 'tr' ? '25 Ekim 2026' : locale === 'es' ? '25 de octubre de 2026' : locale === 'hi' ? '25 अक्टूबर 2026' : locale === 'fr' ? '25 octobre 2026' : 'October 25, 2026' } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const alternates = staticPairs.find((pair) => pair[locale] === path) ?? { [locale]: path };
 const text = ui[locale];

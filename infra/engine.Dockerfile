@@ -1,5 +1,5 @@
 FROM node:24-bookworm-slim
-RUN apt-get update && apt-get install -y --no-install-recommends qpdf util-linux poppler-utils python3 python3-venv libreoffice-writer libreoffice-calc libreoffice-impress tesseract-ocr tesseract-ocr-eng tesseract-ocr-tur fonts-dejavu-core fonts-liberation2 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends qpdf util-linux poppler-utils python3 python3-venv libreoffice-writer libreoffice-calc libreoffice-impress tesseract-ocr-all fonts-dejavu-core fonts-liberation2 fonts-noto-core fonts-noto-cjk && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y --no-install-recommends fonts-crosextra-carlito fonts-crosextra-caladea && rm -rf /var/lib/apt/lists/*
 COPY apps/server/engine/requirements.txt /tmp/requirements.txt
 RUN python3 -m venv /opt/docly-python && /opt/docly-python/bin/pip install --no-cache-dir -r /tmp/requirements.txt

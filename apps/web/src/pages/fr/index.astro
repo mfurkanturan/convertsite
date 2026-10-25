@@ -1,0 +1,15 @@
+---
+import AppLayout from '../../layouts/app-layout.astro';
+import HomeGuides from '../../components/home-guides.astro';
+import AdSlot from '../../components/ad-slot.astro';
+import { brand } from '../../lib/brand';
+import { homeGraph } from '../../lib/seo/structured-data';
+---
+<AppLayout locale="fr" title="Outils PDF gratuits : convertir, fusionner et compresser | DoctorConverter"
+  description="Convertissez des PDF en Word ou Excel, fusionnez ou compressez des documents, créez un PDF à partir d’images et utilisez l’OCR. Les formats et limites sont indiqués pour chaque outil."
+  alternates={{ en: '/', tr: '/tr/', es: '/es/', hi: '/hi/', fr: '/fr/' }}
+  keywords={['outils PDF', 'PDF en Word', 'fusionner PDF', 'compresser PDF', 'images en PDF', 'OCR', brand.name]}
+  jsonLd={homeGraph('fr')}>
+  <AdSlot slot="home" placement="home-after-tools" locale="fr" />
+  <HomeGuides slot="home" locale="fr" />
+</AppLayout>

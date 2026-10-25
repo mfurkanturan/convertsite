@@ -133,10 +133,40 @@ const hindiAliases: Partial<Record<ToolId, string[]>> = {
   ocr: ['पीडीएफ से टेक्स्ट निकालें', 'ओसीआर'], 'pdf-to-pdf-ocr': ['खोजने योग्य पीडीएफ'],
 };
 
+const french: Record<ToolId, Pick<Tool, 'name' | 'description'>> = {
+  'pdf-to-word': { name: 'PDF en Word', description: 'Convertit un PDF contenant du texte en document Word modifiable.' },
+  'word-to-pdf': { name: 'Word en PDF', description: 'Convertit un document DOCX en PDF.' },
+  'merge-pdf': { name: 'Fusionner des PDF', description: 'Réunit des fichiers PDF dans l’ordre choisi.' },
+  'compress-pdf': { name: 'Compresser un PDF', description: 'Essaie de réduire la taille d’un fichier PDF.' },
+  'pdf-to-excel': { name: 'PDF en Excel', description: 'Exporte vers Excel les tableaux détectés dans un PDF.' },
+  'excel-to-pdf': { name: 'Excel en PDF', description: 'Convertit des feuilles XLSX en PDF.' },
+  'pptx-to-pdf': { name: 'PowerPoint en PDF', description: 'Convertit une présentation PPTX en PDF.' },
+  'pdf-to-images': { name: 'PDF en JPG / PNG', description: 'Exporte les pages d’un PDF en images JPG ou PNG.' },
+  'images-to-pdf': { name: 'Images en PDF', description: 'Réunit des images JPG et PNG dans un PDF.' },
+  'edit-pdf-pages': { name: 'Organiser les pages PDF', description: 'Réordonne, pivote, sépare ou supprime des pages PDF.' },
+  'page-numbers': { name: 'Numéroter les pages', description: 'Ajoute le numéro de page et le nombre total au PDF.' },
+  'watermark-pdf': { name: 'Ajouter un filigrane', description: 'Ajoute un filigrane texte sur les pages d’un PDF.' },
+  'protect-pdf': { name: 'Protéger un PDF', description: 'Définit un mot de passe nécessaire pour ouvrir un PDF.' },
+  'unlock-pdf': { name: 'Retirer le mot de passe PDF', description: 'Retire la protection d’un PDF dont vous connaissez le mot de passe.' },
+  ocr: { name: 'Extraire le texte (OCR)', description: 'Extrait le texte d’un PDF ou d’une image dans un fichier TXT.' },
+  'pdf-to-pdf-ocr': { name: 'Créer un PDF consultable (OCR)', description: 'Ajoute du texte sélectionnable et consultable à un PDF numérisé.' },
+};
+
+const frenchAliases: Partial<Record<ToolId, string[]>> = {
+  'pdf-to-word': ['convertir pdf en word', 'pdf en docx'], 'word-to-pdf': ['convertir word en pdf', 'docx en pdf'],
+  'merge-pdf': ['fusionner pdf', 'assembler pdf', 'réunir des pdf'], 'compress-pdf': ['compresser pdf', 'réduire taille pdf'],
+  'pdf-to-excel': ['convertir pdf en excel', 'pdf en xlsx'], 'excel-to-pdf': ['convertir excel en pdf', 'xlsx en pdf'],
+  'pptx-to-pdf': ['powerpoint en pdf', 'pptx en pdf'], 'pdf-to-images': ['pdf en jpg', 'pdf en png'],
+  'images-to-pdf': ['jpg en pdf', 'png en pdf', 'photos en pdf'], 'edit-pdf-pages': ['organiser pages pdf', 'pivoter pages pdf'],
+  'page-numbers': ['numéroter pdf', 'pagination pdf'], 'watermark-pdf': ['filigrane pdf', 'ajouter filigrane'],
+  'protect-pdf': ['protéger pdf', 'mot de passe pdf'], 'unlock-pdf': ['déverrouiller pdf', 'retirer mot de passe pdf'],
+  ocr: ['ocr pdf', 'extraire texte image'], 'pdf-to-pdf-ocr': ['pdf consultable', 'ocr pdf numérisé'],
+};
+
 export function localizedTools(locale: Locale): Tool[] {
   if (locale === 'tr') return tools;
-  const copy = locale === 'es' ? spanish : locale === 'hi' ? hindi : english;
-  const aliases = locale === 'es' ? spanishAliases : locale === 'hi' ? hindiAliases : undefined;
+  const copy = locale === 'es' ? spanish : locale === 'hi' ? hindi : locale === 'fr' ? french : english;
+  const aliases = locale === 'es' ? spanishAliases : locale === 'hi' ? hindiAliases : locale === 'fr' ? frenchAliases : undefined;
   return tools.map((tool) => ({ ...tool, ...copy[tool.id], ...(aliases ? { aliases: [...(tool.aliases ?? []), ...(aliases[tool.id] ?? [])] } : {}) }));
 }
 
@@ -157,6 +187,7 @@ export function searchableToolText(tool: Tool): string {
   const englishText = english[tool.id];
   const spanishText = spanish[tool.id];
   const hindiText = hindi[tool.id];
+  const frenchText = french[tool.id];
   return normalizeSearch([
     tool.name,
     tool.description,
@@ -166,5 +197,6 @@ export function searchableToolText(tool: Tool): string {
     ...(englishText ? [englishText.name, englishText.description] : []),
     ...(spanishText ? [spanishText.name, spanishText.description, ...(spanishAliases[tool.id] ?? [])] : []),
     ...(hindiText ? [hindiText.name, hindiText.description, ...(hindiAliases[tool.id] ?? [])] : []),
+    ...(frenchText ? [frenchText.name, frenchText.description, ...(frenchAliases[tool.id] ?? [])] : []),
   ].join(' '));
 }

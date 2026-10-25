@@ -4,7 +4,7 @@
   export let alternates: Partial<Record<Locale, string>>;
   export let locale: Locale;
   const controls = useUi().controls.languagePicker;
-  const languageNames: Record<Locale, string> = { en: 'English', es: 'Español', tr: 'Türkçe', hi: 'हिन्दी' };
+  const languageNames: Record<Locale, string> = { en: 'English', es: 'Español', tr: 'Türkçe', hi: 'हिन्दी', fr: 'Français' };
   // An explicit choice outranks browser language and country detection on later visits.
   function remember(event: MouseEvent, target: Locale) {
     try { localStorage.setItem('dc-locale', target); } catch { /* storage unavailable */ }

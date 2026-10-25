@@ -4,6 +4,7 @@ import { toolSeoMap } from '../lib/tool-seo';
 import { toolSeoMapEn } from '../lib/tool-seo-en';
 import { toolSeoMapEs } from '../lib/tool-seo-es';
 import { toolSeoMapHi } from '../lib/tool-seo-hi';
+import { toolSeoMapFr } from '../lib/tool-seo-fr';
 import { ui } from '../i18n/ui';
 import { localePath, type Locale } from '../i18n/locales';
 import { figureSize, relatedScenarios, scenarioBase, scenarioPath, type Scenario } from '../lib/seo/scenarios';
@@ -14,7 +15,7 @@ const text = ui[locale].seo;
 const controls = ui[locale].controls;
 const tools = getTools(locale).filter((tool) => scenario.tools.includes(tool.id));
 const related = relatedScenarios(locale, scenario);
-const outputCheck = ({ tr: toolSeoMap, en: toolSeoMapEn, es: toolSeoMapEs, hi: toolSeoMapHi } as const)[locale][scenario.tool].resultCheck;
+const outputCheck = ({ tr: toolSeoMap, en: toolSeoMapEn, es: toolSeoMapEs, hi: toolSeoMapHi, fr: toolSeoMapFr } as const)[locale][scenario.tool].resultCheck;
 ---
 
 <article class="editorial-content mt-12 space-y-10 border-t border-border/70 pt-10 text-text">

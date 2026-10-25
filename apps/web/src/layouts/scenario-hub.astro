@@ -20,11 +20,12 @@ const controls = ui[locale].controls;
 const path = localePath(locale, scenarioBase[locale]);
 const list = scenarios[locale];
 const tools = getTools(locale);
-const alternates = { en: '/use-cases/', tr: '/tr/kullanim/', es: '/es/casos-de-uso/', hi: '/hi/upayog/' };
+const alternates = { en: '/use-cases/', tr: '/tr/kullanim/', es: '/es/casos-de-uso/', hi: '/hi/upayog/', fr: '/fr/guides/' };
 const title = locale === 'tr'
   ? `PDF ve Belge Kullanım Rehberleri – UYAP, Vize, CV, Ödev | ${brand.name}`
   : locale === 'es' ? `Guías para trabajar con PDF – Visados, currículums y documentos | ${brand.name}`
   : locale === 'hi' ? `PDF और दस्तावेज़ उपयोग गाइड | ${brand.name}`
+  : locale === 'fr' ? `Guides pratiques PDF et documents | ${brand.name}`
   : `PDF Guides – Resumes, Visas, Court Filing, Homework | ${brand.name}`;
 ---
 <!doctype html>

@@ -1,7 +1,8 @@
 import math
+import os
 from common import EngineError
+from font_support import font_for_text
 
-# Same font the engine image installs (fonts-dejavu-core); explicit path, no implicit fallback.
 FONT_FILE = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 ANGLE = math.radians(35)
 MAX_FONT = 44
@@ -10,10 +11,10 @@ MARGIN = 0.9
 COLOR = (0.75, 0.2, 0.2)
 
 
-def load_font():
+def load_font(font_file):
     import fitz
     try:
-        return fitz.Font(fontfile=FONT_FILE)
+        return fitz.Font(fontfile=font_file)
     except Exception:
         raise EngineError("ENGINE_UNAVAILABLE")
 
@@ -31,7 +32,7 @@ def font_size(font, text, width, height):
     return size
 
 
-def stamp_page(page, font, text):
+def stamp_page(page, font, font_file, text):
     import fitz
     visible = page.rect  # CropBox with page rotation applied
     size = font_size(font, text, visible.width, visible.height)
@@ -43,16 +44,18 @@ def stamp_page(page, font, text):
     origin = start * page.derotation_matrix
     # Rotate the glyphs by the visible angle plus the page rotation so they read upright on a rotated page.
     turn = fitz.Matrix(math.degrees(ANGLE) + page.rotation)
-    page.insert_text(origin, text, fontsize=size, fontname="DocWatermark", fontfile=FONT_FILE,
+    font_name = "DocWatermark_" + os.path.basename(font_file).split(".")[0]
+    page.insert_text(origin, text, fontsize=size, fontname=font_name, fontfile=font_file,
                      color=COLOR, fill_opacity=0.35, morph=(origin, turn), rotate=0)
 
 
 def apply_watermark(source, output, text):
     import fitz
-    font = load_font()
+    font_file = font_for_text(text) or FONT_FILE
+    font = load_font(font_file)
     if any(not font.has_glyph(ord(ch)) for ch in text):
         raise EngineError("INVALID_OPTIONS")
     with fitz.open(source) as doc:
         for page in doc:
-            stamp_page(page, font, text)
+            stamp_page(page, font, font_file, text)
         doc.save(output)

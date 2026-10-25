@@ -111,8 +111,17 @@
       </div>
       {#each settings as setting}
         <label for={setting.key} class="mt-5 mb-1.5 block text-sm font-medium text-text">{setting.label}</label>
-        <select id={setting.key} aria-describedby={`setting-help-${setting.key}`} disabled={busy} value={selectedSettings[setting.key] ?? setting.options[0].value} onchange={(event) => selectedSettings = { ...selectedSettings, [setting.key]: event.currentTarget.value }} class="field">{#each setting.options as option}<option value={option.value}>{option.label}</option>{/each}</select>
-        <small id={`setting-help-${setting.key}`} class="mt-2 block min-h-10 text-[13px] leading-relaxed text-text-muted">{setting.options.find((option) => option.value === (selectedSettings[setting.key] ?? setting.options[0].value))?.help}</small>
+        <select id={setting.key} aria-describedby={`setting-help-${setting.key}`} disabled={busy} multiple={setting.multiple} size={setting.multiple ? 8 : undefined} value={setting.multiple ? (selectedSettings[setting.key] ?? setting.options[0].value).split('+') : (selectedSettings[setting.key] ?? setting.options[0].value)} onchange={(event) => {
+          const select = event.currentTarget;
+          if (setting.multiple) {
+            const previous = (selectedSettings[setting.key] ?? setting.options[0].value).split('+');
+            const chosen = [...select.selectedOptions].map((option) => option.value);
+            const newlyChosen = chosen.filter((value) => !previous.includes(value));
+            const next = chosen.length > 2 ? [...previous.filter((value) => chosen.includes(value)), ...newlyChosen].slice(-2) : chosen;
+            selectedSettings = { ...selectedSettings, [setting.key]: next.join('+') || setting.options[0].value };
+          } else selectedSettings = { ...selectedSettings, [setting.key]: select.value };
+        }} class="field {setting.multiple ? 'ocr-language-list' : ''}">{#each setting.options as option}<option value={option.value}>{option.label}</option>{/each}</select>
+        <small id={`setting-help-${setting.key}`} class="mt-2 block min-h-10 text-[13px] leading-relaxed text-text-muted">{setting.multiple ? setting.options[0].help : setting.options.find((option) => option.value === (selectedSettings[setting.key] ?? setting.options[0].value))?.help}</small>
       {/each}
       {#if hasPageRange}
         <label for="page-range" class="mt-5 mb-1.5 block text-sm font-medium text-text">{text.pages}</label>
