@@ -1,0 +1,15 @@
+---
+import AppLayout from '../../layouts/app-layout.astro';
+import HomeGuides from '../../components/home-guides.astro';
+import AdSlot from '../../components/ad-slot.astro';
+import { brand } from '../../lib/brand';
+import { homeGraph } from '../../lib/seo/structured-data';
+---
+<AppLayout locale="hi" title="मुफ़्त PDF टूल: बदलें, जोड़ें और व्यवस्थित करें | DoctorConverter"
+  description="PDF को Word या Excel में बदलें, PDF जोड़ें, छवियों से PDF बनाएँ और OCR इस्तेमाल करें। हर टूल के समर्थित फ़ॉर्मैट और सीमाएँ देखें।"
+  alternates={{ en: '/', tr: '/tr/', es: '/es/', hi: '/hi/' }}
+  keywords={['PDF टूल', 'PDF से Word', 'PDF जोड़ें', 'PDF का आकार घटाएँ', 'JPG से PDF', 'OCR', brand.name]}
+  jsonLd={homeGraph('hi')}>
+  <AdSlot slot="home" placement="home-after-tools" locale="hi" />
+  <HomeGuides slot="home" locale="hi" />
+</AppLayout>

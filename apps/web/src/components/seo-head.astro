@@ -20,9 +20,9 @@ const canonical = absoluteUrl(alternates[locale] ?? Astro.url.pathname);
 const links = (Object.entries(alternates) as [Locale, string][]).filter(([, path]) => path);
 // English is the global fallback when a page has no language-specific match.
 const xDefault = alternates.en ?? alternates.es ?? alternates.tr;
-// Spanish uses the existing English share card until a localized asset is prepared.
-const image = absoluteUrl(`/og/og-${locale === 'es' ? 'en' : locale}.jpg`);
-const imageAlt = locale === 'tr' ? `${brand.name} – PDF ve belge araçları, tek yerde` : locale === 'es' ? `${brand.name} – herramientas para PDF y documentos` : `${brand.name} – every PDF and document tool in one place`;
+// Localized share cards are not available yet for Spanish or Hindi.
+const image = absoluteUrl(`/og/og-${locale === 'tr' ? 'tr' : 'en'}.jpg`);
+const imageAlt = locale === 'tr' ? `${brand.name} – PDF ve belge araçları, tek yerde` : locale === 'es' ? `${brand.name} – herramientas para PDF y documentos` : locale === 'hi' ? `${brand.name} – PDF और दस्तावेज़ टूल` : `${brand.name} – every PDF and document tool in one place`;
 const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
 const validAdsenseClient = /^ca-pub-\d+$/.test(adsenseClient ?? '');
 ---
@@ -68,29 +68,30 @@ const validAdsenseClient = /^ca-pub-\d+$/.test(adsenseClient ?? '');
 <script is:inline>
   (function () {
     try {
-      var current = document.documentElement.lang === 'es' ? 'es' : document.documentElement.lang === 'tr' ? 'tr' : 'en';
+      var current = document.documentElement.lang === 'es' ? 'es' : document.documentElement.lang === 'tr' ? 'tr' : document.documentElement.lang === 'hi' ? 'hi' : 'en';
       var alternates = {};
       document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function (link) {
         var lang = link.getAttribute('hreflang').toLowerCase().split('-')[0];
-        if (lang === 'en' || lang === 'es' || lang === 'tr') alternates[lang] = link.href;
+        if (lang === 'en' || lang === 'es' || lang === 'tr' || lang === 'hi') alternates[lang] = link.href;
       });
       if (navigator.webdriver || /bot|crawl|spider|slurp|google|bing|yandex|baidu|duckduck|lighthouse|headless|preview/i.test(navigator.userAgent)) return;
       // An explicit /es/ or /tr/ URL is the visitor's choice; only negotiate language on English URLs.
-      if (/^\/(?:es|tr)(?:\/|$)/.test(location.pathname)) return;
+      if (/^\/(?:es|tr|hi)(?:\/|$)/.test(location.pathname)) return;
       var go = function (want) { if (want && want !== current && alternates[want]) location.replace(new URL(alternates[want]).pathname + location.hash); };
       var saved = null;
       try { saved = localStorage.getItem('dc-locale'); } catch (e) {}
-      if (saved === 'tr' || saved === 'en' || saved === 'es') return go(saved);
+      if (saved === 'tr' || saved === 'en' || saved === 'es' || saved === 'hi') return go(saved);
       // Moving around inside the site never switches language on its own.
       if (document.referrer && new URL(document.referrer).host === location.host) return;
       var lang = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
       if (lang.indexOf('tr') === 0) return go('tr');
       if (lang.indexOf('es') === 0) return go('es');
+      if (lang.indexOf('hi') === 0) return go('hi');
       if (lang.indexOf('en') === 0) return go('en');
       fetch('/cdn-cgi/trace').then(function (r) { return r.text(); }).then(function (text) {
         var country = (text.match(/loc=([A-Z]{2})/) || [])[1];
         var spanishCountries = ['ES','MX','AR','BO','CL','CO','CR','CU','DO','EC','SV','GQ','GT','HN','NI','PA','PY','PE','PR','UY','VE'];
-        go(country === 'TR' || country === 'CY' ? 'tr' : spanishCountries.indexOf(country) >= 0 ? 'es' : 'en');
+        go(country === 'TR' || country === 'CY' ? 'tr' : country === 'IN' ? 'hi' : spanishCountries.indexOf(country) >= 0 ? 'es' : 'en');
       }).catch(function () {});
     } catch (e) {}
   })();

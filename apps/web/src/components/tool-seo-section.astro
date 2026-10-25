@@ -2,7 +2,7 @@
 import type { ToolSeoData } from '../lib/tool-seo';
 import { getTools } from '../lib/tools';
 import { ui } from '../i18n/ui';
-import { localePath, type Locale } from '../i18n/locales';
+import { localePath, localeRoutes, type Locale } from '../i18n/locales';
 import { scenariosForTool, scenarioPath } from '../lib/seo/scenarios';
 
 interface Props { data: ToolSeoData; locale: Locale }
@@ -12,7 +12,7 @@ const tools = getTools(locale);
 const related = tools.filter((tool) => data.relatedTools.includes(tool.id));
 const allGuides = scenariosForTool(locale, data.id);
 const guides = [...allGuides].sort((a, b) => Number(b.tool === data.id) - Number(a.tool === data.id)).slice(0, 4);
-const guidesHub = localePath(locale, locale === 'tr' ? '/kullanim/' : locale === 'es' ? '/casos-de-uso/' : '/use-cases/');
+const guidesHub = localePath(locale, localeRoutes[locale].guides);
 ---
 
 <div class="editorial-content mt-12 space-y-10 border-t border-border pt-8 text-text">

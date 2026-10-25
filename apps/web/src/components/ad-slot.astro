@@ -1,10 +1,13 @@
 ---
+import { ui } from '../i18n/ui';
+
 interface Props {
   placement: string;
-  locale: 'tr' | 'en' | 'es';
+  locale: 'tr' | 'en' | 'es' | 'hi';
 }
 
 const { placement, locale } = Astro.props;
+const text = ui[locale].controls.ad;
 const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
 const slotId = placement === 'home-after-tools'
   ? import.meta.env.PUBLIC_ADSENSE_SLOT_HOME_AFTER_TOOLS
@@ -14,7 +17,7 @@ const configured = /^ca-pub-\d+$/.test(adsenseClient ?? '') && /^\d+$/.test(slot
 {configured ? (
   <aside
     class="my-8 w-full overflow-hidden"
-    aria-label={locale === 'tr' ? 'Reklam' : locale === 'es' ? 'Anuncio' : 'Advertisement'}
+    aria-label={text.label}
     data-ad-placement={placement}
   >
     <ins
@@ -32,17 +35,14 @@ const configured = /^ca-pub-\d+$/.test(adsenseClient ?? '') && /^\d+$/.test(slot
 ) : import.meta.env.DEV ? (
   <aside
     class="my-6 flex min-h-16 w-full flex-col items-center justify-center gap-1 border-y border-border/70 px-4 py-3 text-center"
-    aria-label={locale === 'tr' ? 'Reklam alanı önizlemesi' : locale === 'es' ? 'Vista previa del espacio publicitario' : 'Advertisement placement preview'}
+    aria-label={text.previewLabel}
     data-ad-placement={placement}
   >
     <span class="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-      {locale === 'tr' ? 'Reklam önizlemesi' : locale === 'es' ? 'Vista previa del anuncio' : 'Ad placement preview'}
+      {text.previewTitle}
     </span>
     <p class="text-xs leading-relaxed text-text-muted">
-      {locale === 'tr'
-        ? 'Bu alanın gerçek reklamı için yayıncı kimliği ve reklam birimi kimliği bağlanmalı.'
-        : locale === 'es' ? 'Para mostrar un anuncio aquí, hay que configurar el identificador del editor y de la unidad publicitaria.'
-        : 'Connect your publisher ID and ad unit ID to show a live ad in this space.'}
+      {text.previewText}
     </p>
   </aside>
 ) : null}

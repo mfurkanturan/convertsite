@@ -4,7 +4,7 @@
   import LanguageSwitch from './language-switch.svelte';
   import ToolSearch from './tool-search.svelte';
   import { useLocale, useUi } from '../i18n/context';
-  import { localePath, type Locale } from '../i18n/locales';
+  import { localePath, localeRoutes, type Locale } from '../i18n/locales';
 
   export let query = '';
   export let menuOpen = false;
@@ -17,8 +17,8 @@
   const locale = useLocale();
   const text = useUi().topbar;
   const homeHref = `${localePath(locale, '/')}#tools`;
-  const guidesHref = localePath(locale, locale === 'tr' ? '/kullanim/' : locale === 'es' ? '/casos-de-uso/' : '/use-cases/');
-  const securityHref = localePath(locale, locale === 'tr' ? '/guvenlik' : locale === 'es' ? '/seguridad' : '/security');
+  const guidesHref = localePath(locale, localeRoutes[locale].guides);
+  const securityHref = localePath(locale, localeRoutes[locale].security);
 </script>
 
 <header class="sticky top-0 z-30 w-full border-b border-border bg-surface">

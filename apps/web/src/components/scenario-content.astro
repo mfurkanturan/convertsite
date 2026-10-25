@@ -3,6 +3,7 @@ import { getTools } from '../lib/tools';
 import { toolSeoMap } from '../lib/tool-seo';
 import { toolSeoMapEn } from '../lib/tool-seo-en';
 import { toolSeoMapEs } from '../lib/tool-seo-es';
+import { toolSeoMapHi } from '../lib/tool-seo-hi';
 import { ui } from '../i18n/ui';
 import { localePath, type Locale } from '../i18n/locales';
 import { figureSize, relatedScenarios, scenarioBase, scenarioPath, type Scenario } from '../lib/seo/scenarios';
@@ -10,13 +11,14 @@ import { figureSize, relatedScenarios, scenarioBase, scenarioPath, type Scenario
 interface Props { scenario: Scenario; locale: Locale }
 const { scenario, locale } = Astro.props;
 const text = ui[locale].seo;
+const controls = ui[locale].controls;
 const tools = getTools(locale).filter((tool) => scenario.tools.includes(tool.id));
 const related = relatedScenarios(locale, scenario);
-const outputCheck = (locale === 'tr' ? toolSeoMap : locale === 'es' ? toolSeoMapEs : toolSeoMapEn)[scenario.tool].resultCheck;
+const outputCheck = ({ tr: toolSeoMap, en: toolSeoMapEn, es: toolSeoMapEs, hi: toolSeoMapHi } as const)[locale][scenario.tool].resultCheck;
 ---
 
 <article class="editorial-content mt-12 space-y-10 border-t border-border/70 pt-10 text-text">
-  <nav aria-label={locale === 'es' ? 'Ruta de navegación' : locale === 'tr' ? 'Sayfa konumu' : 'Breadcrumb'} class="flex flex-wrap items-center gap-2 text-sm text-text-muted">
+  <nav aria-label={controls.breadcrumb} class="flex flex-wrap items-center gap-2 text-sm text-text-muted">
     <a href={localePath(locale, '/')} class="hover:text-accent">{text.home}</a><span>/</span>
     <a href={localePath(locale, scenarioBase[locale])} class="hover:text-accent">{text.hubTitle}</a><span>/</span>
     <span class="font-medium text-text">{scenario.title}</span>

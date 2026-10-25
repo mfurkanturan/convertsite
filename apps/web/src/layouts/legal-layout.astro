@@ -18,10 +18,11 @@ interface Props {
   locale?: Locale;
 }
 
-const { title, description, locale = 'tr', updatedAt = locale === 'tr' ? '25 Ekim 2026' : locale === 'es' ? '25 de octubre de 2026' : 'October 25, 2026' } = Astro.props;
+const { title, description, locale = 'tr', updatedAt = locale === 'tr' ? '25 Ekim 2026' : locale === 'es' ? '25 de octubre de 2026' : locale === 'hi' ? '25 अक्टूबर 2026' : 'October 25, 2026' } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const alternates = staticPairs.find((pair) => pair[locale] === path) ?? { [locale]: path };
 const text = ui[locale];
+const controls = text.controls;
 ---
 
 <!doctype html>
@@ -30,7 +31,7 @@ const text = ui[locale];
     <SeoHead {locale} title={`${title} — ${brand.name}`} {description} {alternates} />
   </head>
   <body class="min-h-screen bg-bg text-text antialiased">
-    <a class="skip-link" href="#main-content">{locale === 'tr' ? 'İçeriğe geç' : locale === 'es' ? 'Ir al contenido' : 'Skip to content'}</a>
+    <a class="skip-link" href="#main-content">{controls.skipToContent}</a>
     <header class="document-header"><div class="document-header-inner">
       <Logo href={localePath(locale, '/')} {locale} />
       <div class="flex items-center gap-2">

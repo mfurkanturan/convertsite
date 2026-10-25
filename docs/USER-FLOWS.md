@@ -74,7 +74,15 @@ Sayfa küçük resimleri oluşturma işlemi de kaynak sınırlarına tabidir. Ö
 - Sonuç ekranı API'nin indirme başlığındaki dosya adı kuralıyla eşleşen adı, gerçek çıktı türü ve boyutu gösterir. İndirme, yeni dosyayla devam etme ve erişimi erken silme ayrı eylemlerdir; ayrıca araç için tanımlıysa ilgili bir sonraki araca bağlantı verir. Yeni dosya eylemi eski işi/dosyaları hemen silmez; bunlar sunucu saklama süresi dolana kadar arka planda kalır ve geçerli iş erişim politikası uygulanır.
 - Kuyruk/çalışma durumu ve job kimliği aynı sekmenin `sessionStorage` alanında tutulur. Sekme yenilenince iş kimliğiyle durum tekrar okunur ve dosyalar yeniden yüklenmez. Tarayıcıdaki yerel kaynak dosyalar geri yüklenemez; iş başarısız/iptal olmuş ve kaynak yoksa kullanıcıdan dosyaları yeniden seçmesi istenir.
 - `NO_TEXT`, `NO_TABLES`, `INVALID_OPTIONS`, `WRONG_PASSWORD`, `INVALID_DOCUMENT`, `UNSUPPORTED_FORMAT`, `LIMIT_EXCEEDED`, `PROCESSING_TIMEOUT`, `ENGINE_UNAVAILABLE` ve kapasite hataları güvenli, eyleme dönük kullanıcı mesajlarıyla eşlenir. Ham motor stderr'i arayüze gösterilmez.
-- Araç URL'leri Türkçe/İngilizce statik rota, sayfaya özel title/description/H1, breadcrumb, yapılandırılmış veri, kullanım rehberi ve ilgili araç bağlantılarını korur. Araç kopyası, dokümante edilmiş girdi/çıktı ve limitleri aşan sınırsız, birebir veya kayıpsız kalite vaadi kullanmamalıdır.
+- Araç URL'leri yerelleştirilmiş rota, sayfaya özel title/description/H1, breadcrumb, yapılandırılmış veri, kullanım rehberi ve ilgili araç bağlantılarını korur. Araç kopyası, dokümante edilmiş girdi/çıktı ve limitleri aşan sınırsız, birebir veya kayıpsız kalite vaadi kullanmamalıdır.
+
+## Dil ve yerelleştirme
+
+- Uygulama arayüzü İngilizce (`/`), Türkçe (`/tr/`), İspanyolca (`/es/`) ve Hintçe (`/hi/`) sayfa gruplarını destekler. Hindi, Devanagari yazı sistemiyle ve standart `hi` dil koduyla sunulur; `hi-IN` Open Graph/structured-data bölge bilgisidir.
+- Ortak kontrol metinleri `apps/web/src/i18n/ui.ts` içindeki tipli arayüz sözlüğünde; yerel karşılıklar `ui-es.ts` ve `ui-hi.ts` dosyalarında tutulur. Araç ayarları, araç SEO içeriği ve kullanım rehberleri ayrı, yerelleştirilmiş veri kaynaklarıdır. Hiçbiri harici CMS'ten yüklenmez; metinler derleme sırasında uygulamaya girer.
+- `pnpm --filter @convertsite/web check:i18n`, sözlük anahtarlarını/fonksiyon imzalarını, İngilizceye sessizce düşen metinleri ve yerelleştirilmiş araç/rehber kapsamını denetler.
+- Arayüz dili ile motorun belge tanıma dilleri farklı kavramlardır. OCR motoru İngilizce ve Türkçe destekler; Hintçe arayüzü Hintçe OCR desteği anlamına gelmez. Araç ekranı ve SEO metni bu sınırı açıkça söyler.
+- Hintçe başlangıç sürümünde 16 araç rotası, ortak sayfalar ve üç seçilmiş kullanım rehberi yerelleştirilmiştir. Sadece karşılığı bulunan sayfalara hreflang alternatifi eklenir; eksik Hintçe rehber URL'leri üretilmez.
 
 ## Sprint 5 rehber ve güven anlatımı
 

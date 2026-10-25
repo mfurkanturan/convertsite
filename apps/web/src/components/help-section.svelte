@@ -1,13 +1,14 @@
 <script lang="ts">
   import Icon from './icon.svelte';
   import { useLocale, useUi } from '../i18n/context';
-  import { localePath } from '../i18n/locales';
+  import { localePath, localeRoutes } from '../i18n/locales';
   import { track } from '../lib/analytics';
   export let compact = false;
   const locale = useLocale();
   const text = useUi().help;
-  const securityHref = localePath(locale, locale === 'tr' ? '/guvenlik' : locale === 'es' ? '/seguridad' : '/security');
-  const privacyHref = localePath(locale, locale === 'tr' ? '/gizlilik' : locale === 'es' ? '/privacidad' : '/privacy');
+  const links = useUi().links;
+  const securityHref = localePath(locale, localeRoutes[locale].security);
+  const privacyHref = localePath(locale, localeRoutes[locale].privacy);
   let openFaqIndex: number | null = null;
 </script>
 
@@ -45,7 +46,7 @@
         <p class="mt-1 max-w-3xl text-sm leading-relaxed text-text-soft">{text.privacyText}</p>
       </div>
     </div>
-    <nav class="flex flex-wrap gap-x-5 gap-y-1 pl-9 text-sm font-semibold lg:pl-0" aria-label={locale === 'tr' ? 'Güvenlik ve gizlilik belgeleri' : locale === 'es' ? 'Documentos de seguridad y privacidad' : 'Security and privacy documents'}>
+    <nav class="flex flex-wrap gap-x-5 gap-y-1 pl-9 text-sm font-semibold lg:pl-0" aria-label={`${links.security} · ${links.privacy}`}>
       <a class="min-h-11 inline-flex items-center text-accent underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" href={securityHref}>{text.securityLink}</a>
       <a class="min-h-11 inline-flex items-center text-accent underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" href={privacyHref}>{text.privacyLink}</a>
     </nav>

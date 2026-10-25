@@ -1,6 +1,6 @@
 @theme {
-  --font-sans: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Sora Variable', 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Inter Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Sora Variable', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
 
   --color-bg: #f8fafc;
   --color-surface: #ffffff;

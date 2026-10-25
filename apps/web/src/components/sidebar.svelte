@@ -4,7 +4,7 @@
   import { getCategories, getTools, suggestedToolIds, type Category } from '../lib/tools';
   import { brand } from '../lib/brand';
   import { useLocale, useUi } from '../i18n/context';
-  import { localePath } from '../i18n/locales';
+  import { localePath, localeRoutes } from '../i18n/locales';
 
   export let category: Category = 'all';
   export let open = false;
@@ -16,11 +16,7 @@
   const text = ui.sidebar;
   const tools = getTools(locale);
   const categories = getCategories(locale);
-  const legal = locale === 'tr'
-    ? [['/hakkimizda', ui.links.about], ['/guvenlik', ui.links.security], ['/gizlilik', ui.links.privacy], ['/kullanim-sartlari', ui.links.terms], ['/iletisim', ui.links.contact]]
-    : locale === 'es'
-      ? [['/acerca-de', ui.links.about], ['/seguridad', ui.links.security], ['/privacidad', ui.links.privacy], ['/terminos', ui.links.terms], ['/contacto', ui.links.contact]]
-      : [['/about', ui.links.about], ['/security', ui.links.security], ['/privacy', ui.links.privacy], ['/terms', ui.links.terms], ['/contact', ui.links.contact]];
+  const legal = [[localeRoutes[locale].about, ui.links.about], [localeRoutes[locale].security, ui.links.security], [localeRoutes[locale].privacy, ui.links.privacy], [localeRoutes[locale].terms, ui.links.terms], [localeRoutes[locale].contact, ui.links.contact]];
 </script>
 
 {#if open}
@@ -61,7 +57,7 @@
           {/if}
         </button>
       {/each}
-      <a class="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-text-soft hover:bg-bg hover:text-text" href={localePath(locale, locale === 'tr' ? '/kullanim/' : locale === 'es' ? '/casos-de-uso/' : '/use-cases/')}><Icon name="info" size={18} /><span>{ui.topbar.useCases}</span></a>
+      <a class="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-text-soft hover:bg-bg hover:text-text" href={localePath(locale, localeRoutes[locale].guides)}><Icon name="info" size={18} /><span>{ui.topbar.useCases}</span></a>
     </nav>
 
     <p class="mt-6 mb-2 pl-2 text-xs font-bold tracking-wider uppercase text-text-muted">{text.frequent}</p>

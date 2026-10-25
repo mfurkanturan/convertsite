@@ -2,14 +2,14 @@
   import { onMount } from 'svelte';
   import Icon from './icon.svelte';
   import { renderAllPdfPages, type PdfPagePreview } from '../lib/pdf-preview';
-  import { useLocale } from '../i18n/context';
+  import { useUi } from '../i18n/context';
 
   export let file: File;
   export let disabled = false;
   export let onchangerange: (range: string, rotation: number) => void;
   export let onremovefile: (() => void) | undefined = undefined;
 
-  const locale = useLocale();
+  const text = useUi().controls.organizer;
 
   let loading = true;
   let pages: PdfPagePreview[] = [];
@@ -113,13 +113,13 @@
   <div class="flex items-center justify-between pb-3.5 border-b border-border/80 flex-wrap gap-2.5">
     <div class="flex items-center gap-2 flex-wrap">
       <strong class="font-semibold text-text text-sm sm:text-base">
-        {locale === 'tr' ? 'PDF Sayfaları' : locale === 'es' ? 'Páginas del PDF' : 'PDF Pages'}
+        {text.title}
       </strong>
       <span class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-semibold text-accent">
-        {pages.length} {locale === 'tr' ? 'Sayfa' : locale === 'es' ? 'páginas' : 'Pages'}
+        {pages.length} {text.page}
       </span>
       <span class="text-xs text-text-muted hidden sm:inline">
-        • {locale === 'tr' ? 'Sürükleyerek veya oklarla sırayı değiştir' : locale === 'es' ? 'Arrastra o usa las flechas para cambiar el orden' : 'Drag or use arrows to reorder'}
+        • {text.reorder}
       </span>
     </div>
 
@@ -129,9 +129,9 @@
           type="button"
           class="text-xs font-medium text-text-muted hover:text-accent transition-colors px-2 py-1 rounded hover:bg-bg border border-border/60"
           onclick={resetPages}
-          title={locale === 'tr' ? 'Varsayılan sayfa sırasına geri dön' : locale === 'es' ? 'Restablecer el orden original' : 'Reset to original order'}
+          title={text.resetTitle}
         >
-          {locale === 'tr' ? 'Sırayı Sıfırla' : locale === 'es' ? 'Restablecer orden' : 'Reset Order'}
+          {text.reset}
         </button>
       {/if}
 
@@ -140,9 +140,9 @@
           type="button"
           class="text-xs font-medium text-danger hover:text-danger-strong transition-colors px-2 py-1 rounded hover:bg-danger-soft border border-border/60"
           onclick={onremovefile}
-          title={locale === 'tr' ? 'Dosyayı kaldır ve yenisini seç' : locale === 'es' ? 'Quitar el archivo y elegir otro' : 'Remove file'}
+          title={text.replaceTitle}
         >
-          {locale === 'tr' ? 'Dosyayı Değiştir' : locale === 'es' ? 'Cambiar archivo' : 'Change File'}
+          {text.replace}
         </button>
       {/if}
     </div>
@@ -153,15 +153,15 @@
     <div class="py-12 flex flex-col items-center justify-center text-center">
       <div class="h-8 w-8 animate-spin rounded-full border-3 border-accent border-t-transparent mb-3"></div>
       <p class="text-sm font-medium text-text">
-        {locale === 'tr' ? 'PDF sayfalarının önizlemeleri yükleniyor...' : locale === 'es' ? 'Cargando vistas previas de las páginas del PDF…' : 'Rendering PDF page previews...'}
+        {text.rendering}
       </p>
       <p class="text-xs text-text-muted mt-1">
-        {locale === 'tr' ? 'Sayfalar taranıp küçük resimler hazırlanıyor' : locale === 'es' ? 'Preparando miniaturas de las páginas' : 'Extracting pages into visual thumbnails'}
+        {text.thumbnails}
       </p>
     </div>
   {:else if pages.length === 0}
     <div class="py-10 text-center text-text-muted text-sm">
-      {locale === 'tr' ? 'Sayfa bulunamadı veya PDF yüklenemedi.' : locale === 'es' ? 'No se encontraron páginas o no se pudo cargar el PDF.' : 'No pages found or could not load PDF.'}
+      {text.noPages}
     </div>
   {:else}
     <!-- Pages Drag & Drop Grid -->
@@ -189,7 +189,7 @@
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
-                title={locale === 'tr' ? '90° Döndür' : locale === 'es' ? 'Girar 90°' : 'Rotate 90°'}
+                title={text.rotate}
                 onclick={() => rotatePage(index)}
               >
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
@@ -199,7 +199,7 @@
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
-                title={locale === 'tr' ? 'Büyüt' : locale === 'es' ? 'Ampliar' : 'Zoom'}
+                title={text.zoom}
                 onclick={() => zoomPage = page}
               >
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
@@ -209,7 +209,7 @@
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-danger-soft hover:text-danger transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-30"
-                title={locale === 'tr' ? 'Sayfayı kaldır' : locale === 'es' ? 'Quitar página' : 'Remove page'}
+                title={text.remove}
                 disabled={disabled || pages.length <= 1}
                 onclick={() => removePage(index)}
               >
@@ -223,7 +223,7 @@
             type="button"
             class="relative flex h-36 sm:h-44 w-full items-center justify-center rounded-lg border border-border/60 bg-white overflow-hidden cursor-grab active:cursor-grabbing p-1"
             onclick={() => zoomPage = page}
-            title={locale === 'tr' ? 'Sürükleyerek sırasını değiştir' : locale === 'es' ? 'Arrastrar para cambiar el orden' : 'Drag to reorder'}
+            title={text.dragTitle}
           >
             <img
               src={page.dataUrl}
@@ -235,7 +235,7 @@
             <!-- Drag overlay hint on hover -->
             <div class="absolute inset-0 bg-black/15 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <span class="text-[10px] font-semibold text-white bg-black/70 px-2.5 py-1 rounded-full backdrop-blur-xs shadow">
-                {locale === 'tr' ? 'Sürükle' : locale === 'es' ? 'Arrastrar' : 'Drag'}
+                {text.drag}
               </span>
             </div>
           </button>
@@ -243,7 +243,7 @@
           <!-- Bottom: Reorder arrows & Original Page Number -->
           <div class="mt-2 flex items-center justify-between px-0.5">
             <span class="text-[10px] font-medium text-text-muted">
-              {locale === 'tr' ? 'Orijinal:' : locale === 'es' ? 'Original:' : 'Orig:'} #{page.pageNumber}
+              {text.original} #{page.pageNumber}
             </span>
 
             <div class="flex items-center gap-1">
@@ -251,7 +251,7 @@
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded bg-surface hover:bg-accent-soft hover:text-accent text-text-muted border border-border/60 disabled:opacity-30 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 disabled={disabled || index === 0}
-                title={locale === 'tr' ? 'Sola / Başa taşı' : locale === 'es' ? 'Mover a la izquierda' : 'Move left'}
+                title={text.left}
                 onclick={() => movePage(index, -1)}
               >
                 <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
@@ -260,7 +260,7 @@
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded bg-surface hover:bg-accent-soft hover:text-accent text-text-muted border border-border/60 disabled:opacity-30 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
                 disabled={disabled || index === pages.length - 1}
-                title={locale === 'tr' ? 'Sağa / Sona taşı' : locale === 'es' ? 'Mover a la derecha' : 'Move right'}
+                title={text.right}
                 onclick={() => movePage(index, 1)}
               >
                 <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -284,7 +284,7 @@
     <div class="relative z-10 flex max-h-[90vh] max-w-2xl flex-col rounded-2xl border border-border bg-surface shadow-2xl overflow-hidden p-4">
       <div class="flex items-center justify-between pb-3 border-b border-border mb-3">
         <strong class="text-sm font-semibold text-text">
-          {locale === 'tr' ? 'Sayfa Önizlemesi' : locale === 'es' ? 'Vista previa de la página' : 'Page Preview'} — #{zoomPage.pageNumber}
+          {text.preview} — #{zoomPage.pageNumber}
         </strong>
         <button
           type="button"

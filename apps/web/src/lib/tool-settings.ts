@@ -62,6 +62,25 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
     ocr: [{ key: 'language', label: 'Idioma del documento', options: [choice('eng','Inglés','Para reconocer palabras en inglés.'), choice('tur','Turco','Para reconocer caracteres y palabras en turco.'), choice('tur+eng','Turco e inglés','Para documentos que contienen ambos idiomas.')] }],
     'pdf-to-pdf-ocr': [{ key: 'language', label: 'Idioma del documento', options: [choice('eng','Inglés','Para reconocer palabras en inglés.'), choice('tur','Turco','Para reconocer caracteres y palabras en turco.'), choice('tur+eng','Turco e inglés','Para documentos que contienen ambos idiomas.')] }],
   },
+  hi: {
+    'excel-to-pdf': [{ key: 'sheets', label: 'वर्कशीट', options: [choice('all','सभी वर्कशीट','फ़ाइल की सभी वर्कशीट को PDF में निर्यात करता है।'), choice('first','केवल पहली वर्कशीट','केवल पहली वर्कशीट को PDF में निर्यात करता है।')] }],
+    'pdf-to-images': [
+      { key: 'format', label: 'छवि फ़ॉर्मैट', options: [choice('jpg','JPG','फ़ोटो और छोटी फ़ाइलों के लिए; संपीड़न से विवरण कम हो सकता है।'), choice('png','PNG','टेक्स्ट और स्पष्ट किनारों के लिए; फ़ाइल बड़ी हो सकती है।')] },
+      { key: 'dpi', label: 'छवि गुणवत्ता', options: [choice('100','मानक','कम रिज़ॉल्यूशन और आम तौर पर छोटी आउटपुट फ़ाइल।'), choice('150','उच्च','अधिक विवरण और आम तौर पर बड़ी आउटपुट फ़ाइल।')] },
+    ],
+    'images-to-pdf': [
+      { key: 'size', label: 'पृष्ठ का आकार', options: [choice('a4','A4','छवियों को A4 पृष्ठों पर रखता है।'), choice('image','छवि के अनुसार','हर पृष्ठ का आकार छवि के माप के अनुसार रखता है।')] },
+      { key: 'orientation', label: 'पृष्ठ की दिशा', options: [choice('portrait','पोर्ट्रेट','पृष्ठों को लंबवत बनाता है।'), choice('landscape','लैंडस्केप','पृष्ठों को क्षैतिज बनाता है।')] },
+    ],
+    'edit-pdf-pages': [
+      { key: 'mode', label: 'आउटपुट', options: [choice('pdf','चुने हुए पृष्ठ एक PDF में','चुने हुए पृष्ठों को एक PDF फ़ाइल में जोड़ता है।'), choice('zip','हर पृष्ठ की अलग PDF (ZIP)','हर चुने हुए पृष्ठ की अलग PDF बनाकर ZIP में देता है।')] },
+      { key: 'rotation', label: 'चुने हुए पृष्ठ घुमाएँ', options: [choice('0','न घुमाएँ','पृष्ठों की मौजूदा दिशा बनाए रखता है।'), choice('90','90° दाएँ','चुने हुए पृष्ठों को घड़ी की दिशा में 90° घुमाता है।'), choice('180','180°','चुने हुए पृष्ठों को आधा घुमाता है।'), choice('270','90° बाएँ','चुने हुए पृष्ठों को घड़ी की उलटी दिशा में 90° घुमाता है।')] },
+    ],
+    'page-numbers': [{ key: 'pageNumberPosition', label: 'संख्या की जगह', options: [choice('bottom-center','नीचे बीच में','हर पृष्ठ के नीचे बीच में संख्या रखता है।'), choice('bottom-right','नीचे दाएँ','हर पृष्ठ के नीचे दाएँ संख्या रखता है।'), choice('top-right','ऊपर दाएँ','हर पृष्ठ के ऊपर दाएँ संख्या रखता है।')] }],
+    // OCR engine currently supports English and Turkish only; do not offer Hindi here.
+    ocr: [{ key: 'language', label: 'दस्तावेज़ की भाषा', options: [choice('eng','अंग्रेज़ी','अंग्रेज़ी शब्द पहचानने के लिए।'), choice('tur','तुर्की','तुर्की अक्षर और शब्द पहचानने के लिए।'), choice('tur+eng','तुर्की + अंग्रेज़ी','दोनों भाषाओं वाले दस्तावेज़ों के लिए।')] }],
+    'pdf-to-pdf-ocr': [{ key: 'language', label: 'दस्तावेज़ की भाषा', options: [choice('eng','अंग्रेज़ी','अंग्रेज़ी शब्द पहचानने के लिए।'), choice('tur','तुर्की','तुर्की अक्षर और शब्द पहचानने के लिए।'), choice('tur+eng','तुर्की + अंग्रेज़ी','दोनों भाषाओं वाले दस्तावेज़ों के लिए।')] }],
+  },
 };
 export function getSettings(id: ToolId, locale: Locale = 'tr'): Setting[] { return settings[locale][id] ?? []; }
 export function requestOptions(id: ToolId, selected: Record<string,string>, pages: string, locale: Locale = 'tr', customText?: string): ToolOptions {

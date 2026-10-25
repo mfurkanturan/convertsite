@@ -103,10 +103,41 @@ const spanishAliases: Partial<Record<ToolId, string[]>> = {
   'pdf-to-pdf-ocr': ['pdf buscable', 'hacer pdf buscable'],
 };
 
+const hindi: Record<ToolId, Pick<Tool, 'name' | 'description'>> = {
+  'pdf-to-word': { name: 'PDF से Word', description: 'टेक्स्ट वाले PDF को संपादन योग्य Word दस्तावेज़ में बदलें।' },
+  'word-to-pdf': { name: 'Word से PDF', description: 'DOCX दस्तावेज़ को PDF में बदलें।' },
+  'merge-pdf': { name: 'PDF जोड़ें', description: 'PDF फ़ाइलों को अपनी चुनी हुई क्रम-व्यवस्था में एक दस्तावेज़ में जोड़ें।' },
+  'compress-pdf': { name: 'PDF का आकार घटाएँ', description: 'PDF फ़ाइल का आकार कम करने का प्रयास करें।' },
+  'pdf-to-excel': { name: 'PDF से Excel', description: 'PDF में पहचानी गई तालिकाओं को Excel शीट में निर्यात करें।' },
+  'excel-to-pdf': { name: 'Excel से PDF', description: 'XLSX वर्कशीट को PDF में बदलें।' },
+  'pptx-to-pdf': { name: 'PowerPoint से PDF', description: 'PPTX प्रस्तुति को PDF में बदलें।' },
+  'pdf-to-images': { name: 'PDF से JPG / PNG', description: 'PDF पृष्ठों को JPG या PNG छवियों के रूप में निर्यात करें।' },
+  'images-to-pdf': { name: 'छवियों से PDF', description: 'JPG और PNG छवियों को एक PDF में जोड़ें।' },
+  'edit-pdf-pages': { name: 'PDF पृष्ठ व्यवस्थित करें', description: 'PDF पृष्ठों का क्रम बदलें, घुमाएँ, अलग करें या हटाएँ।' },
+  'page-numbers': { name: 'पृष्ठ संख्या जोड़ें', description: 'PDF के पृष्ठों पर पृष्ठ संख्या और कुल पृष्ठ जोड़ें।' },
+  'watermark-pdf': { name: 'वॉटरमार्क जोड़ें', description: 'PDF पृष्ठों पर टेक्स्ट वॉटरमार्क जोड़ें।' },
+  'protect-pdf': { name: 'PDF पर पासवर्ड लगाएँ', description: 'PDF खोलने के लिए पासवर्ड सेट करें।' },
+  'unlock-pdf': { name: 'PDF का पासवर्ड हटाएँ', description: 'जिस PDF का मौजूदा पासवर्ड आपको पता है, उससे पासवर्ड सुरक्षा हटाएँ।' },
+  ocr: { name: 'टेक्स्ट निकालें (OCR)', description: 'PDF या छवि से टेक्स्ट निकालकर TXT फ़ाइल बनाएँ।' },
+  'pdf-to-pdf-ocr': { name: 'PDF को खोजने योग्य बनाएँ (OCR)', description: 'स्कैन किए गए PDF में चुना और खोजा जा सकने वाला टेक्स्ट जोड़ें।' },
+};
+
+const hindiAliases: Partial<Record<ToolId, string[]>> = {
+  'pdf-to-word': ['पीडीएफ से वर्ड', 'pdf ko word mein badlein'], 'word-to-pdf': ['वर्ड से पीडीएफ'],
+  'merge-pdf': ['पीडीएफ जोड़ें', 'पीडीएफ मिलाएं'], 'compress-pdf': ['पीडीएफ छोटा करें'],
+  'pdf-to-excel': ['पीडीएफ से एक्सेल'], 'excel-to-pdf': ['एक्सेल से पीडीएफ'],
+  'pptx-to-pdf': ['पावरपॉइंट से पीडीएफ'], 'pdf-to-images': ['पीडीएफ से इमेज'],
+  'images-to-pdf': ['फोटो से पीडीएफ', 'इमेज से पीडीएफ'], 'edit-pdf-pages': ['पीडीएफ पेज व्यवस्थित करें'],
+  'page-numbers': ['पीडीएफ में पेज नंबर जोड़ें'], 'watermark-pdf': ['पीडीएफ में वॉटरमार्क जोड़ें'],
+  'protect-pdf': ['पीडीएफ पर पासवर्ड लगाएं'], 'unlock-pdf': ['पीडीएफ पासवर्ड हटाएं'],
+  ocr: ['पीडीएफ से टेक्स्ट निकालें', 'ओसीआर'], 'pdf-to-pdf-ocr': ['खोजने योग्य पीडीएफ'],
+};
+
 export function localizedTools(locale: Locale): Tool[] {
   if (locale === 'tr') return tools;
-  const copy = locale === 'es' ? spanish : english;
-  return tools.map((tool) => ({ ...tool, ...copy[tool.id], ...(locale === 'es' ? { aliases: [...(tool.aliases ?? []), ...(spanishAliases[tool.id] ?? [])] } : {}) }));
+  const copy = locale === 'es' ? spanish : locale === 'hi' ? hindi : english;
+  const aliases = locale === 'es' ? spanishAliases : locale === 'hi' ? hindiAliases : undefined;
+  return tools.map((tool) => ({ ...tool, ...copy[tool.id], ...(aliases ? { aliases: [...(tool.aliases ?? []), ...(aliases[tool.id] ?? [])] } : {}) }));
 }
 
 export const getTools = localizedTools;
@@ -125,6 +156,7 @@ export function normalizeSearch(value: string): string {
 export function searchableToolText(tool: Tool): string {
   const englishText = english[tool.id];
   const spanishText = spanish[tool.id];
+  const hindiText = hindi[tool.id];
   return normalizeSearch([
     tool.name,
     tool.description,
@@ -133,5 +165,6 @@ export function searchableToolText(tool: Tool): string {
     ...(tool.aliases ?? []),
     ...(englishText ? [englishText.name, englishText.description] : []),
     ...(spanishText ? [spanishText.name, spanishText.description, ...(spanishAliases[tool.id] ?? [])] : []),
+    ...(hindiText ? [hindiText.name, hindiText.description, ...(hindiAliases[tool.id] ?? [])] : []),
   ].join(' '));
 }

@@ -1,5 +1,6 @@
 import type { ToolId } from '@convertsite/contracts';
 import type { Locale } from './locales';
+import { createHindiUi } from './ui-hi';
 import { createSpanishUi } from './ui-es';
 
 // Every user-facing interface string, per language. Content pages (tool SEO, use cases) live in lib/seo.
@@ -304,6 +305,15 @@ const tr = {
     updated: 'Son güncelleme:',
   },
   categories: { all: 'Tüm araçlar', convert: 'Dönüştür', organize: 'Düzenle', optimize: 'Optimize et ve koru', ocr: 'OCR' },
+  controls: {
+    skipToContent: 'İçeriğe geç', breadcrumb: 'Sayfa konumu',
+    guideCard: { featured: 'Rehber', more: 'Diğer senaryolar', read: 'Rehberi oku', steps: 'Rehber adımları' },
+    languagePicker: { select: 'Dil seçin', title: 'Dil', available: 'Kullanılabilir diller' },
+    fileList: { reorder: 'Sıralamak için kartları sürükle veya okları kullan', grid: 'Kart görünümü', gridTitle: 'Görsel Kart Görünümü', list: 'Liste görünümü', listTitle: 'Kompakt Liste Görünümü', previewFile: 'Tam sayfa incele', clickPreview: 'Önizlemek için tıkla', loading: 'Yükleniyor...', drag: 'Taşı', preview: 'Önizle', close: 'Kapat (Esc)', unsupported: 'Bu dosya türü için tarayıcı içi canlı önizleme desteklenmiyor.', closeHint: 'Kapatmak için Esc tuşuna bas veya dışarıya tıkla', closeButton: 'Kapat' },
+    organizer: { title: 'PDF Sayfaları', page: 'Sayfa', reorder: 'Sürükleyerek veya oklarla sırayı değiştir', resetTitle: 'Varsayılan sayfa sırasına geri dön', reset: 'Sırayı Sıfırla', replaceTitle: 'Dosyayı kaldır ve yenisini seç', replace: 'Dosyayı Değiştir', rendering: 'PDF sayfalarının önizlemeleri yükleniyor...', thumbnails: 'Sayfalar taranıp küçük resimler hazırlanıyor', noPages: 'Sayfa bulunamadı veya PDF yüklenemedi.', rotate: '90° Döndür', zoom: 'Büyüt', remove: 'Sayfayı kaldır', dragTitle: 'Sürükleyerek sırasını değiştir', drag: 'Sürükle', original: 'Orijinal:', left: 'Sola / Başa taşı', right: 'Sağa / Sona taşı', preview: 'Sayfa Önizlemesi' },
+    consent: { preferences: 'Çerez tercihleri', title: 'Çerez tercihlerin', description: 'İzninle, site kullanımını anlamak ve sorunları belirlemek için isteğe bağlı analitik depolama kullanırız. Dosya adı, belge içeriği ve parola ölçüme dahil edilmez. Reddetsen de tüm araçları kullanabilirsin. Tercihini daha sonra değiştirebilirsin.', scope: 'Bu tercih yalnızca isteğe bağlı kullanım ölçümünü yönetir; zorunlu oturum depolamasını, reklamları veya ağ sağlayıcısının ölçümünü değiştirmez.', privacy: 'Çerezler ve gizlilik hakkında', decline: 'Reddet', accept: 'Kabul et' },
+    ad: { label: 'Reklam', previewLabel: 'Reklam alanı önizlemesi', previewTitle: 'Reklam önizlemesi', previewText: 'Bu alanın gerçek reklamı için yayıncı kimliği ve reklam birimi kimliği bağlanmalı.' },
+  },
   logoLabel: (name: string) => `${name} ana sayfa`,
 };
 
@@ -626,7 +636,16 @@ const en: UiDictionary = {
     updated: 'Last updated:',
   },
   categories: { all: 'All tools', convert: 'Convert', organize: 'Organize', optimize: 'Optimize & protect', ocr: 'OCR' },
+  controls: {
+    skipToContent: 'Skip to content', breadcrumb: 'Breadcrumb',
+    guideCard: { featured: 'Guide', more: 'More guides', read: 'Read the guide', steps: 'Guide steps' },
+    languagePicker: { select: 'Select language', title: 'Language', available: 'Available languages' },
+    fileList: { reorder: 'Drag cards to reorder', grid: 'Grid view', gridTitle: 'Visual Grid View', list: 'List view', listTitle: 'Compact List View', previewFile: 'Preview file', clickPreview: 'Click to preview', loading: 'Loading...', drag: 'Drag', preview: 'Preview', close: 'Close (Esc)', unsupported: 'Direct preview is not available for this file type.', closeHint: 'Press Esc or click outside to close', closeButton: 'Close' },
+    organizer: { title: 'PDF Pages', page: 'Pages', reorder: 'Drag or use arrows to reorder', resetTitle: 'Reset to original order', reset: 'Reset Order', replaceTitle: 'Remove file', replace: 'Change File', rendering: 'Rendering PDF page previews...', thumbnails: 'Extracting pages into visual thumbnails', noPages: 'No pages found or could not load PDF.', rotate: 'Rotate 90°', zoom: 'Zoom', remove: 'Remove page', dragTitle: 'Drag to reorder', drag: 'Drag', original: 'Orig:', left: 'Move left', right: 'Move right', preview: 'Page Preview' },
+    consent: { preferences: 'Cookie preferences', title: 'Your cookie preferences', description: 'With your permission, we use optional analytics storage to understand site usage and identify problems. File names, document contents and passwords are excluded. All tools work if you decline, and you can change your choice later.', scope: 'This choice controls optional usage analytics only; it does not change essential session storage, advertising or measurement by the network provider.', privacy: 'About cookies and privacy', decline: 'Decline', accept: 'Accept' },
+    ad: { label: 'Advertisement', previewLabel: 'Advertisement placement preview', previewTitle: 'Ad placement preview', previewText: 'Connect your publisher ID and ad unit ID to show a live ad in this space.' },
+  },
   logoLabel: (name: string) => `${name} home`,
 };
 
-export const ui: Record<Locale, UiDictionary> = { tr, en, es: createSpanishUi(en) };
+export const ui: Record<Locale, UiDictionary> = { tr, en, es: createSpanishUi(en), hi: createHindiUi(en) };

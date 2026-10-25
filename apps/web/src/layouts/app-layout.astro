@@ -5,6 +5,7 @@ import AppShell from '../components/app-shell.svelte';
 import SeoHead from '../components/seo-head.astro';
 import SiteFooter from '../components/site-footer.astro';
 import { htmlLang, type Alternates, type Locale } from '../i18n/locales';
+import { ui } from '../i18n/ui';
 import '../styles/global.css';
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
   heading?: { title: string; lead: string };
 }
 const { locale, title, description, alternates, keywords, jsonLd, toolId, heading } = Astro.props;
+const text = ui[locale].controls;
 ---
 <!doctype html>
 <html lang={htmlLang[locale]}>
@@ -26,7 +28,7 @@ const { locale, title, description, alternates, keywords, jsonLd, toolId, headin
     <SeoHead {locale} {title} {description} {alternates} {keywords} {jsonLd} />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">{locale === 'tr' ? 'İçeriğe geç' : locale === 'es' ? 'Ir al contenido' : 'Skip to content'}</a>
+    <a class="skip-link" href="#main-content">{text.skipToContent}</a>
     <AppShell client:load {locale} initialToolId={toolId} {heading} switchAlternates={alternates}>
       <slot />
       <slot name="home" slot="home" />

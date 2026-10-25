@@ -1,6 +1,7 @@
 <script lang="ts">
   import Icon from './icon.svelte';
   import type { Locale } from '../i18n/locales';
+  import { ui } from '../i18n/ui';
   import { track } from '../lib/analytics';
 
   interface GuideItem {
@@ -22,11 +23,7 @@
   export let sideGuides: GuideItem[] = [];
   export let quickGuides: GuideItem[] = [];
 
-  const copy = locale === 'tr'
-    ? { featured: 'Rehber', more: 'Diğer senaryolar', read: 'Rehberi oku', steps: 'Rehber adımları' }
-    : locale === 'es'
-      ? { featured: 'Guía', more: 'Más guías', read: 'Leer la guía', steps: 'Pasos de la guía' }
-      : { featured: 'Guide', more: 'More guides', read: 'Read the guide', steps: 'Guide steps' };
+  const copy = ui[locale].controls.guideCard;
 </script>
 
 <section id="guides" class="mt-[var(--section-space)] border-t border-border pt-[var(--section-space)]" aria-labelledby="guides-title">

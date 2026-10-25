@@ -5,26 +5,18 @@ import LanguageSwitch from './language-switch.svelte';
 import { brand } from '../lib/brand';
 import { getTools, suggestedToolIds } from '../lib/tools';
 import { ui } from '../i18n/ui';
-import { localePath, staticPairs, type Locale } from '../i18n/locales';
+import { localePath, localeRoutes, staticPairs, type Locale } from '../i18n/locales';
 
 interface Props { locale: Locale; alternates?: Partial<Record<Locale, string>> }
 const { locale } = Astro.props;
 const text = ui[locale];
 const tools = getTools(locale).filter((tool) => suggestedToolIds.includes(tool.id));
-const hubPath = locale === 'tr' ? '/kullanim/' : locale === 'es' ? '/casos-de-uso/' : '/use-cases/';
+const hubPath = localeRoutes[locale].guides;
 const hub = localePath(locale, hubPath);
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const alternates = Astro.props.alternates ?? staticPairs.find((pair) => pair[locale] === currentPath) ?? { [locale]: currentPath };
-const securityLegal = locale === 'tr'
-  ? [['/guvenlik', text.links.security], ['/gizlilik', text.links.privacy], ['/kullanim-sartlari', text.links.terms]]
-  : locale === 'es'
-    ? [['/seguridad', text.links.security], ['/privacidad', text.links.privacy], ['/terminos', text.links.terms]]
-    : [['/security', text.links.security], ['/privacy', text.links.privacy], ['/terms', text.links.terms]];
-const contactLinks = locale === 'tr'
-  ? [['/hakkimizda', text.links.about], ['/iletisim', text.links.contact]]
-  : locale === 'es'
-    ? [['/acerca-de', text.links.about], ['/contacto', text.links.contact]]
-    : [['/about', text.links.about], ['/contact', text.links.contact]];
+const securityLegal = [[localeRoutes[locale].security, text.links.security], [localeRoutes[locale].privacy, text.links.privacy], [localeRoutes[locale].terms, text.links.terms]];
+const contactLinks = [[localeRoutes[locale].about, text.links.about], [localeRoutes[locale].contact, text.links.contact]];
 ---
 <footer class="site-footer mt-14 border-t border-white/15 bg-brand-navy pt-8 pb-6">
   <div class="page-container">

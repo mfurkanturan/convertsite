@@ -4,6 +4,7 @@ import { localePath } from '../../i18n/locales';
 import { trScenarios } from './scenarios-tr';
 import { enScenarios } from './scenarios-en';
 import { esScenarios } from './scenarios-es';
+import { hiScenarios } from './scenarios-hi';
 import { trDeep } from './scenarios-tr-deep';
 import { trMore } from './scenarios-tr-more';
 
@@ -46,6 +47,7 @@ export const groupLabels: Record<Locale, Record<ScenarioGroup, string>> = {
   tr: { student: 'Öğrenci & sınav', legal: 'Hukuk & UYAP', visa: 'Vize & resmi işlemler', career: 'İK & kariyer', finance: 'Muhasebe & finans', office: 'Ofis & günlük işler' },
   en: { student: 'Students & exams', legal: 'Legal & court filing', visa: 'Visa & official forms', career: 'Jobs & resumes', finance: 'Accounting & finance', office: 'Office & everyday tasks' },
   es: { student: 'Estudios y exámenes', legal: 'Documentación legal', visa: 'Visados y trámites', career: 'Empleo y currículum', finance: 'Contabilidad y finanzas', office: 'Oficina y tareas cotidianas' },
+  hi: { student: 'पढ़ाई और परीक्षाएँ', legal: 'कानूनी दस्तावेज़', visa: 'वीज़ा और सरकारी आवेदन', career: 'नौकरी और करियर', finance: 'लेखा और वित्त', office: 'ऑफ़िस और रोज़मर्रा के काम' },
 };
 export const groupOrder: ScenarioGroup[] = ['student', 'legal', 'visa', 'career', 'finance', 'office'];
 
@@ -59,8 +61,8 @@ function deepen(base: Scenario[], deep: typeof trDeep): Scenario[] {
   });
 }
 
-export const scenarios: Record<Locale, Scenario[]> = { tr: deepen(trScenarios, trDeep), en: enScenarios, es: esScenarios };
-export const scenarioBase: Record<Locale, string> = { tr: '/kullanim/', en: '/use-cases/', es: '/casos-de-uso/' };
+export const scenarios: Record<Locale, Scenario[]> = { tr: deepen(trScenarios, trDeep), en: enScenarios, es: esScenarios, hi: hiScenarios };
+export const scenarioBase: Record<Locale, string> = { tr: '/kullanim/', en: '/use-cases/', es: '/casos-de-uso/', hi: '/upayog/' };
 
 export function scenarioPath(locale: Locale, slug: string): string {
   return localePath(locale, `${scenarioBase[locale]}${slug}`);
@@ -68,11 +70,12 @@ export function scenarioPath(locale: Locale, slug: string): string {
 
 export function scenarioAlternates(locale: Locale, scenario: Scenario): Alternates {
   const result: Alternates = { [locale]: scenarioPath(locale, scenario.slug) };
+  // Turkish and Spanish records point at the English slug, so the group is matched through it.
+  const groupKey = locale === 'en' ? scenario.slug : scenario.pair;
+  if (!groupKey) return result;
   for (const other of Object.keys(scenarios) as Locale[]) {
     if (other === locale) continue;
-    const paired = scenario.pair && scenarios[other].find((item) => item.slug === scenario.pair);
-    const reverse = scenarios[other].find((item) => item.pair === scenario.slug);
-    const match = paired ?? reverse;
+    const match = scenarios[other].find((item) => (other === 'en' ? item.slug : item.pair) === groupKey);
     if (match) result[other] = scenarioPath(other, match.slug);
   }
   return result;

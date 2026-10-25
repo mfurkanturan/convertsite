@@ -3,7 +3,7 @@
   import Icon from './icon.svelte';
   import { formatBytes } from '../lib/file-selection';
   import { renderPdfPage } from '../lib/pdf-preview';
-  import { useUi, useLocale } from '../i18n/context';
+  import { useUi } from '../i18n/context';
 
   export let files: File[];
   export let onremove: (index: number) => void;
@@ -12,8 +12,9 @@
   export let reorder = false;
   export let disabled = false;
 
-  const locale = useLocale();
-  const text = useUi().files;
+  const ui = useUi();
+  const text = ui.files;
+  const controls = ui.controls.fileList;
 
   // View mode: 'grid' (visual cards) or 'list' (compact table)
   let viewMode: 'grid' | 'list' = 'grid';
@@ -117,7 +118,7 @@
       </span>
       {#if reorder}
         <span class="hidden sm:inline-block text-xs text-text-muted">
-          ({locale === 'tr' ? 'Sıralamak için kartları sürükle veya okları kullan' : locale === 'es' ? 'Arrastra las tarjetas o usa las flechas para cambiar el orden' : 'Drag cards to reorder'})
+          ({controls.reorder})
         </span>
       {/if}
     </div>
@@ -127,9 +128,9 @@
       <button
         type="button"
         class="flex h-11 w-11 items-center justify-center rounded-md text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus {viewMode === 'grid' ? 'bg-surface text-accent font-semibold shadow-2xs' : 'text-text-muted hover:text-text'}"
-        aria-label={locale === 'tr' ? 'Kart görünümü' : locale === 'es' ? 'Vista de cuadrícula' : 'Grid view'}
+        aria-label={controls.grid}
         aria-pressed={viewMode === 'grid'}
-        title={locale === 'tr' ? 'Görsel Kart Görünümü' : locale === 'es' ? 'Vista de tarjetas' : 'Visual Grid View'}
+        title={controls.gridTitle}
         onclick={() => viewMode = 'grid'}
       >
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -137,9 +138,9 @@
       <button
         type="button"
         class="flex h-11 w-11 items-center justify-center rounded-md text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus {viewMode === 'list' ? 'bg-surface text-accent font-semibold shadow-2xs' : 'text-text-muted hover:text-text'}"
-        aria-label={locale === 'tr' ? 'Liste görünümü' : locale === 'es' ? 'Vista de lista' : 'List view'}
+        aria-label={controls.list}
         aria-pressed={viewMode === 'list'}
-        title={locale === 'tr' ? 'Kompakt Liste Görünümü' : locale === 'es' ? 'Vista de lista compacta' : 'Compact List View'}
+        title={controls.listTitle}
         onclick={() => viewMode = 'list'}
       >
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
@@ -175,7 +176,7 @@
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
-                title={locale === 'tr' ? 'Tam sayfa incele' : locale === 'es' ? 'Vista previa del archivo' : 'Preview file'}
+                title={controls.previewFile}
                 onclick={() => openPreview(file)}
               >
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -199,7 +200,7 @@
             type="button"
             class="relative flex h-28 sm:h-32 w-full items-center justify-center rounded-lg border border-border/50 bg-surface overflow-hidden cursor-pointer group-hover:border-accent/40 transition-colors"
             onclick={() => openPreview(file)}
-            title={locale === 'tr' ? 'Önizlemek için tıkla' : locale === 'es' ? 'Haz clic para ver una vista previa' : 'Click to preview'}
+            title={controls.clickPreview}
           >
             {#if isImage && imageThumbnails.has(file)}
               <img
@@ -225,7 +226,7 @@
                   <div class="h-1 bg-text rounded-full w-3/4 mx-auto"></div>
                 </div>
                 <span class="mt-2 text-[10px] text-text-muted font-medium">
-                  {locale === 'tr' ? 'Yükleniyor...' : locale === 'es' ? 'Cargando...' : 'Loading...'}
+                  {controls.loading}
                 </span>
               </div>
             {:else}
@@ -240,7 +241,7 @@
             {#if reorder}
               <div class="absolute inset-x-0 bottom-0 py-1 bg-gradient-to-t from-black/20 to-transparent flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <span class="text-[9px] font-medium text-white/90 bg-black/50 px-1.5 py-0.5 rounded">
-                  {locale === 'tr' ? 'Taşı' : locale === 'es' ? 'Arrastrar' : 'Drag'}
+                  {controls.drag}
                 </span>
               </div>
             {/if}
@@ -289,7 +290,7 @@
           <button
             type="button"
               class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
-            title={locale === 'tr' ? 'Önizle' : locale === 'es' ? 'Vista previa' : 'Preview'}
+            title={controls.preview}
             onclick={() => openPreview(file)}
           >
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -364,7 +365,7 @@
           type="button"
           class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-text-muted hover:border-danger hover:text-danger transition-colors"
           onclick={closePreview}
-          title={locale === 'tr' ? 'Kapat (Esc)' : locale === 'es' ? 'Cerrar (Esc)' : 'Close (Esc)'}
+          title={controls.close}
         >
           <Icon name="close" size={16} />
         </button>
@@ -393,7 +394,7 @@
               <Icon name="file" size={32} />
             </span>
             <p class="text-sm font-medium text-text">
-              {locale === 'tr' ? 'Bu dosya türü için tarayıcı içi canlı önizleme desteklenmiyor.' : locale === 'es' ? 'Este tipo de archivo no admite vista previa en el navegador.' : 'Direct preview is not available for this file type.'}
+              {controls.unsupported}
             </p>
             <p class="text-xs text-text-muted mt-1">
               {previewFile.name} ({formatBytes(previewFile.size)})
@@ -404,13 +405,13 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-border px-5 py-3 bg-bg/40 text-xs text-text-muted">
-        <span>{locale === 'tr' ? 'Kapatmak için Esc tuşuna bas veya dışarıya tıkla' : locale === 'es' ? 'Pulsa Esc o haz clic fuera para cerrar' : 'Press Esc or click outside to close'}</span>
+        <span>{controls.closeHint}</span>
         <button
           type="button"
           class="rounded-md bg-surface px-3 py-1 font-semibold text-text border border-border hover:border-accent transition-colors"
           onclick={closePreview}
         >
-          {locale === 'tr' ? 'Kapat' : locale === 'es' ? 'Cerrar' : 'Close'}
+          {controls.closeButton}
         </button>
       </div>
     </div>

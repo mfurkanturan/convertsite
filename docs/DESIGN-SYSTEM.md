@@ -10,6 +10,8 @@ Açık zemin, belirgin tipografik hiyerarşi, sınırlı vurgu rengi ve geniş o
 
 Değerler tek kaynak olarak `apps/web/src/styles/tokens.css` içinde Tailwind `@theme` bloğunda tutulur; gerçek metin/zemin eşleşmeleri uygulamada kontrast kontrolünden geçer.
 
+Hintçe arayüz Devanagari glifleri için Noto Sans Devanagari, Windows Nirmala UI ve Mangal sistem yazı tiplerini yedek zincirinde dener. Sora/Inter Devanagari karakter kapsamı sağlamaz; Hintçe başlıklarda Latin harfleri için kullanılan sıkı harf aralığı kaldırılır. Bu yazı tipleri bulunmadığında tarayıcı ve işletim sistemi yedeğine geçilir.
+
 | Token | Değer | Kullanım |
 | --- | --- | --- |
 | background | #F8FAFC | Sayfa zemini |

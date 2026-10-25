@@ -33,7 +33,7 @@ Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `
 
 Bu varsayımlar tasarım ve geliştirme başlangıcı içindir; geri döndürülemez ürün kararı değildir.
 
-- Türkçe arayüz; metinler ileride başka dillere taşınabilecek şekilde tutulur.
+- İngilizce arayüz kök URL'de; Türkçe `/tr/`, İspanyolca `/es/` ve Hintçe `/hi/` altında sunulur. OCR'ın desteklediği belge dilleri arayüz dillerinden bağımsızdır; mevcut motor kapsamı Türkçe ve İngilizcedir.
 - Üyeliksiz kullanım; anonim ziyaretçi için güvenli sunucu oturumu ve işlem sahipliği.
 - Araç başına bir işlem oluşturma; çok dosyalı girdi yalnızca ilgili aracın gerektirdiği yerde.
 - PDF sıkıştırmada her dosyanın küçüleceği garanti edilmez.
