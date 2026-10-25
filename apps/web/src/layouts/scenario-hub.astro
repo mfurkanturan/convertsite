@@ -19,9 +19,10 @@ const text = ui[locale].seo;
 const path = localePath(locale, scenarioBase[locale]);
 const list = scenarios[locale];
 const tools = getTools(locale);
-const alternates = { en: '/use-cases/', tr: '/tr/kullanim/' };
+const alternates = { en: '/use-cases/', tr: '/tr/kullanim/', es: '/es/casos-de-uso/' };
 const title = locale === 'tr'
   ? `PDF ve Belge Kullanım Rehberleri – UYAP, Vize, CV, Ödev | ${brand.name}`
+  : locale === 'es' ? `Guías para trabajar con PDF – Visados, currículums y documentos | ${brand.name}`
   : `PDF Guides – Resumes, Visas, Court Filing, Homework | ${brand.name}`;
 ---
 <!doctype html>
@@ -31,13 +32,13 @@ const title = locale === 'tr'
       jsonLd={hubGraph(locale, path, list.map((item) => ({ name: item.title, path: scenarioPath(locale, item.slug) })))} />
   </head>
   <body class="bg-bg text-text">
-    <a class="skip-link" href="#main-content">{locale === 'tr' ? 'İçeriğe geç' : 'Skip to content'}</a>
+    <a class="skip-link" href="#main-content">{locale === 'tr' ? 'İçeriğe geç' : locale === 'es' ? 'Ir al contenido' : 'Skip to content'}</a>
     <header class="document-header"><div class="document-header-inner">
       <Logo href={localePath(locale, '/')} {locale} />
-      <LanguageSwitch href={alternates[locale === 'tr' ? 'en' : 'tr']} {locale} />
+      <LanguageSwitch {alternates} {locale} />
     </div></header>
     <main id="main-content" class="page-container py-12 max-sm:py-8">
-      <nav aria-label="Breadcrumb" class="mb-6 flex items-center gap-2 text-xs text-text-muted">
+      <nav aria-label={locale === 'es' ? 'Ruta de navegación' : locale === 'tr' ? 'Sayfa konumu' : 'Breadcrumb'} class="mb-6 flex items-center gap-2 text-xs text-text-muted">
         <a href={localePath(locale, '/')} class="hover:text-accent">{text.home}</a><span>/</span><span class="font-medium text-text">{text.hubTitle}</span>
       </nav>
       <h1 class="font-display text-[clamp(28px,3.4vw,40px)] font-bold tracking-tight text-text">{text.hubTitle}</h1>
@@ -65,6 +66,6 @@ const title = locale === 'tr'
         );
       })}
     </main>
-    <SiteFooter {locale} alternateHref={alternates[locale === 'tr' ? 'en' : 'tr']} />
+    <SiteFooter {locale} {alternates} />
   </body>
 </html>

@@ -5,22 +5,26 @@ import LanguageSwitch from './language-switch.svelte';
 import { brand } from '../lib/brand';
 import { getTools, suggestedToolIds } from '../lib/tools';
 import { ui } from '../i18n/ui';
-import { localePath, type Locale } from '../i18n/locales';
+import { localePath, staticPairs, type Locale } from '../i18n/locales';
 
-interface Props { locale: Locale; alternateHref?: string }
+interface Props { locale: Locale; alternates?: Partial<Record<Locale, string>> }
 const { locale } = Astro.props;
 const text = ui[locale];
 const tools = getTools(locale).filter((tool) => suggestedToolIds.includes(tool.id));
-const hub = localePath(locale, locale === 'tr' ? '/kullanim/' : '/use-cases/');
-const alternateHref = Astro.props.alternateHref ?? (locale === 'tr'
-  ? Astro.url.pathname.replace(/^\/tr\/?/, '/')
-  : `/tr${Astro.url.pathname}`);
+const hubPath = locale === 'tr' ? '/kullanim/' : locale === 'es' ? '/casos-de-uso/' : '/use-cases/';
+const hub = localePath(locale, hubPath);
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const alternates = Astro.props.alternates ?? staticPairs.find((pair) => pair[locale] === currentPath) ?? { [locale]: currentPath };
 const securityLegal = locale === 'tr'
   ? [['/guvenlik', text.links.security], ['/gizlilik', text.links.privacy], ['/kullanim-sartlari', text.links.terms]]
-  : [['/security', text.links.security], ['/privacy', text.links.privacy], ['/terms', text.links.terms]];
+  : locale === 'es'
+    ? [['/seguridad', text.links.security], ['/privacidad', text.links.privacy], ['/terminos', text.links.terms]]
+    : [['/security', text.links.security], ['/privacy', text.links.privacy], ['/terms', text.links.terms]];
 const contactLinks = locale === 'tr'
   ? [['/hakkimizda', text.links.about], ['/iletisim', text.links.contact]]
-  : [['/about', text.links.about], ['/contact', text.links.contact]];
+  : locale === 'es'
+    ? [['/acerca-de', text.links.about], ['/contacto', text.links.contact]]
+    : [['/about', text.links.about], ['/contact', text.links.contact]];
 ---
 <footer class="site-footer mt-14 border-t border-white/15 bg-brand-navy pt-8 pb-6">
   <div class="page-container">
@@ -59,7 +63,7 @@ const contactLinks = locale === 'tr'
     <div class="flex flex-col items-start justify-between gap-4 border-t border-border pt-6 text-[13px] text-text-muted sm:flex-row sm:items-center">
       <p>© {brand.year} {brand.name} ({brand.domain}). {text.footer.rights}</p>
       <div class="flex flex-wrap items-center gap-4 sm:gap-6">
-        <LanguageSwitch href={alternateHref} {locale} client:load />
+        <LanguageSwitch {alternates} {locale} client:load />
         <AnalyticsConsent client:load {locale} />
       </div>
     </div>

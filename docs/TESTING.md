@@ -14,7 +14,7 @@ Karşılaştırmalı ara koşu gerektiğinde `node scripts/audit-engines.mjs --t
 
 15 araçlık audit'in izole regresyon koşusunda 2 dosyada 36 entegrasyon testi geçti (`.qa/engine-audit/regression.txt`). Bu sayım ölçüm sürümüne aittir; sonradan eklenen aranabilir PDF aracı için kanıt değildir. Audit değerlendiricisinin dört birim testi ayrıca geçti. 120 senaryo × üç tekrar ve 360 performans çağrısının bütünlüğü rapor üretiminde kontrol edilir; eksik/çift kayıt rapor üretimini durdurur. Bu sayımlar geniş belge corpus'u veya üretim kapasite onayı değildir.
 
-`pnpm check` import/katman sınırlarını ve server/web tiplerini doğrular. `pnpm build` server tip kontrolü ve Astro statik derlemesini yapar.
+`pnpm check` import/katman sınırlarını ve server/web tiplerini doğrular. Web tarafının `check` betiği ayrıca `check:i18n` çalıştırır: İspanyolca sözlükte İngilizce kopya kalmadığını, TR/EN anahtar eşleşmesini (`api.codes.*` hariç, çünkü TR sunucunun Türkçe mesajlarını kullanır) ve her İngilizce senaryonun İspanyolca bir karşılığı olduğunu doğrular. `pnpm build` server tip kontrolü ve Astro statik derlemesini yapar.
 
 Gerçek entegrasyon testleri için çalışan Docker gerekir:
 

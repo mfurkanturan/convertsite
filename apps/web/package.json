@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node ../../scripts/copy-pdfjs-assets.mjs && astro dev --host 127.0.0.1 --port 4321",
     "build": "node ../../scripts/copy-pdfjs-assets.mjs && astro build",
-    "check": "astro check && svelte-check --tsconfig ./tsconfig.json",
+    "check": "astro check && svelte-check --tsconfig ./tsconfig.json && pnpm run check:i18n",
+    "check:i18n": "tsx scripts/check-i18n.ts",
     "preview": "astro preview --host 127.0.0.1 --port 4321"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@astrojs/check": "0.9.12",
     "svelte-check": "4.7.7",
+    "tsx": "4.23.15",
     "typescript": "6.0.3"
   }
 }

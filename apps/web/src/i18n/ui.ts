@@ -1,5 +1,6 @@
 import type { ToolId } from '@convertsite/contracts';
 import type { Locale } from './locales';
+import { createSpanishUi } from './ui-es';
 
 // Every user-facing interface string, per language. Content pages (tool SEO, use cases) live in lib/seo.
 const tr = {
@@ -628,4 +629,4 @@ const en: UiDictionary = {
   logoLabel: (name: string) => `${name} home`,
 };
 
-export const ui: Record<Locale, UiDictionary> = { tr, en };
+export const ui: Record<Locale, UiDictionary> = { tr, en, es: createSpanishUi(en) };

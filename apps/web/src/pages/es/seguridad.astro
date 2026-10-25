@@ -1,0 +1,17 @@
+---
+import LegalLayout from '../../layouts/legal-layout.astro';
+---
+<LegalLayout locale="es" title="Seguridad y tratamiento de archivos" description="Información sobre la carga, el procesamiento, el acceso de sesión y la eliminación de archivos en DoctorConverter.">
+  <p>Esta página describe los controles de seguridad y el ciclo de vida de los archivos en la aplicación. Su funcionamiento también depende de la configuración de alojamiento y red.</p>
+  <ol class="processing-rail list-none p-0" aria-label="Etapas del procesamiento"><li>Selecciona el archivo</li><li>Validamos el tipo y los límites</li><li>Lo procesamos temporalmente</li><li>El acceso caduca o se cierra al borrar</li></ol>
+  <h2>Conexión y sesión</h2>
+  <p>El sitio público usa HTTPS. La API asocia las cargas a una cookie de sesión anónima firmada que caduca a las 24 horas. El acceso a archivos y trabajos se comprueba según esa sesión.</p>
+  <h2>Validación y procesamiento</h2>
+  <p>El navegador no envía los archivos hasta que inicias el proceso. La API comprueba la firma del tipo, el tamaño y límites estructurales. Los archivos aceptados se guardan temporalmente en almacenamiento privado, separado de la base de datos de la aplicación. La base de datos y la cola contienen referencias y metadatos, no el contenido del archivo. Los trabajos usan motores locales; el contenido no se envía a una API externa de conversión o inteligencia artificial.</p>
+  <h2>Caducidad y eliminación</h2>
+  <p>El tiempo de almacenamiento se puede configurar; el valor predeterminado es de 60 minutos y la herramienta muestra el valor comunicado por la API. La solicitud de borrar cierra el acceso de inmediato. La eliminación física se realiza en una tarea periódica después de un periodo de espera de dos minutos y puede demorarse si el archivo sigue en uso. Cerrar el acceso no significa que la eliminación física ya haya terminado.</p>
+  <h2>Proveedores de red y analítica</h2>
+  <p>Cloudflare procesa datos técnicos de conexión como proveedor de red y CDN; Cloudflare Web Analytics se añade según la configuración del sitio. PostHog EU se carga solo si aceptas la analítica opcional. Puede mostrarse publicidad de Google AdSense en la página principal y su tratamiento se gestiona por separado. Consulta la <a href="/es/privacidad" class="text-accent underline">Política de privacidad</a>.</p>
+  <h2>Notificar un problema</h2>
+  <p>Para informar de un problema de seguridad, escribe a <a href="mailto:doctorconverter@doctorconverter.com" class="text-accent underline">doctorconverter@doctorconverter.com</a>.</p>
+</LegalLayout>

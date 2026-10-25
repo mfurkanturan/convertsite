@@ -6,8 +6,8 @@
   export let compact = false;
   const locale = useLocale();
   const text = useUi().help;
-  const securityHref = localePath(locale, locale === 'tr' ? '/guvenlik' : '/security');
-  const privacyHref = localePath(locale, locale === 'tr' ? '/gizlilik' : '/privacy');
+  const securityHref = localePath(locale, locale === 'tr' ? '/guvenlik' : locale === 'es' ? '/seguridad' : '/security');
+  const privacyHref = localePath(locale, locale === 'tr' ? '/gizlilik' : locale === 'es' ? '/privacidad' : '/privacy');
   let openFaqIndex: number | null = null;
 </script>
 
@@ -45,7 +45,7 @@
         <p class="mt-1 max-w-3xl text-sm leading-relaxed text-text-soft">{text.privacyText}</p>
       </div>
     </div>
-    <nav class="flex flex-wrap gap-x-5 gap-y-1 pl-9 text-sm font-semibold lg:pl-0" aria-label={locale === 'tr' ? 'Güvenlik ve gizlilik belgeleri' : 'Security and privacy documents'}>
+    <nav class="flex flex-wrap gap-x-5 gap-y-1 pl-9 text-sm font-semibold lg:pl-0" aria-label={locale === 'tr' ? 'Güvenlik ve gizlilik belgeleri' : locale === 'es' ? 'Documentos de seguridad y privacidad' : 'Security and privacy documents'}>
       <a class="min-h-11 inline-flex items-center text-accent underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" href={securityHref}>{text.securityLink}</a>
       <a class="min-h-11 inline-flex items-center text-accent underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" href={privacyHref}>{text.privacyLink}</a>
     </nav>

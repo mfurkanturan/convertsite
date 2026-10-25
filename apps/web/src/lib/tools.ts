@@ -65,9 +65,48 @@ const english: Record<ToolId, Pick<Tool, 'name' | 'description'>> = {
   'pdf-to-pdf-ocr': { name: 'Make PDF searchable (OCR)', description: 'Add selectable, searchable text to a scanned PDF.' },
 };
 
+const spanish: Record<ToolId, Pick<Tool, 'name' | 'description'>> = {
+  'pdf-to-word': { name: 'PDF a Word', description: 'Convierte PDF con texto en documentos Word editables.' },
+  'word-to-pdf': { name: 'Word a PDF', description: 'Convierte un documento DOCX a PDF.' },
+  'merge-pdf': { name: 'Combinar PDF', description: 'Combina archivos PDF en el orden que elijas.' },
+  'compress-pdf': { name: 'Comprimir PDF', description: 'Prueba a reducir el tamaño de un archivo PDF.' },
+  'pdf-to-excel': { name: 'PDF a Excel', description: 'Exporta las tablas detectadas en un PDF a hojas de Excel.' },
+  'excel-to-pdf': { name: 'Excel a PDF', description: 'Convierte hojas de cálculo XLSX a PDF.' },
+  'pptx-to-pdf': { name: 'PowerPoint a PDF', description: 'Convierte una presentación PPTX a PDF.' },
+  'pdf-to-images': { name: 'PDF a JPG o PNG', description: 'Exporta las páginas de un PDF como imágenes JPG o PNG.' },
+  'images-to-pdf': { name: 'Imágenes a PDF', description: 'Combina imágenes JPG y PNG en un solo PDF.' },
+  'edit-pdf-pages': { name: 'Organizar páginas PDF', description: 'Reordena, gira, divide o elimina páginas de un PDF.' },
+  'page-numbers': { name: 'Añadir números de página', description: 'Añade el número y el total de páginas a un PDF.' },
+  'watermark-pdf': { name: 'Añadir marca de agua', description: 'Añade una marca de agua de texto a las páginas de un PDF.' },
+  'protect-pdf': { name: 'Proteger PDF', description: 'Establece una contraseña para abrir un PDF.' },
+  'unlock-pdf': { name: 'Quitar contraseña de PDF', description: 'Quita la protección de un PDF si conoces su contraseña.' },
+  ocr: { name: 'Extraer texto (OCR)', description: 'Extrae texto de un PDF o una imagen a un archivo TXT.' },
+  'pdf-to-pdf-ocr': { name: 'Crear PDF buscable (OCR)', description: 'Añade una capa de texto seleccionable y buscable a un PDF escaneado.' },
+};
+
+const spanishAliases: Partial<Record<ToolId, string[]>> = {
+  'pdf-to-word': ['convertir pdf a word', 'pdf a docx', 'pasar pdf a word'],
+  'word-to-pdf': ['convertir word a pdf', 'docx a pdf'],
+  'merge-pdf': ['combinar pdf', 'unir pdf', 'juntar pdf'],
+  'compress-pdf': ['comprimir pdf', 'reducir tamaño pdf'],
+  'pdf-to-excel': ['convertir pdf a excel', 'pdf a xlsx'],
+  'excel-to-pdf': ['convertir excel a pdf', 'xlsx a pdf'],
+  'pptx-to-pdf': ['powerpoint a pdf', 'pptx a pdf'],
+  'pdf-to-images': ['pdf a jpg', 'pdf a png', 'pdf a imagen'],
+  'images-to-pdf': ['jpg a pdf', 'png a pdf', 'fotos a pdf'],
+  'edit-pdf-pages': ['dividir pdf', 'girar páginas pdf', 'organizar pdf'],
+  'page-numbers': ['numerar páginas pdf', 'añadir números de página pdf'],
+  'watermark-pdf': ['marca de agua pdf', 'añadir marca de agua'],
+  'protect-pdf': ['proteger pdf', 'poner contraseña a pdf'],
+  'unlock-pdf': ['quitar contraseña pdf', 'desbloquear pdf'],
+  ocr: ['ocr pdf', 'extraer texto de imagen', 'imagen a texto'],
+  'pdf-to-pdf-ocr': ['pdf buscable', 'hacer pdf buscable'],
+};
+
 export function localizedTools(locale: Locale): Tool[] {
   if (locale === 'tr') return tools;
-  return tools.map((tool) => ({ ...tool, ...english[tool.id] }));
+  const copy = locale === 'es' ? spanish : english;
+  return tools.map((tool) => ({ ...tool, ...copy[tool.id], ...(locale === 'es' ? { aliases: [...(tool.aliases ?? []), ...(spanishAliases[tool.id] ?? [])] } : {}) }));
 }
 
 export const getTools = localizedTools;
@@ -80,11 +119,12 @@ export function localizedCategories(locale: Locale): { id: Category; label: stri
 export const getCategories = localizedCategories;
 
 export function normalizeSearch(value: string): string {
-  return value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i').replace(/[→/\\_-]+/g, ' ').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
+  return value.toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i').replace(/[→/\\_-]+/g, ' ').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
 }
 
 export function searchableToolText(tool: Tool): string {
   const englishText = english[tool.id];
+  const spanishText = spanish[tool.id];
   return normalizeSearch([
     tool.name,
     tool.description,
@@ -92,5 +132,6 @@ export function searchableToolText(tool: Tool): string {
     tool.output,
     ...(tool.aliases ?? []),
     ...(englishText ? [englishText.name, englishText.description] : []),
+    ...(spanishText ? [spanishText.name, spanishText.description, ...(spanishAliases[tool.id] ?? [])] : []),
   ].join(' '));
 }

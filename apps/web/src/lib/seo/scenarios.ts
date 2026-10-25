@@ -3,6 +3,7 @@ import type { Alternates, Locale } from '../../i18n/locales';
 import { localePath } from '../../i18n/locales';
 import { trScenarios } from './scenarios-tr';
 import { enScenarios } from './scenarios-en';
+import { esScenarios } from './scenarios-es';
 import { trDeep } from './scenarios-tr-deep';
 import { trMore } from './scenarios-tr-more';
 
@@ -44,6 +45,7 @@ export const figureSize: Record<string, [number, number]> = {
 export const groupLabels: Record<Locale, Record<ScenarioGroup, string>> = {
   tr: { student: 'Öğrenci & sınav', legal: 'Hukuk & UYAP', visa: 'Vize & resmi işlemler', career: 'İK & kariyer', finance: 'Muhasebe & finans', office: 'Ofis & günlük işler' },
   en: { student: 'Students & exams', legal: 'Legal & court filing', visa: 'Visa & official forms', career: 'Jobs & resumes', finance: 'Accounting & finance', office: 'Office & everyday tasks' },
+  es: { student: 'Estudios y exámenes', legal: 'Documentación legal', visa: 'Visados y trámites', career: 'Empleo y currículum', finance: 'Contabilidad y finanzas', office: 'Oficina y tareas cotidianas' },
 };
 export const groupOrder: ScenarioGroup[] = ['student', 'legal', 'visa', 'career', 'finance', 'office'];
 
@@ -57,17 +59,22 @@ function deepen(base: Scenario[], deep: typeof trDeep): Scenario[] {
   });
 }
 
-export const scenarios: Record<Locale, Scenario[]> = { tr: deepen(trScenarios, trDeep), en: enScenarios };
-export const scenarioBase: Record<Locale, string> = { tr: '/kullanim/', en: '/use-cases/' };
+export const scenarios: Record<Locale, Scenario[]> = { tr: deepen(trScenarios, trDeep), en: enScenarios, es: esScenarios };
+export const scenarioBase: Record<Locale, string> = { tr: '/kullanim/', en: '/use-cases/', es: '/casos-de-uso/' };
 
 export function scenarioPath(locale: Locale, slug: string): string {
   return localePath(locale, `${scenarioBase[locale]}${slug}`);
 }
 
 export function scenarioAlternates(locale: Locale, scenario: Scenario): Alternates {
-  const other: Locale = locale === 'tr' ? 'en' : 'tr';
   const result: Alternates = { [locale]: scenarioPath(locale, scenario.slug) };
-  if (scenario.pair && scenarios[other].some((item) => item.slug === scenario.pair)) result[other] = scenarioPath(other, scenario.pair);
+  for (const other of Object.keys(scenarios) as Locale[]) {
+    if (other === locale) continue;
+    const paired = scenario.pair && scenarios[other].find((item) => item.slug === scenario.pair);
+    const reverse = scenarios[other].find((item) => item.pair === scenario.slug);
+    const match = paired ?? reverse;
+    if (match) result[other] = scenarioPath(other, match.slug);
+  }
   return result;
 }
 

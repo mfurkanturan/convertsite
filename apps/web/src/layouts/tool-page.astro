@@ -4,14 +4,15 @@ import AppLayout from './app-layout.astro';
 import ToolSeoSection from '../components/tool-seo-section.astro';
 import { toolSeoMap } from '../lib/tool-seo';
 import { toolSeoMapEn } from '../lib/tool-seo-en';
+import { toolSeoMapEs } from '../lib/tool-seo-es';
 import { toolGraph } from '../lib/seo/structured-data';
 import { localePath, type Locale } from '../i18n/locales';
 
 interface Props { locale: Locale; toolId: ToolId }
 const { locale, toolId } = Astro.props;
-const data = (locale === 'tr' ? toolSeoMap : toolSeoMapEn)[toolId];
+const data = (locale === 'tr' ? toolSeoMap : locale === 'es' ? toolSeoMapEs : toolSeoMapEn)[toolId];
 const path = localePath(locale, `/${toolId}`);
-const alternates = { en: `/${toolId}`, tr: `/tr/${toolId}` };
+const alternates = { en: `/${toolId}`, tr: `/tr/${toolId}`, es: `/es/${toolId}` };
 ---
 <AppLayout {locale} title={data.metaTitle} description={data.metaDescription} {alternates} keywords={data.keywords}
   jsonLd={toolGraph(locale, data, path)} toolId={toolId} heading={{ title: data.h1, lead: data.lead }}>

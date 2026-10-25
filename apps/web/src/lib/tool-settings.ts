@@ -44,6 +44,24 @@ const settings: Record<Locale, Partial<Record<ToolId, Setting[]>>> = {
     ocr: [{ key: 'language', label: 'Document language', options: [choice('eng','English','For recognizing English words.'), choice('tur','Turkish','For recognizing Turkish characters and words.'), choice('tur+eng','Turkish + English','For documents that contain both languages.')] }],
     'pdf-to-pdf-ocr': [{ key: 'language', label: 'Document language', options: [choice('eng','English','For recognizing English words.'), choice('tur','Turkish','For recognizing Turkish characters and words.'), choice('tur+eng','Turkish + English','For documents that contain both languages.')] }],
   },
+  es: {
+    'excel-to-pdf': [{ key: 'sheets', label: 'Hojas de cálculo', options: [choice('all','Todas las hojas','Exporta todas las hojas del archivo a PDF.'), choice('first','Solo la primera hoja','Exporta únicamente la primera hoja a PDF.')] }],
+    'pdf-to-images': [
+      { key: 'format', label: 'Formato de imagen', options: [choice('jpg','JPG','Para fotografías y archivos más pequeños; la compresión puede perder detalle.'), choice('png','PNG','Para texto y bordes nítidos; los archivos pueden ocupar más espacio.')] },
+      { key: 'dpi', label: 'Calidad de imagen', options: [choice('100','Estándar','Menor resolución y, normalmente, archivos más pequeños.'), choice('150','Alta','Más detalle y, normalmente, archivos más grandes.')] },
+    ],
+    'images-to-pdf': [
+      { key: 'size', label: 'Tamaño de página', options: [choice('a4','A4','Coloca las imágenes en páginas A4.'), choice('image','Ajustar a la imagen','Adapta cada página a las dimensiones de la imagen.')] },
+      { key: 'orientation', label: 'Orientación', options: [choice('portrait','Vertical','Crea páginas en orientación vertical.'), choice('landscape','Horizontal','Crea páginas en orientación horizontal.')] },
+    ],
+    'edit-pdf-pages': [
+      { key: 'mode', label: 'Formato de salida', options: [choice('pdf','Páginas seleccionadas en un PDF','Combina las páginas seleccionadas en un solo PDF.'), choice('zip','Un PDF por página (ZIP)','Crea un PDF por cada página seleccionada y los incluye en un ZIP.')] },
+      { key: 'rotation', label: 'Girar páginas seleccionadas', options: [choice('0','Sin giro','Mantiene la orientación actual.'), choice('90','90° a la derecha','Gira las páginas seleccionadas 90° en sentido horario.'), choice('180','180°','Gira las páginas media vuelta.'), choice('270','90° a la izquierda','Gira las páginas seleccionadas 90° en sentido antihorario.')] },
+    ],
+    'page-numbers': [{ key: 'pageNumberPosition', label: 'Posición del número', options: [choice('bottom-center','Abajo, centrado','Coloca el número en el centro del pie de página.'), choice('bottom-right','Abajo, a la derecha','Coloca el número en la esquina inferior derecha.'), choice('top-right','Arriba, a la derecha','Coloca el número en la esquina superior derecha.')] }],
+    ocr: [{ key: 'language', label: 'Idioma del documento', options: [choice('eng','Inglés','Para reconocer palabras en inglés.'), choice('tur','Turco','Para reconocer caracteres y palabras en turco.'), choice('tur+eng','Turco e inglés','Para documentos que contienen ambos idiomas.')] }],
+    'pdf-to-pdf-ocr': [{ key: 'language', label: 'Idioma del documento', options: [choice('eng','Inglés','Para reconocer palabras en inglés.'), choice('tur','Turco','Para reconocer caracteres y palabras en turco.'), choice('tur+eng','Turco e inglés','Para documentos que contienen ambos idiomas.')] }],
+  },
 };
 export function getSettings(id: ToolId, locale: Locale = 'tr'): Setting[] { return settings[locale][id] ?? []; }
 export function requestOptions(id: ToolId, selected: Record<string,string>, pages: string, locale: Locale = 'tr', customText?: string): ToolOptions {

@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro';
 import { toolIds } from '@convertsite/contracts';
-import { absoluteUrl, staticPairs, type Alternates, type Locale } from '../i18n/locales';
+import { absoluteUrl, locales, staticPairs, type Alternates, type Locale } from '../i18n/locales';
 import { scenarios, scenarioAlternates } from '../lib/seo/scenarios';
 
 // Built from the same route data as the pages, so every URL carries its hreflang alternates.
 const entries: { alternates: Alternates; priority: string }[] = [
   ...staticPairs.map((pair, index) => ({ alternates: pair, priority: index === 0 ? '1.0' : index === 1 ? '0.8' : '0.4' })),
-  ...toolIds.map((id) => ({ alternates: { en: `/${id}`, tr: `/tr/${id}` }, priority: '0.9' })),
-  ...(['tr', 'en'] as Locale[]).flatMap((locale) => scenarios[locale].map((scenario) => ({ alternates: scenarioAlternates(locale, scenario), priority: '0.8' }))),
+  ...toolIds.map((id) => ({ alternates: { en: `/${id}`, tr: `/tr/${id}`, es: `/es/${id}` }, priority: '0.9' })),
+  ...locales.flatMap((locale) => scenarios[locale].map((scenario) => ({ alternates: scenarioAlternates(locale, scenario), priority: '0.8' }))),
 ];
 
 export const GET: APIRoute = () => {
@@ -16,7 +16,7 @@ export const GET: APIRoute = () => {
   const urls: string[] = [];
   for (const { alternates, priority } of entries) {
     const links = (Object.entries(alternates) as [Locale, string][]).filter(([, path]) => path);
-    const xDefault = alternates.en ?? alternates.tr;
+    const xDefault = alternates.en ?? alternates.es ?? alternates.tr;
     for (const [, path] of links) {
       if (seen.has(path)) continue;
       seen.add(path);

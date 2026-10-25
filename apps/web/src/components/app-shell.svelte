@@ -15,7 +15,7 @@
   export let locale: Locale = 'tr';
   // Page-specific H1 for tool and use-case landing pages.
   export let heading: { title: string; lead: string } | undefined = undefined;
-  export let switchHref: string | undefined = undefined;
+  export let switchAlternates: Partial<Record<Locale, string>> = {};
   provideLocale(locale);
   const tools = getTools(locale);
   const home = localePath(locale, '/');
@@ -25,9 +25,9 @@
   let menuOpen = false;
   let stagedFile: File | undefined = undefined;
   let activeTool: Tool | undefined = initialToolId ? tools.find((t) => t.id === initialToolId) : undefined;
-  $: currentSwitchHref = activeTool
-    ? localePath(locale === 'tr' ? 'en' : 'tr', `/${activeTool.id}`)
-    : switchHref;
+  $: currentSwitchAlternates = activeTool
+    ? { en: `/${activeTool.id}`, tr: `/tr/${activeTool.id}`, es: `/es/${activeTool.id}` }
+    : switchAlternates;
   const onHome = () => window.location.pathname === home || window.location.pathname === home.replace(/\/$/, '') || window.location.pathname === '';
 
   function setCategory(value: Category) {
@@ -112,7 +112,7 @@
   <Topbar
     {query}
     {menuOpen}
-    switchHref={currentSwitchHref}
+    switchAlternates={currentSwitchAlternates}
     current={activeTool?.name}
     onsearch={search}
     ontool={openTool}

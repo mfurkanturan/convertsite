@@ -4,12 +4,12 @@
   import LanguageSwitch from './language-switch.svelte';
   import ToolSearch from './tool-search.svelte';
   import { useLocale, useUi } from '../i18n/context';
-  import { localePath } from '../i18n/locales';
+  import { localePath, type Locale } from '../i18n/locales';
 
   export let query = '';
   export let menuOpen = false;
   export let current: string | undefined = undefined;
-  export let switchHref: string | undefined = undefined;
+  export let switchAlternates: Partial<Record<Locale, string>> = {};
   export let onmenu: () => void;
   export let onsearch: (value: string) => void;
   export let ontool: (id: string) => void;
@@ -17,8 +17,8 @@
   const locale = useLocale();
   const text = useUi().topbar;
   const homeHref = `${localePath(locale, '/')}#tools`;
-  const guidesHref = localePath(locale, locale === 'tr' ? '/kullanim/' : '/use-cases/');
-  const securityHref = localePath(locale, locale === 'tr' ? '/guvenlik' : '/security');
+  const guidesHref = localePath(locale, locale === 'tr' ? '/kullanim/' : locale === 'es' ? '/casos-de-uso/' : '/use-cases/');
+  const securityHref = localePath(locale, locale === 'tr' ? '/guvenlik' : locale === 'es' ? '/seguridad' : '/security');
 </script>
 
 <header class="sticky top-0 z-30 w-full border-b border-border bg-surface">
@@ -40,7 +40,7 @@
 
     <div class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3 lg:ml-0 lg:flex-initial">
       <ToolSearch {query} onsearch={onsearch} ontool={ontool} />
-      {#if switchHref}<LanguageSwitch href={switchHref} />{/if}
+      <LanguageSwitch alternates={switchAlternates} {locale} />
       <button
         class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border text-text-soft transition-colors hover:bg-accent-soft hover:text-accent lg:hidden"
         aria-label={text.openMenu}

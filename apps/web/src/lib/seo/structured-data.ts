@@ -4,7 +4,7 @@ import { ui } from '../../i18n/ui';
 import type { ToolSeoData } from '../tool-seo';
 import type { Scenario } from './scenarios';
 
-const lang = (locale: Locale) => (locale === 'tr' ? 'tr-TR' : 'en-US');
+const lang = (locale: Locale) => (locale === 'tr' ? 'tr-TR' : locale === 'es' ? 'es-ES' : 'en-US');
 const websiteId = `${siteUrl}/#website`;
 const orgId = `${siteUrl}/#organization`;
 
@@ -27,7 +27,7 @@ export function homeGraph(locale: Locale) {
   const url = absoluteUrl(localePath(locale, '/'));
   return { '@context': 'https://schema.org', '@graph': [
     { '@type': 'Organization', '@id': orgId, name: brand.name, url: siteUrl, logo: absoluteUrl('/favicon.svg'), email: 'doctorconverter@doctorconverter.com' },
-    { '@type': 'WebSite', '@id': websiteId, url: siteUrl, name: brand.name, inLanguage: ['tr-TR', 'en-US'], publisher: { '@id': orgId } },
+    { '@type': 'WebSite', '@id': websiteId, url: siteUrl, name: brand.name, inLanguage: ['tr-TR', 'en-US', 'es-ES'], publisher: { '@id': orgId } },
     app(brand.name, ui[locale].hero.lead, url, locale),
     faqPage(ui[locale].help.questions.map((item) => ({ q: item.title, a: item.text }))),
   ] };

@@ -21,7 +21,7 @@ Bu belge, arayüz, araç ve rehber sayfalarında yayımlanan içerik için ortak
 - Sitemap yalnızca mevcut, kanonik, indekslenebilir sayfaları içerir ve dil alternatiflerini doğru eşler. `robots.txt` sitemap adresini gösterir.
 - 404 sayfası açıklayıcı H1 ve çalışan yerel ana sayfa bağlantıları verir; `noindex` kullanır. Sunucu 5xx hata sayfaları hosting katmanında ayrıca tanımlanır.
 - Her içerik rotasında bir H1, anlamlı başlık hiyerarşisi, etiketli gezinme alanları ve erişilebilir link adları bulunur.
-- Türkçe ve İngilizce sayfalarda içerik, sayfa başlığı, dil değiştirici ve link hedefleri aynı işleve karşılık gelir; taşma mobil genişlikte kontrol edilir.
+- Türkçe, İngilizce ve İspanyolca sayfalarda içerik, sayfa başlığı, dil değiştirici ve link hedefleri aynı işleve karşılık gelir; taşma mobil genişlikte kontrol edilir.
 - Footer bağlantıları, mailto adresi, iletişim ve yasal sayfalar gerçek ve erişilebilir hedeflere gider. Aynı yasal bağlantı grubu birden çok yerde gereksiz tekrarlanmaz.
 
 ## Sprint 6 doğrulama kapsamı
@@ -33,7 +33,7 @@ Bu belge, arayüz, araç ve rehber sayfalarında yayımlanan içerik için ortak
 ## Ortak dil ve içerik sahipliği
 
 - Türkçe arayüz ve yönlendirmeler kısa “sen” dili kullanır; İngilizce aynı işlevi doğal görev diliyle anlatır. Yasal hükümler sadeleştirilirken hak ve sorumlulukların anlamı korunur.
-- Ortak arayüz metni `i18n/ui.ts`, araç katalog açıklaması `lib/tools.ts`, araç SEO verisi `lib/tool-seo.ts` / `lib/tool-seo-en.ts`, senaryo metni `lib/seo/scenarios-*` kaynaklarında tutulur. İkinci çeviri veya çalışma zamanı metin temizleme sistemi kurulmaz.
+- Ortak arayüz metni `i18n/ui.ts` ve `i18n/ui-es.ts`, araç katalog açıklaması `lib/tools.ts`, araç SEO verisi `lib/tool-seo.ts` / `lib/tool-seo-en.ts` / `lib/tool-seo-es.ts`, senaryo metni `lib/seo/scenarios-*` kaynaklarında tutulur. İkinci çeviri veya çalışma zamanı metin temizleme sistemi kurulmaz. Yeni İngilizce arayüz anahtarı veya senaryo eklendiğinde `apps/web` içindeki `check:i18n` betiği İspanyolca karşılığı yoksa başarısız olur.
 - Başlık somut işi söyler; açıklama, CTA ve uyarı aynı cümleyi tekrarlamaz. Kart sayısını doldurmak için üç özellik veya üç fayda üretilmez.
 - Araç SSS’si yalnızca araca özgü soruları yanıtlar. Ücret ve genel dosya saklama soruları ana sayfa/politika kaynaklarında kalır.
 - Araç başlatma etiketleri 16 araç kimliğini kapsayan tip kontrollü sözlüktür. Parola, filigran ve OCR alanları da ortak i18n kaynağını kullanır.

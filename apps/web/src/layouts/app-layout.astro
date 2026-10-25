@@ -19,7 +19,6 @@ interface Props {
   heading?: { title: string; lead: string };
 }
 const { locale, title, description, alternates, keywords, jsonLd, toolId, heading } = Astro.props;
-const switchHref = alternates[locale === 'tr' ? 'en' : 'tr'];
 ---
 <!doctype html>
 <html lang={htmlLang[locale]}>
@@ -27,11 +26,11 @@ const switchHref = alternates[locale === 'tr' ? 'en' : 'tr'];
     <SeoHead {locale} {title} {description} {alternates} {keywords} {jsonLd} />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">{locale === 'tr' ? 'İçeriğe geç' : 'Skip to content'}</a>
-    <AppShell client:load {locale} initialToolId={toolId} {heading} {switchHref}>
+    <a class="skip-link" href="#main-content">{locale === 'tr' ? 'İçeriğe geç' : locale === 'es' ? 'Ir al contenido' : 'Skip to content'}</a>
+    <AppShell client:load {locale} initialToolId={toolId} {heading} switchAlternates={alternates}>
       <slot />
       <slot name="home" slot="home" />
     </AppShell>
-    <SiteFooter {locale} alternateHref={switchHref} />
+    <SiteFooter {locale} alternates={alternates} />
   </body>
 </html>
