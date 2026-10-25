@@ -30,11 +30,11 @@ async function intercept(page: Page) {
 test('no PostHog requests before consent or after declining/reloading', async ({ page }) => {
   const capture = await intercept(page);
   await page.goto('/tr/pdf-to-word?password=PRIVATE_SENTINEL#PRIVATE_SENTINEL', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByRole('button', { name: 'Analitiğe izin ver', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Kabul et', exact: true })).toBeVisible();
   expect(capture.requests).toHaveLength(0);
   await page.getByRole('button', { name: 'Reddet', exact: true }).click();
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Analitik tercihleri', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Çerez tercihleri', exact: true })).toBeVisible();
   expect(capture.requests).toHaveLength(0);
 });
 
@@ -45,7 +45,7 @@ test('navigation and file-selection events contain only allowlisted, non-sensiti
     maxFileBytes: 10485760, maxFiles: 20, maxTotalBytes: 41943040, maxTotalPages: 300, retentionMinutes: 60,
   }) }));
   await page.goto('/tr/');
-  await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
+  await page.getByRole('button', { name: 'Kabul et', exact: true }).click();
   await expect.poll(() => capture.events.some(event => event.event === '$pageview')).toBe(true);
   const search = page.getByRole('combobox', { name: /Araç ara/ });
   await search.fill('excel');
@@ -80,7 +80,7 @@ test('hero upload intent is recorded without reading the selected file', async (
   const capture = await intercept(page);
   await page.route('**/api/capabilities', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ enabledTools: [], maxFileBytes: 10485760, maxFiles: 20, maxTotalBytes: 41943040, maxTotalPages: 300, retentionMinutes: 60 }) }));
   await page.goto('/tr/');
-  await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
+  await page.getByRole('button', { name: 'Kabul et', exact: true }).click();
   await expect.poll(() => capture.events.some(event => event.event === '$pageview')).toBe(true);
   const chooserEvent = page.waitForEvent('filechooser');
   await page.getByRole('button', { name: 'Dosya seç', exact: true }).click();
@@ -94,7 +94,7 @@ test('hero upload intent is recorded without reading the selected file', async (
 test('consent permits sanitized events; revocation stops capture', async ({ page }) => {
   const capture = await intercept(page);
   await page.goto('/tr/pdf-to-word?password=PRIVATE_SENTINEL');
-  await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
+  await page.getByRole('button', { name: 'Kabul et', exact: true }).click();
   await expect.poll(() => capture.events.some(e => e.event === '$pageview'), { timeout: 20000 }).toBe(true);
   const sentBeforeRevocation = await page.evaluate(async url => {
     // Exercise the real application's privacy boundary with deliberately unsafe runtime input.
@@ -110,7 +110,7 @@ test('consent permits sanitized events; revocation stops capture', async ({ page
   expect(upload.properties.tool).toBe('pdf-to-word');
   expect(upload.properties.file_count).toBe(1);
   expect(upload.properties.environment).toBe('development');
-  await page.getByRole('button', { name: 'Analitik tercihleri', exact: true }).click();
+  await page.getByRole('button', { name: 'Çerez tercihleri', exact: true }).click();
   await page.getByRole('button', { name: 'Reddet', exact: true }).click();
   const count = capture.events.length;
   const sent = await page.evaluate(async url => {
@@ -119,7 +119,7 @@ test('consent permits sanitized events; revocation stops capture', async ({ page
   }, capture.module.url);
   expect(sent).toBe(false);
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Analitik tercihleri', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Çerez tercihleri', exact: true })).toBeVisible();
   expect(capture.events.length).toBe(count);
 });
 
@@ -130,7 +130,7 @@ test('Do Not Track prevents collection even when consent was accepted', async ({
     localStorage.setItem('dc-analytics-consent-v1', 'accepted');
   });
   await page.goto('/tr/pdf-to-word');
-  await expect(page.getByRole('button', { name: 'Analitik tercihleri', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Çerez tercihleri', exact: true })).toBeVisible();
   expect(capture.requests).toHaveLength(0);
 });
 
@@ -150,7 +150,7 @@ for (const state of ['succeeded', 'failed'] as const) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
     });
     await page.goto('/tr/pdf-to-word', { waitUntil: 'domcontentloaded' });
-    await page.getByRole('button', { name: 'Analitiğe izin ver', exact: true }).click();
+    await page.getByRole('button', { name: 'Kabul et', exact: true }).click();
     await expect.poll(() => capture.events.some(e => e.event === '$pageview')).toBe(true);
     await page.locator('input[type="file"]').setInputFiles({ name: 'PRIVATE_SENTINEL.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n%%EOF') });
     await page.getByRole('button', { name: 'Word’e dönüştür', exact: true }).click();
@@ -161,7 +161,7 @@ for (const state of ['succeeded', 'failed'] as const) {
     expect(capture.events.some(e => e.event === 'processing_started')).toBe(true);
     for (const event of ['upload_completed', 'conversion_requested']) expect(capture.events.some(e => e.event === event)).toBe(true);
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await expect(page.getByRole('button', { name: 'Analitik tercihleri', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Çerez tercihleri', exact: true })).toBeVisible();
     await expect.poll(() => capture.events.filter(e => e.event === '$pageview').length).toBe(2);
     expect(capture.events.filter(e => e.event === outcome)).toHaveLength(1);
     expect(JSON.stringify(capture.events)).not.toContain('PRIVATE_SENTINEL');

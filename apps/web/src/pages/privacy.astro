@@ -10,7 +10,7 @@ import LegalLayout from '../layouts/legal-layout.astro';
     <ol class="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
       <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#files">Files and retention</a></li>
       <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#session">Session and technical data</a></li>
-      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#measurement">Site measurement</a></li>
+      <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#cookies">Cookies and usage analytics</a></li>
       <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#advertising">Advertising</a></li>
       <li><a class="inline-flex min-h-11 items-center text-sm text-accent hover:underline" href="#contact">Contact</a></li>
     </ol>
@@ -32,9 +32,11 @@ import LegalLayout from '../layouts/legal-layout.astro';
     <li>Your interface language choice is stored in browser local storage.</li>
   </ul>
 
-  <h2 id="measurement">Site measurement</h2>
+  <span id="measurement" aria-hidden="true"></span>
+  <h2 id="cookies">Cookies and usage analytics</h2>
+  <p>The essential session cookie enables file processing. Your language and optional analytics choices are saved in browser local storage. Optional analytics starts only after you select “Accept”. Selecting “Decline” does not prevent you from using the tools. You can change your choice using “Cookie preferences” in the footer.</p>
   <p>Cloudflare adds Cloudflare Web Analytics to the live domain for page-view and performance measurement. Cloudflare also handles requests as the CDN/network provider. The analytics preference control does not change Cloudflare configuration.</p>
-  <p>PostHog EU loads only after you explicitly allow it. It may measure page and tool visits, API-accepted uploads, processing states observed by the browser, download clicks and fixed error categories. PostHog receives technical request data and an anonymous analytics identifier separate from file-access sessions. File names/content, passwords, file/job IDs and download URLs are excluded from analytics events. Session replay, automatic click capture and raw error/console collection are disabled. You can withdraw permission using “Analytics preferences” in the footer; this preference does not turn off advertising or Cloudflare Web Analytics. See <a href="https://posthog.com/privacy" rel="nofollow">PostHog’s Privacy Policy</a>.</p>
+  <p>PostHog EU loads only after you explicitly allow it. It may measure page and tool visits, API-accepted uploads, processing states observed by the browser, download clicks and fixed error categories. PostHog receives technical request data and an anonymous analytics identifier separate from file-access sessions. File names/content, passwords, file/job IDs and download URLs are excluded from analytics events. Session replay, automatic click capture and raw error/console collection are disabled. You can withdraw permission using “Cookie preferences” in the footer; this preference does not turn off advertising or Cloudflare Web Analytics. See <a href="https://posthog.com/privacy" rel="nofollow">PostHog’s Privacy Policy</a>.</p>
 
   <h2 id="advertising">Advertising</h2>
   <p>A Google AdSense ad may appear on the home page. When an ad loads, Google and its partners may process data such as browser/device details, IP address and ad interactions, and may use cookies or similar technologies for ad delivery. See <a href="https://policies.google.com/technologies/ads" rel="nofollow">Google’s advertising technology information</a> and <a href="https://policies.google.com/privacy" rel="nofollow">Google’s Privacy Policy</a> for details and controls. Uploaded document files and contents are not sent in advertising events.</p>

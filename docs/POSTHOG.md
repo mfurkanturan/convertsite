@@ -4,7 +4,7 @@
 
 ## Etkinleşme ve gizlilik
 
-SDK yalnızca ziyaretçi açıkça izin verdikten sonra dinamik yüklenir. İlk tercihte ve reddetmede PostHog ağına istek yapılmaz. Alt bölümdeki Analitik tercihleri / Analytics preferences düğmesiyle geri çekilebilir. Tercih `dc-analytics-consent-v1` yerel depolama anahtarında tutulur; PostHog kimliği dosya erişim cookie'sinden ayrıdır. DNT/GPC sinyali varsa izin verilse bile toplama yapılmaz. Depolama erişilemezse kapalı kalır. Sekmeler arası tercih değişimi dinlenir; izin öncesi olaylar sonradan gönderilmek üzere biriktirilmez.
+SDK yalnızca ziyaretçi açıkça izin verdikten sonra dinamik yüklenir. İlk tercihte ve reddetmede PostHog ağına istek yapılmaz. Alt bölümdeki Çerez tercihleri / Cookie preferences düğmesiyle geri çekilebilir. Tercih `dc-analytics-consent-v1` yerel depolama anahtarında tutulur; PostHog kimliği dosya erişim cookie'sinden ayrıdır. DNT/GPC sinyali varsa izin verilse bile toplama yapılmaz. Depolama erişilemezse kapalı kalır. Sekmeler arası tercih değişimi dinlenir; izin öncesi olaylar sonradan gönderilmek üzere biriktirilmez.
 
 Bu tercih Google reklamları veya Cloudflare analitiği için bir CMP değildir. Mevcut reklam davranışı bu değişiklikte değiştirilmedi. PostHog'a yapılan isteklerin ağ adresini sağlayıcı görebilir; “hiç kişisel veri işlenmiyor” iddiası yoktur. Kullanıcı ve sağlayıcı gizlilik metinleri buna göre okunmalıdır.
 
