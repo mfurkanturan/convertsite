@@ -4,10 +4,11 @@ import HomeGuides from '../../components/home-guides.astro';
 import AdSlot from '../../components/ad-slot.astro';
 import { brand } from '../../lib/brand';
 import { homeGraph } from '../../lib/seo/structured-data';
+import { staticPairs } from '../../i18n/locales';
 ---
 <AppLayout locale="es" title="Herramientas PDF gratis: convertir, unir y comprimir | DoctorConverter"
   description="Convierte PDF a Word o Excel, une y comprime documentos, crea PDF desde imágenes y usa OCR. Sin cuenta; los archivos se almacenan temporalmente y caducan según la política activa del servicio."
-  alternates={{ en: '/', tr: '/tr/', es: '/es/' }} keywords={['convertir PDF', 'unir PDF', 'comprimir PDF', 'PDF a Word', 'PDF a Excel', 'JPG a PDF', 'OCR', brand.name]}
+  alternates={staticPairs[0]} keywords={['convertir PDF', 'unir PDF', 'comprimir PDF', 'PDF a Word', 'PDF a Excel', 'JPG a PDF', 'OCR', brand.name]}
   jsonLd={homeGraph('es')}>
   <AdSlot slot="home" placement="home-after-tools" locale="es" />
   <HomeGuides slot="home" locale="es" />
