@@ -193,9 +193,9 @@ export const esScenarios: Scenario[] = [
     metaDescription: 'Extrae el texto de un documento escaneado con OCR. Compáralo con el original antes de citarlo.', lead: 'Extrae el texto de un documento escaneado con OCR. Compáralo con el original antes de citarlo.',
     queries: ['copiar texto de PDF escaneado', 'PDF escaneado a texto', 'OCR PDF online gratis', 'imagen a texto', 'extraer texto de una foto', 'texto de PDF no seleccionable'],
     sections: [
-      { heading: 'Qué hace el OCR', body: ['Los documentos escaneados son imágenes, así que sus palabras no se pueden seleccionar ni buscar. El OCR (reconocimiento óptico de caracteres) lee esas imágenes y devuelve texto plano.', 'Elige inglés, turco o ambos. El resultado es un archivo TXT; no conserva el diseño, pero el texto está listo para pegarlo donde necesites. El reconocimiento en español todavía no está disponible.'] },
+      { heading: 'Qué hace el OCR', body: ['Los documentos escaneados son imágenes, así que sus palabras no se pueden seleccionar ni buscar. El OCR (reconocimiento óptico de caracteres) lee esas imágenes y devuelve texto plano.', 'Elige uno o dos idiomas de la lista, incluido el español. El resultado es un archivo TXT; no conserva el diseño, pero el texto está listo para pegarlo donde necesites. La precisión depende de la calidad del escaneo y del modelo de idioma.'] },
     ],
-    steps: [{ title: 'Sube el archivo', text: 'Elige un PDF escaneado (hasta 20 páginas) o una foto.' }, { title: 'Indica el idioma', text: 'Inglés, turco o ambos.' }, { title: 'Obtén el texto', text: 'Descarga el archivo TXT y copia lo que necesites.' }],
+    steps: [{ title: 'Sube el archivo', text: 'Elige un PDF escaneado (hasta 20 páginas) o una foto.' }, { title: 'Indica el idioma', text: 'Uno o dos idiomas de la lista, incluido el español.' }, { title: 'Obtén el texto', text: 'Descarga el archivo TXT y copia lo que necesites.' }],
     tips: ['Extrae solo las páginas que necesites con Organizar páginas PDF antes de ejecutar el OCR.', 'Los escaneos torcidos o de baja resolución reducen la precisión; 300 ppp dan los mejores resultados.'],
     faqs: [
       { q: '¿Reconoce letra manuscrita?', a: 'El OCR está pensado para texto impreso; la precisión con letra a mano es baja.' },
@@ -223,7 +223,7 @@ export const esScenarios: Scenario[] = [
     metaDescription: 'Exporta a Word tu currículum antiguo en PDF, revisa el diseño y actualiza tu experiencia y tus datos.', lead: 'Exporta a Word tu currículum antiguo en PDF, revisa el diseño y actualiza tu experiencia y tus datos.',
     queries: ['convertir currículum PDF a Word', 'editar CV en PDF', 'actualizar CV antiguo en PDF', 'CV PDF a DOCX', 'currículum de Canva a Word'],
     sections: [
-      { heading: 'Actualiza y vuelve a exportar', body: ['El paso de PDF a Word reconstruye las tablas y los diseños de currículum en dos columnas. Después de editar, usa Word a PDF para obtener un PDF listo para enviar.'] },
+      { heading: 'Actualiza y vuelve a exportar', body: ['El paso de PDF a Word reconstruye las tablas e intenta reconstruir los currículums en dos columnas; revisa el orden y la posición de las columnas en el resultado. Después de editar, usa Word a PDF para obtener un PDF listo para enviar.'] },
     ],
     steps: [{ title: 'Convierte', text: 'Pasa tu currículum en PDF a Word.' }, { title: 'Actualiza', text: 'Añade tu nueva experiencia y tus habilidades.' }, { title: 'Exporta', text: 'Guarda la versión final con Word a PDF.' }],
     tips: ['Los cuadros de texto de las herramientas de diseño pueden llegar como cuadros separados; edita el texto dentro de ellos.'],
