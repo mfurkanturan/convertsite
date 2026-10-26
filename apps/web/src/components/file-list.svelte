@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import Icon from './icon.svelte';
+  import FilePreviewDialog from './file-preview-dialog.svelte';
   import { formatBytes } from '../lib/file-selection';
   import { renderPdfPage } from '../lib/pdf-preview';
   import { useUi } from '../i18n/context';
@@ -23,15 +24,27 @@
   let draggedIndex: number | null = null;
   let dragOverIndex: number | null = null;
 
-  // Quick look preview modal
+  // The dialog owns its own preview URL and releases it when closed.
   let previewFile: File | null = null;
-  let previewUrl: string | null = null;
 
   // Thumbnail cache for images and rendered PDFs
   let imageThumbnails = new Map<File, string>();
   let pdfThumbnails = new Map<File, string>();
 
   $: {
+    const activeFiles = new Set(files);
+
+    for (const [file, url] of imageThumbnails) {
+      if (!activeFiles.has(file)) {
+        URL.revokeObjectURL(url);
+        imageThumbnails.delete(file);
+      }
+    }
+    for (const file of pdfThumbnails.keys()) {
+      if (!activeFiles.has(file)) pdfThumbnails.delete(file);
+    }
+    if (previewFile && !activeFiles.has(previewFile)) previewFile = null;
+
     // Generate previews for images and PDFs
     for (const file of files) {
       if (file.type.startsWith('image/') && !imageThumbnails.has(file)) {
@@ -39,8 +52,10 @@
       } else if (file.name.toLowerCase().endsWith('.pdf') && !pdfThumbnails.has(file)) {
         renderPdfPage(file, 1, 220).then((url) => {
           if (url) {
-            pdfThumbnails.set(file, url);
-            pdfThumbnails = pdfThumbnails;
+            if (files.includes(file)) {
+              pdfThumbnails.set(file, url);
+              pdfThumbnails = pdfThumbnails;
+            }
           }
         });
       }
@@ -48,16 +63,10 @@
   }
 
   function openPreview(file: File) {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
     previewFile = file;
-    previewUrl = URL.createObjectURL(file);
   }
 
   function closePreview() {
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      previewUrl = null;
-    }
     previewFile = null;
   }
 
@@ -98,15 +107,13 @@
   }
 
   onDestroy(() => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
     for (const url of imageThumbnails.values()) {
       URL.revokeObjectURL(url);
     }
     imageThumbnails.clear();
+    pdfThumbnails.clear();
   });
 </script>
-
-<svelte:window onkeydown={(e) => { if (e.key === 'Escape' && previewFile) closePreview(); }} />
 
 <div class="mt-4 rounded-panel border border-border bg-surface p-4 sm:p-5" role="group" aria-label={text.selected}>
   <!-- Header with count and view switcher -->
@@ -330,90 +337,6 @@
 </div>
 
 <!-- FULLSCREEN QUICK LOOK MODAL -->
-{#if previewFile && previewUrl}
-  <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 sm:p-6 backdrop-blur-sm"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Dosya Önizlemesi"
-  >
-    <!-- Backdrop dismiss -->
-    <button
-      type="button"
-      class="fixed inset-0 cursor-default"
-      aria-label="Kapat"
-      onclick={closePreview}
-    ></button>
-
-    <!-- Modal Box -->
-    <div class="relative z-10 flex h-full max-h-[90vh] w-full max-w-4xl flex-col rounded-2xl border border-border bg-surface shadow-2xl overflow-hidden">
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-border px-5 py-3.5 bg-bg/60">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent shrink-0">
-            <Icon name="file" size={16} />
-          </span>
-          <div class="min-w-0">
-            <h3 class="truncate text-sm font-semibold text-text max-w-md sm:max-w-xl" title={previewFile.name}>
-              {previewFile.name}
-            </h3>
-            <span class="text-xs text-text-muted">{formatBytes(previewFile.size)}</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          class="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-text-muted hover:border-danger hover:text-danger transition-colors"
-          onclick={closePreview}
-          title={controls.close}
-        >
-          <Icon name="close" size={16} />
-        </button>
-      </div>
-
-      <!-- Modal Body (Viewer) -->
-      <div class="flex-1 overflow-auto p-4 flex items-center justify-center bg-bg/40">
-        {#if previewFile.name.toLowerCase().endsWith('.pdf')}
-          <!-- Native In-Browser High-Res PDF Viewer -->
-          <iframe
-            src={previewUrl}
-            title={previewFile.name}
-            class="h-full min-h-[60vh] w-full rounded-xl border border-border/80 bg-white shadow-inner"
-          ></iframe>
-        {:else if previewFile.type.startsWith('image/')}
-          <!-- Image Viewer -->
-          <img
-            src={previewUrl}
-            alt={previewFile.name}
-            class="max-h-[75vh] max-w-full rounded-xl object-contain shadow-md"
-          />
-        {:else}
-          <!-- Other File Info Placeholder -->
-          <div class="text-center p-8">
-            <span class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-soft text-accent mb-3">
-              <Icon name="file" size={32} />
-            </span>
-            <p class="text-sm font-medium text-text">
-              {controls.unsupported}
-            </p>
-            <p class="text-xs text-text-muted mt-1">
-              {previewFile.name} ({formatBytes(previewFile.size)})
-            </p>
-          </div>
-        {/if}
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="flex items-center justify-between border-t border-border px-5 py-3 bg-bg/40 text-xs text-text-muted">
-        <span>{controls.closeHint}</span>
-        <button
-          type="button"
-          class="rounded-md bg-surface px-3 py-1 font-semibold text-text border border-border hover:border-accent transition-colors"
-          onclick={closePreview}
-        >
-          {controls.closeButton}
-        </button>
-      </div>
-    </div>
-  </div>
+{#if previewFile}
+  <FilePreviewDialog file={previewFile} onclose={closePreview} />
 {/if}
