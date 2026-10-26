@@ -4,10 +4,11 @@ import HomeGuides from '../../components/home-guides.astro';
 import AdSlot from '../../components/ad-slot.astro';
 import { brand } from '../../lib/brand';
 import { homeGraph } from '../../lib/seo/structured-data';
+import { staticPairs } from '../../i18n/locales';
 ---
 <AppLayout locale="tr" title="PDF Dönüştürücü – Birleştir, Sıkıştır, Word’e Çevir | DoctorConverter"
   description="Ücretsiz PDF araçları: PDF birleştirme, sıkıştırma, Word ve Excel dönüştürme, görsellerden PDF oluşturma ve OCR. Hesap gerekmez; dosyalar etkin saklama politikasına göre süreli olarak tutulur."
-  alternates={{ en: '/', tr: '/tr/' }} keywords={['pdf dönüştürücü', 'pdf birleştirme', 'pdf küçültme', 'pdf word çevirme', 'pdf excel çevirme', 'jpg pdf yapma', 'ocr', brand.name]}
+  alternates={staticPairs[0]} keywords={['pdf dönüştürücü', 'pdf birleştirme', 'pdf küçültme', 'pdf word çevirme', 'pdf excel çevirme', 'jpg pdf yapma', 'ocr', brand.name]}
   jsonLd={homeGraph('tr')}>
   <AdSlot slot="home" placement="home-after-tools" locale="tr" />
   <HomeGuides slot="home" locale="tr" />
