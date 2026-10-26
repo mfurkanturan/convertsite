@@ -12,13 +12,16 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, ardından `SEO`, `POSTHO
 - Rota/şablon değişikliği frontend rolüyle birlikte yapılır; olay verisi backend'den geliyorsa sözleşme değişikliği backend rolüne bildirilir.
 
 ## Nereye bakılır
+- İçerik doğruluğunun kaynakları: motor dil desteği `packages/contracts/src/tools.ts` içindeki `ocrLanguageCodes` ve `ENGINE-SUPPORT.md`; çelişkide `ENGINE-SUPPORT.md` (güncel) `ENGINE-AUDIT.md`'nin (başlangıç ölçümü) önüne geçer. Araç sayısı: kodda 16 kayıtlı araç var; motor audit'i ilk 15 aracı kapsar.
 - Rotalar: `apps/web/src/pages` (`tr/ es/ fr/ hi/`, `[tool].astro`, `use-cases/`, `sitemap.xml.ts`).
-- İçerik: `apps/web/src/lib/tool-seo*.ts` (TR/EN/ES/FR/HI), `lib/seo/scenarios-*.ts`, `i18n/ui.ts`.
-- Analitik: `lib/analytics.ts`, `lib/analytics-policy.ts`; test: `e2e/analytics.spec.ts`, `e2e/content-consistency.spec.ts`.
+- Dil/rota eşlemeleri ve hreflang kaynağı: `apps/web/src/i18n/locales.ts` (`staticPairs`), `lib/seo/scenarios.ts` (`scenarioAlternates`).
+- İçerik: `apps/web/src/lib/tool-seo.ts` (**TR**; adında dil eki yoktur), `tool-seo-en.ts`, `-es.ts`, `-fr.ts`, `-hi.ts`; ES/FR/HI dosyaları tek satırlık nesnelerdir, anahtar araması için `ocr:` ve `'pdf-to-pdf-ocr':` biçimlerine bak; `lib/seo/scenarios-*.ts`, `i18n/ui.ts`.
+- Analitik: `lib/analytics.ts` (izin, reddetme, DNT/GPC mantığı: `permitted()`), `lib/analytics-policy.ts` (olay adı ve özellik izin listesi); test: `e2e/analytics.spec.ts`. Repository kökündeki `e2e/` dizini (`apps/web/e2e` yok): `e2e/content-consistency.spec.ts` (yalnızca TR/EN), `e2e/locale-hreflang.spec.ts` (ES/FR/HI hreflang).
 
 ## Komutlar
 - `pnpm check` (`check:i18n` dahil), `pnpm build`, `pnpm test:e2e`. İçerik tutarlılığı `content-consistency.spec.ts` (16 araç × TR/EN, tek H1, görünür SSS = schema, hreflang yalnızca var olan eşdeğerler).
-- Analitik izin testleri varsayılan olarak atlanır; `PUBLIC_POSTHOG_LOCAL=true` ve `POSTHOG_E2E=1` ile ayrıca çalıştırılır. Atlanan testi geçti sayma.
+- Analitik izin testleri varsayılan olarak atlanır. Tam yöntem `docs/POSTHOG.md`'de: `PUBLIC_POSTHOG_LOCAL=true` ile `astro dev --host 127.0.0.1 --port 4325` başlat, ikinci terminalde `POSTHOG_E2E=1` ve `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4325` ile `pnpm exec playwright test e2e/analytics.spec.ts` çalıştır. Atlanan testi geçti sayma.
+- ES/FR/HI içeriğinde metin doğruluğunu otomatik denetleyen test yoktur (yalnızca hreflang ve `check:i18n` anahtar eşleşmesi); bu dillerin iddia doğruluğunu elle denetle (özellikle OCR dil desteği, iki sütun/yerleşim ve görsel iddiaları).
 
 ## Çalışma kuralları
 - URL, locale eşleşmesi, canonical, hreflang, sitemap ve yapılandırılmış veriyi birlikte kontrol et; hreflang yalnızca gerçekten var olan eşdeğer sayfaya verilir.

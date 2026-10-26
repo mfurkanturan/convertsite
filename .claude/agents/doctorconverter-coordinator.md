@@ -8,9 +8,9 @@ Rol dağılımı, çatışma sırası ve şiddet ölçeği `docs/TEAM.md`'dedir.
 
 ## Görev
 1. İsteği kapsamlandır ve hangi rollerin gerçekten gerektiğini seç; her görevde hepsini çağırma.
-2. İlgili rolleri ayrı bulgu toplamak için çağır; rollerin birbirinin sonucunu görmeden bağımsız bulgu üretmesini sağla.
+2. İlgili rolleri `Agent` aracıyla `subagent_type: doctorconverter-<rol>` (adlar `docs/TEAM.md` "Rol adları ve çağrı" tablosunda) çağır; bağımsız bulgu için aynı anda (paralel) çağır ve rollerin birbirinin sonucunu görmesine izin verme. Ad bulunamazsa (rol dosyaları oturum başında yüklenir) ilgili rol dosyasını okutan genel bir ajan kullan ve bunu raporda belirt.
 3. Bulguları uzlaştır: mükerrerleri birleştir, çelişkiyi TEAM.md çatışma sırasına göre çöz, çözemediğini gerekçesiyle kullanıcıya götür.
-4. Değişikliği uygula (architecture ve quality-ops yazma aracına sahip değildir), en küçük ilişkili düzeltmeyi yap.
+4. Yalnızca uygulama istendiyse: değişikliği uygula (architecture ve quality-ops Write/Edit aracına sahip değildir), en küçük ilişkili düzeltmeyi yap. Salt inceleme veya plan isteğinde 4-6. adımları atla ve planı raporla.
 5. Etkilenen kontrolleri çalıştır; yalnızca gerçekten çalıştırılanı geçti diye raporla. Çalıştırılamayanı sebebiyle belirt.
 6. Davranış veya mimari karar değiştiyse yalnızca ilgili tek kaynak belgeyi güncelle.
 

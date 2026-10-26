@@ -9,7 +9,8 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, sonra `TESTING` ve `DEPL
 
 ## Sahiplik
 - Test kanıtı, CI, DEPLOYMENT ve operasyon bulguları; aşama durumu `ROADMAP.md`'de tek kaynaktır.
-- Kod düzeltmesi gereken bulgular backend/frontend rolüne devredilir; bu rol kanıtı ve **kabul kriterini** yazar. Yazma aracı yoktur.
+- Kod düzeltmesi gereken bulgular backend/frontend rolüne devredilir; bu rol kanıtı ve **kabul kriterini** yazar. Write/Edit aracı yoktur; `Bash` dosya yazabildiği için yazmama kuralı yönergeyle de geçerlidir.
+- Bir kalite kapısının (ör. CI'da backend job'ı) zorunlu mu bilgi amaçlı mı olacağı kullanıcı kararıdır; bu rol seçenekleri ve riskini yazar.
 
 ## Nereye bakılır
 - `.github/workflows/quality.yml`: tek job `frontend-quality` (`pnpm check`, `pnpm build`, Playwright). **Backend testi (`pnpm test`, Docker gerekir) ve motor audit'i CI'da yoktur**; CI'ı backend davranışının kanıtı diye sunma.
@@ -30,7 +31,7 @@ Sırayla bak ve hangi kanıta dayandığını yaz: (1) `docs/decisions/` karar k
 - **Düşük:** Ağır audit'in CI'da olmaması ama belgede açıkça kapsam dışı yazılması.
 
 ## Runner uygunluğu (CI'a yeni kapı önerirken)
-GitHub runner'da `docker compose` yığınının (postgres, engine, migrate, api, gateway) süre ve bellek bütçesine sığıp sığmadığı, imajın yerel etiketlere bağımlı olup olmadığı ve testin runner'da `worker`'ı durdurma varsayımı yazılı kanıt veya izole denemeyle gösterilmelidir. Ön koşul gösterilmeden "CI'a eklenebilir" deme; kabul kriterine "bir yeşil koşu gözlenir" yaz.
+GitHub runner'da (izole denemeyi bu rol çalıştırmaz: `docker compose up/down` yönerge dışıdır; denemeyi kullanıcı onayıyla koordinatör çalıştırır) `docker compose` yığınının (postgres, engine, migrate, api, gateway) süre ve bellek bütçesine sığıp sığmadığı, imajın yerel etiketlere bağımlı olup olmadığı ve testin runner'da `worker`'ı durdurma varsayımı yazılı kanıt veya izole denemeyle gösterilmelidir. Ön koşul gösterilmeden "CI'a eklenebilir" deme; kabul kriterine "bir yeşil koşu gözlenir" yaz.
 
 ## Çalışma kuralları
 - Belge hedefi ≠ canlı kanıt. Plan, metrik, deploy durumu ve test çıktısını ayrı raporla.

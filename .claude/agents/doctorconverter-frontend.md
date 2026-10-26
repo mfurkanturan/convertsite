@@ -12,11 +12,12 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`; ardından `USER-FLOWS`, 
 
 ## Nereye bakılır
 - `apps/web/src/components` (Svelte), `pages` (Astro; `[tool].astro`, `tr/ es/ fr/ hi/`, `use-cases/`), `layouts`, `styles/{tokens,global}.css`.
-- `apps/web/src/i18n/ui.ts` UI sözlüğü; `lib/tools.ts`, `lib/tool-settings.ts` araç kayıtları; `lib/api-client.ts` API istemcisi; `lib/file-selection.ts`.
-- Playwright: `e2e/{app,visual-quality,visual-regression,content-consistency,analytics}.spec.ts`; `playwright.config.ts` repository kökündedir.
+- `apps/web/src/i18n/ui.ts` (TR/EN sözlük ve tipler), `ui-es.ts`, `ui-fr.ts`, `ui-hi.ts` (diğer diller), `locales.ts` (dil ve rota eşlemeleri), `context.ts`; `lib/tools.ts`, `lib/tool-settings.ts` araç kayıtları; `lib/api-client.ts` API istemcisi; `lib/file-selection.ts`.
+- Playwright: `e2e/{app,file-preview,locale-hreflang,visual-quality,visual-regression,content-consistency,analytics}.spec.ts`; `e2e/` ve `playwright.config.ts` repository kökündedir (`apps/web` altında değil). Proje adları: `chromium`, `mobile-chrome`, `firefox`, `safari-webkit`, `mobile-safari-webkit`, Windows'ta `edge`; örnek: `pnpm exec playwright test e2e/file-preview.spec.ts --project=chromium`.
+- Gerçek API yeteneği ve limitleri: `/api/capabilities` yanıtı ve `docs/API.md`.
 
 ## Komutlar
-- `pnpm dev` yerel önizleme. `pnpm check` tip + sınır + `check:i18n` (TR/EN anahtar eşleşmesi, ES'te İngilizce kopya kalmaması). `pnpm build`, `pnpm preview`.
+- `pnpm dev` yerel önizleme. `pnpm check` kök betik: sınır denetimi + server tipleri + web `astro check`/`svelte-check` + `check:i18n` (TR, EN, ES, HI, FR arayüz kapsamı; HI/FR araç SEO'su; rehber eşleşmeleri); yaklaşık bir dakika sürer. `pnpm build`, `pnpm preview`.
 - `pnpm test:e2e` davranış/görsel değişiminde çalıştır; proje (Chromium, mobil, Firefox, WebKit, Edge) ve filtreye göre sonucu raporla. Atlanan testler geçmiş sayılmaz. Hydration gerektiren kontroller kabuğun hydrate olmasını bekler. Yalnızca metin/stil değişikliği için gereksiz test yazma.
 - Görsel çıktılar ignored `.qa/` altındadır; commit etme.
 
@@ -25,6 +26,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`; ardından `USER-FLOWS`, 
 - Yükleme, seçim, sıralama, klavye, bekleme, hata, sonuç, indirme ve erken silme durumlarını birlikte ele al. Dosya, kullanıcı açık eylem yapmadan gönderilmez.
 - Çeviri metinleri locale sözlüğüne; dil yönlendirmesi ve canonical/hreflang eşleşmesini bozma. Arayüz dili ≠ OCR/belge dili desteği.
 - Tasarım token'ları; 1200px container, ortak gutter; dekoratif katman ve tekrar eden kart ekleme.
+- **Modal/dialog kontrol listesi:** açılışta odak dialog'a taşınır; Tab/Shift+Tab dialog içinde kalır; Escape kapatır; kapanışta odak tetikleyiciye döner (tetikleyiciyi açıkça geçir, Safari düğmeyi odaklamaz); `role="dialog"`, `aria-modal`, `aria-labelledby` görünür başlığa bağlı; ikon düğmelerin `aria-label`'ı var; mobilde 44px hedef ve `dvh`. Örnek: `file-preview-dialog.svelte`, test: `e2e/file-preview.spec.ts`.
 - Erişilebilir etiket, odak yönetimi, klavye erişimi, 44px mobil hedef, 320px'de taşmama ve 4.5:1 metin kontrastı her değişiklikte kontrol edilir. Fiziksel cihaz / ekran okuyucu otomatik testte yoktur; bunu belirt.
 - Üretilmemiş sonuç gösterme: API erişilemezken varsayılan limit aktif politika gibi görünmez.
 

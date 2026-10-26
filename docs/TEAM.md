@@ -8,7 +8,7 @@ Koordinatör kullanıcı isteğini kapsamlandırır, tek kaynak belgeleri kontro
 
 ## Çatışma sırası
 
-Roller çeliştiğinde sıra: (1) kullanıcı kapsamı ve `AGENTS.md`; (2) gizlilik, erişim kontrolü ve veri silme; (3) mimari sınırlar; (4) doğruluk (iddia, destek sınırı, test kanıtı); (5) kullanıcı deneyimi ve SEO; (6) kapsam kolaylığı. Çözülemeyen çatışma gerekçesiyle kullanıcıya götürülür; koordinatör sessizce seçmez.
+Roller çeliştiğinde sıra: (1) kullanıcı kapsamı ve `AGENTS.md`; (2) gizlilik, erişim kontrolü ve veri silme; (3) mimari sınırlar; (4) doğruluk (iddia, destek sınırı, test kanıtı); (5) kullanıcı deneyimi ve SEO; (6) kapsam kolaylığı. Süre/maliyet ile doğruluk çatışırsa doğruluk kazanır; bir kalite kapısının zorunlu mu bilgi amaçlı mı olacağı kullanıcı kararıdır, quality-ops yalnızca kanıtı ve kabul kriterini yazar. Çözülemeyen çatışma gerekçesiyle kullanıcıya götürülür; koordinatör sessizce seçmez.
 
 ## Şiddet ölçeği
 
@@ -27,7 +27,20 @@ Roller çeliştiğinde sıra: (1) kullanıcı kapsamı ve `AGENTS.md`; (2) gizli
 | Kalite ve operasyon | Test kanıtı, CI, dağıtım, kapasite, izleme, yedekleme ve geri yükleme | `docs/TESTING.md`, `docs/DEPLOYMENT.md`, `docs/ROADMAP.md` |
 | Koordinatör | Çok rollü görevleri kapsamlandırma, bulguları uzlaştırma, uygulama ve doğrulama raporu | Bu dosya, `AGENTS.md` |
 
-Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğruluğu sahibi SEO ve analitik rolüdür. Mimari ve kalite/operasyon rolleri salt incelemedir ve yazma aracı almaz (`.claude/agents` içindeki `tools`); düzeltmeyi koordinatör veya sahip rol yapar. Bulgu önemleri yukarıdaki ölçekle verilir.
+Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğruluğu sahibi SEO ve analitik rolüdür. Mimari ve kalite/operasyon rolleri salt incelemedir: `.claude/agents` içindeki `tools` listesinde Write/Edit yoktur. `Bash` kanıt toplamak için açıktır ve dosya yazabildiğinden "yazma" yasağı teknik olarak değil yönergeyle de zorlanır; düzeltmeyi koordinatör veya sahip rol yapar. Bulgu önemleri yukarıdaki ölçekle verilir.
+
+## Rol adları ve çağrı
+
+| Rol | Ajan adı (`subagent_type`) |
+|---|---|
+| Mimari | `doctorconverter-architecture` |
+| Backend ve belge işleme | `doctorconverter-backend` |
+| Frontend ve kullanıcı deneyimi | `doctorconverter-frontend` |
+| SEO ve analitik (içerik doğruluğu dahil) | `doctorconverter-seo-analytics` |
+| Kalite ve operasyon | `doctorconverter-quality-ops` |
+| Koordinatör | `doctorconverter-coordinator` |
+
+Koordinatör rolleri `Agent` aracıyla bu adlarla çağırır. Bağımsız bulgu toplamak için rolleri aynı anda (paralel) çağır, sonuçları görmeden birbirine aktarma; uzlaştırmayı sonra yap. Ajan listesi oturum başında yüklenir; oturum açıldıktan sonra eklenen veya değişen rol dosyaları yeni oturum gerektirir. Ad bulunamazsa ilgili rol dosyasını okuyup yönergeleri izleyen genel bir ajan kullan ve bunu raporda belirt.
 
 ## Çalışma anlaşması
 
@@ -50,6 +63,8 @@ Rol yönergelerinin tek kaynağı `.claude/agents/doctorconverter-*.md` dosyalar
 Rol dosyaları aynı ürün kapsamı için yardımcıdır; repository dosyaları ve AGENTS.md bağlayıcı proje kuralları olmaya devam eder.
 
 ## İlk ortak değerlendirme
+
+Bu bölümdeki satır sayıları ve kapasite rakamları 25 Ekim 2026 ölçümüdür; kullanmadan önce yeniden ölç.
 
 Mevcut yapıda API, worker ve engine ayrı entrypoint'lere sahip; Render API servisi bunları tek container'da başlatıyor. Backend kaynak dosyalarının çoğu küçük; `analytics/infrastructure/repository.ts` 183 satırla backend'de en uzun ölçülen kaynak dosyası. Frontend'de `apps/web/src/lib/seo/scenarios-tr.ts` (663), `apps/web/src/i18n/ui.ts` (652), `apps/web/src/lib/seo/scenarios-en.ts` (649), `apps/web/src/lib/seo/scenarios-tr-deep.ts` (491) ve `apps/web/src/lib/tool-seo.ts` (324) uzun içerik/veri dosyalarıdır; satır sayısı tek başına god file kanıtı değildir.
 

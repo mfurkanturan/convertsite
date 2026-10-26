@@ -6,12 +6,15 @@ Kayıtlı 16 araç, 16 ayrı altyapı veya servis değildir. Ortak sorumluluklar
 
 | Modül | Sahip olduğu iş | Kavramsal veri sahipliği | Yapmaması gereken |
 | --- | --- | --- | --- |
-| files | Yükleme, doğrulama, özel depolama, erişim ve fiziksel temizleme | Dosya kaydı, yükleme durumu, boyut, checksum, saklama sonu | Dönüşüm veya iş kuyruğu yönetmek |
+| files | Yükleme, doğrulama, özel depolama, erişim, fiziksel temizleme ve depolanan dosya sayısı/boyutu sınırları | Dosya kaydı, yükleme durumu, boyut, checksum, saklama sonu | Dönüşüm veya iş kuyruğu yönetmek |
 | jobs | İş kabulü, durum, dispatch, lease, tekrar deneme ve iptal | İş, giriş/çıkış referansları, deneme ve hata özeti | Motor komutlarını veya araç seçeneklerini uygulamak |
 | conversions | Biçimler arası dönüşüm | İşlem seçeneklerinin semantiği ve motor yetenekleri; başlangıçta ayrı tablo gerekmez | Dosya sahipliği veya kuyruk tablosu yönetmek |
 | pdf-operations | Birleştirme, sayfa düzenleme, sıkıştırma | Sayfa planı ve sıkıştırma kuralları; başlangıçta ayrı tablo gerekmez | Office dönüşümü veya OCR yapmak |
 | ocr | Dil ve metin tanıma kuralları | OCR seçenekleri ve desteklenen diller; başlangıçta ayrı tablo gerekmez | Yerleşimi koruyan DOCX üretimini varsaymak |
-| usage | Kullanım politikası ve kapasite rezervasyonu | Kota rezervasyonu, tüketim, politika sürümü | Dosya depolamak veya motor çalıştırmak |
+| usage | Kullanım politikası ve kapasite rezervasyonu (aktif iş kotası) | Kota rezervasyonu, tüketim, politika sürümü | Dosya depolamak veya motor çalıştırmak |
+| analytics | Salt okunur yönetici istatistikleri: kuyruk sayıları ve yaşı, başarı/hata, süre, cleanup gecikmesi | Kendi tablosu yok; `jobs` ve `files` tablolarını raporlama için okur | Veri yazmak, iş veya dosya durumunu değiştirmek |
+
+Bilinen sınır istisnası: `analytics/infrastructure/repository.ts` `jobs` ve `files` tablolarını doğrudan SQL ile okur. Bu, "başka modülün tablosuna erişme" kuralının dışındadır ve dar bir salt okunur istatistik sözleşmesine taşınana kadar geçici istisna olarak kabul edilir; sınır denetim betiği yalnızca import'a baktığı için bunu yakalamaz.
 
 Tablo isimleri ve indeksler DATA-MODEL hazırlanırken kesinleştirilir. Bu belge tablo tasarımı yerine sahiplik sınırını belirler.
 

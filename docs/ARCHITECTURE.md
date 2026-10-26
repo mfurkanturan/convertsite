@@ -35,16 +35,18 @@ Arayüzler onları tüketen katmanda tanımlanır. Kullanılmayan soyutlama, gen
 
 ## Önerilen kod yerleşimi
 
-Bu dizinler uygulama kurulurken oluşturulacaktır; şimdilik planı temsil eder.
+Dizinler uygulanmıştır; aşağıdaki ağaç özet yerleşimi gösterir (alt dizinlerin tamamı değildir).
 
 ```text
 apps/
   web/                         # Astro + Svelte arayüzü
   server/
     src/
-      entrypoints/             # API ve worker başlangıç noktaları
+      entrypoints/             # API, worker, engine ve migrate başlangıç noktaları
       bootstrap/               # Bağımlılık bağlama
+      engine/                  # Motor HTTP kapısı, kapasite sınırı, süreç grubu
       modules/
+        analytics/
         files/
         jobs/
         conversions/
