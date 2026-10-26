@@ -90,6 +90,10 @@ API durum, indirme, önizleme, iptal ve silmede sahipliği doğrular. Depolama a
 - Kapanışta yeni iş alımı durur; devam eden işler süre sınırı içinde bitirilir veya lease mekanizmasıyla kurtarılır.
 - Aynı sürüm API/worker uyumu ve migration sırası dağıtım belgesinde tanımlanır.
 
+## Mevcut çalışma biçimi
+
+API, worker ve engine ayrı entrypoint'lere sahiptir. Yerel Compose bu süreçleri ayrı servislerde çalıştırır. Mevcut Render yerleşiminde web ve API ayrı servislerdir; API container'ı migration, engine ve worker süreçlerini birlikte başlatır. Render'da worker/engine için bağımsız ölçekleme veya ayrı kaynak bütçesi varsayılmamalıdır. Dağıtım ayrıntıları ve açık operasyon işleri [DEPLOYMENT](DEPLOYMENT.md) içindedir.
+
 ## Mimari kabul şartları
 
 Domain/application katmanlarında dış teknoloji import'u bulunmaması, modül içlerine izinsiz erişimin engellenmesi, worker yeniden başladığında işin kurtarılması ve oturumlar arası dosya erişiminin reddedilmesi otomatik kontrollerle doğrulanır.

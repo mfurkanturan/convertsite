@@ -1,8 +1,10 @@
 # Teknoloji kararları
 
-Durum: Önerilen başlangıç altyapısı. Kesin sürümler kurulum tarihinde uyumluluk kontrolüyle seçilecek ve lockfile'a sabitlenecektir. Performans üstünlüğü henüz ölçülmüş değildir.
+Durum: Uygulama bu teknoloji tabanıyla geliştirilip Render üzerinde dağıtılmıştır. Kesin paket sürümlerinin kaynağı manifestler ve lockfile'dır; performans üstünlüğü ölçülmüş değildir. Canlı dağıtım, üretim kapasitesi ve operasyon hazırlığının tamamlandığı anlamına gelmez.
 
-Frontend Astro 7.4.2, @astrojs/svelte 9.1.1, Svelte 5.57.2 ve TypeScript 6.0.3 ile kuruldu. Fastify, Drizzle, pg-boss ve Vitest vardır. 10 araç izole QPDF/Poppler/LibreOffice/Tesseract ve Python adaptörleriyle çalışır; ayrıntılar ENGINE-SUPPORT içindedir. Gerçek sürüm kaynağı manifestler/lockfile ve engine/requirements.txt'dir. Stil, Tailwind CSS v4 + `@theme` token'ları (kaynak: `apps/web/src/styles/tokens.css`) ile yazılır; ESLint/Prettier ve CI workflow'ü henüz yoktur. Import sınırı kontrolü ve gerçek DB/motor testleri vardır.
+Frontend Astro 7.4.2, @astrojs/svelte 9.1.1, Svelte 5.57.2 ve TypeScript 6.0.3 kullanır. Server Fastify, Drizzle, pg-boss ve Vitest kullanır. `docs/ENGINE-SUPPORT.md` kodda 16 kayıtlı aracı ve her aracın sınırlarını açıklar; bu kayıtlar eşit kalite veya geniş gerçek belge desteği kanıtı değildir. Stil, Tailwind CSS v4 + `@theme` token'ları (kaynak: `apps/web/src/styles/tokens.css`) ile yazılır.
+
+ESLint ve Prettier yapılandırması yoktur. Bunun yerine `pnpm check`, modül/katman import denetimi, TypeScript, Astro/Svelte ve i18n kontrollerini çalıştırır. `.github/workflows/quality.yml`, pull request ve `main` push'larında check, build ve Playwright E2E adımlarını yürütür. Test ve kalite kapsamı için `docs/TESTING.md`; canlı ve yerel dağıtım ayrımı için `docs/DEPLOYMENT.md` esas alınır.
 
 ## Uygulama temeli
 
@@ -21,8 +23,10 @@ Frontend Astro 7.4.2, @astrojs/svelte 9.1.1, Svelte 5.57.2 ve TypeScript 6.0.3 i
 | Kuyruk | pg-boss | İlk aşamada ayrı broker işletmeden PostgreSQL kullanımı |
 | Log | Fastify/Pino tabanlı yapılandırılmış log | İstek/iş korelasyonu ve merkezi redaction |
 | Test | Vitest, Playwright | İş kuralları, gerçek adaptör entegrasyonu ve kritik kullanıcı akışları |
-| Kod denetimi | ESLint, Prettier, TypeScript kontrolü | Modül sınırları ve tutarlı kod |
-| Dağıtım | Linux, Docker Compose, Caddy | Tek sunucuda anlaşılır başlangıç ve HTTPS |
+| Kod denetimi | Import sınırı betiği, TypeScript, Astro/Svelte ve i18n kontrolleri | Mevcut katman sınırlarını ve tipleri doğrular; ayrı ESLint/Prettier yoktur |
+| CI | GitHub Actions: check, build, Playwright E2E | PR ve `main` push'larında kalite kapıları |
+| Yerel dağıtım | Linux, Docker Compose, Caddy | Geliştirme ve entegrasyon akışını izole çalıştırır |
+| Canlı dağıtım | Render static site + Docker web service | Mevcut yerleşim için DEPLOYMENT içindeki operasyon sınırları geçerlidir |
 
 Astro API sorumluluğu üstlenmez; statik web ve Fastify tek origin altında yayınlanır. SSR ancak somut ihtiyaç doğarsa ayrıca değerlendirilir.
 
