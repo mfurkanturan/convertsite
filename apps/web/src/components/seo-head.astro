@@ -35,7 +35,7 @@ const validAdsenseClient = /^ca-pub-\d+$/.test(adsenseClient ?? '');
 {validAdsenseClient ? <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossorigin="anonymous"></script> : null}
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <link rel="canonical" href={canonical} />
-{links.length > 1 ? links.map(([lang, path]) => <link rel="alternate" hreflang={htmlLang[lang]} href={absoluteUrl(path)} />) : null}
+{links.map(([lang, path]) => <link rel="alternate" hreflang={htmlLang[lang]} href={absoluteUrl(path)} />)}
 {links.length > 1 && xDefault ? <link rel="alternate" hreflang="x-default" href={absoluteUrl(xDefault)} /> : null}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preload" as="font" type="font/woff2" href={soraLatin} crossorigin />
