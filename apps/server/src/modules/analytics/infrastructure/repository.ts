@@ -7,6 +7,9 @@ export interface ToolMetric {
   uniqueUsers: number;
   succeeded: number;
   failed: number;
+  // Null until a succeeded job with recorded start and finish times exists.
+  avgSucceededSeconds: number | null;
+  p95SucceededSeconds: number | null;
 }
 
 export interface EngineMetric {
@@ -29,8 +32,15 @@ export interface QueueMetric {
   failedLastHour: number;
 }
 
+export interface CleanupMetric {
+  // Expired files still waiting for physical removal.
+  duePurge: number;
+  oldestDueSeconds: number;
+}
+
 export interface AnalyticsSummary {
   queue: QueueMetric;
+  cleanup: CleanupMetric;
   totalJobs: number;
   totalUniqueUsers: number;
   successfulJobs: number;
@@ -84,6 +94,20 @@ export function analyticsRepository(pool: pg.Pool) {
         FROM jobs
         WHERE state IN ('queued', 'running') OR created_at >= now() - INTERVAL '1 hour'
       `);
+      // 0b. Cleanup backlog: expired files not yet physically removed. Only counts and ages.
+      const cleanupRes = await pool.query<{ due: string; oldest_due_seconds: string }>(`
+        SELECT
+          COUNT(*)::text as due,
+          COALESCE(EXTRACT(EPOCH FROM now() - MIN(expires_at)), 0)::text as oldest_due_seconds
+        FROM files
+        WHERE NOT purged AND expires_at <= now()
+      `);
+      const cleanupRow = cleanupRes.rows[0];
+      const cleanup: CleanupMetric = {
+        duePurge: Number(cleanupRow?.due ?? 0),
+        oldestDueSeconds: Math.round(Number(cleanupRow?.oldest_due_seconds ?? 0)),
+      };
+
       const queueRow = queueRes.rows[0];
       const queue: QueueMetric = {
         queued: Number(queueRow?.queued ?? 0),
@@ -144,18 +168,23 @@ export function analyticsRepository(pool: pg.Pool) {
         unique_users: string;
         succeeded: string;
         failed: string;
+        avg_succeeded_seconds: string | null;
+        p95_succeeded_seconds: string | null;
       }>(`
         SELECT
           tool,
           COUNT(*)::text as total,
           COUNT(DISTINCT owner)::text as unique_users,
           COUNT(*) FILTER (WHERE state = 'succeeded')::text as succeeded,
-          COUNT(*) FILTER (WHERE state = 'failed')::text as failed
+          COUNT(*) FILTER (WHERE state = 'failed')::text as failed,
+          AVG(EXTRACT(EPOCH FROM finished_at - started_at)) FILTER (WHERE state = 'succeeded' AND started_at IS NOT NULL AND finished_at IS NOT NULL)::text as avg_succeeded_seconds,
+          percentile_cont(0.95) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM finished_at - started_at)) FILTER (WHERE state = 'succeeded' AND started_at IS NOT NULL AND finished_at IS NOT NULL)::text as p95_succeeded_seconds
         FROM jobs
         GROUP BY tool
         ORDER BY COUNT(*) DESC
       `);
 
+      const seconds = (value: string | null) => (value === null ? null : Math.round(Number(value) * 10) / 10);
       const tools: ToolMetric[] = toolsRes.rows.map((row) => ({
         tool: row.tool,
         engine: toolEngineMap[row.tool] ?? 'other',
@@ -163,6 +192,8 @@ export function analyticsRepository(pool: pg.Pool) {
         uniqueUsers: Number(row.unique_users),
         succeeded: Number(row.succeeded),
         failed: Number(row.failed),
+        avgSucceededSeconds: seconds(row.avg_succeeded_seconds),
+        p95SucceededSeconds: seconds(row.p95_succeeded_seconds),
       }));
 
       // 3. Engine breakdown
@@ -201,6 +232,7 @@ export function analyticsRepository(pool: pg.Pool) {
 
       return {
         queue,
+        cleanup,
         totalJobs,
         totalUniqueUsers,
         successfulJobs,

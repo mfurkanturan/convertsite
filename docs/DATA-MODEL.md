@@ -5,7 +5,7 @@ Gerçek şemanın kaynağı `apps/server/migrations` altındaki SQL dosyalarıd�
 | Tablo | Sahibi | Veri |
 | --- | --- | --- |
 | files | files | UUID, owner hash, client (yüklemede ağın anahtarlı IP özeti), kind, size/pages, pending/ready/deleted, expiry, purged |
-| jobs | jobs | UUID, owner, tool/state, options JSONB, sıralı input_ids, output_id, idempotency key/hash, attempt, error, deleted, tarihler |
+| jobs | jobs | UUID, owner, tool/state, options JSONB, sıralı input_ids, output_id, idempotency key/hash, attempt, error, deleted, tarihler, `started_at` ve `finished_at` (0007 öncesi işlerde boş; süre metriklerinde dışarıda kalır) |
 | job_secrets | jobs | İşe bağlı AES-256-GCM şifreli geçici parola ve expiry; başarılı/başarısız/iptal/süre dolumu/maintenance temizliğinde silinir |
 | usage_accounts | usage | Owner başına active_jobs |
 | worker_heartbeats | işletim | Worker adı ve son görülme |

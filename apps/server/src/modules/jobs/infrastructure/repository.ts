@@ -29,7 +29,7 @@ export function jobRepository(pool: pg.Pool, boss: PgBoss, config: Config, admis
       const expired = await pool.query<JobRecord>(`SELECT * FROM jobs WHERE state IN ('queued','running') AND (expires_at<=now() OR created_at<now()-interval '10 minutes')`);
       for (const job of expired.rows) await transaction(pool, async (client) => {
         const { usage } = admission(client); await usage.lock(job.owner);
-        const changed = await client.query(`UPDATE jobs SET state='failed',error='PROCESSING_TIMEOUT',attempt=NULL WHERE id=$1 AND state IN ('queued','running') AND (expires_at<=now() OR created_at<now()-interval '10 minutes')`, [job.id]);
+        const changed = await client.query(`UPDATE jobs SET state='failed',error='PROCESSING_TIMEOUT',attempt=NULL,finished_at=now() WHERE id=$1 AND state IN ('queued','running') AND (expires_at<=now() OR created_at<now()-interval '10 minutes')`, [job.id]);
         if (changed.rowCount) { await usage.release(job.owner); await client.query('DELETE FROM job_secrets WHERE job_id=$1', [job.id]); }
       });
       await pool.query(`DELETE FROM job_secrets s
@@ -72,7 +72,7 @@ export function jobRepository(pool: pg.Pool, boss: PgBoss, config: Config, admis
       catch { return null; }
     },
     async claim(id, attempt) {
-      const result = await pool.query<JobRecord>(`UPDATE jobs SET state='running',attempt=$2 WHERE id=$1 AND state IN ('queued','running') AND NOT deleted AND expires_at>now() RETURNING *`, [id, attempt]);
+      const result = await pool.query<JobRecord>(`UPDATE jobs SET state='running',attempt=$2,started_at=now() WHERE id=$1 AND state IN ('queued','running') AND NOT deleted AND expires_at>now() RETURNING *`, [id, attempt]);
       return result.rows[0] ?? null;
     },
     async finish(job, attempt, output) {
@@ -84,7 +84,7 @@ export function jobRepository(pool: pg.Pool, boss: PgBoss, config: Config, admis
         const expiresAt = new Date(Date.now() + config.retentionMinutes * 60000);
         await files.insert({ ...output, owner: job.owner, status: 'ready', expiresAt });
         await files.protect(job.input_ids, expiresAt);
-        await client.query(`UPDATE jobs SET state='succeeded',output_id=$2,expires_at=$3 WHERE id=$1`, [job.id, output.id, expiresAt]);
+        await client.query(`UPDATE jobs SET state='succeeded',output_id=$2,expires_at=$3,finished_at=now() WHERE id=$1`, [job.id, output.id, expiresAt]);
         await client.query('DELETE FROM job_secrets WHERE job_id=$1', [job.id]);
         await usage.release(job.owner);
         return true;
@@ -93,7 +93,7 @@ export function jobRepository(pool: pg.Pool, boss: PgBoss, config: Config, admis
     async fail(job, attempt, code) {
       await transaction(pool, async (client) => {
         const { usage } = admission(client); await usage.lock(job.owner);
-        const changed = await client.query(`UPDATE jobs SET state='failed',error=$3 WHERE id=$1 AND attempt=$2 AND state='running'`, [job.id, attempt, code]);
+        const changed = await client.query(`UPDATE jobs SET state='failed',error=$3,finished_at=now() WHERE id=$1 AND attempt=$2 AND state='running'`, [job.id, attempt, code]);
         if (changed.rowCount) { await usage.release(job.owner); await client.query('DELETE FROM job_secrets WHERE job_id=$1', [job.id]); }
       });
     },
@@ -102,7 +102,7 @@ export function jobRepository(pool: pg.Pool, boss: PgBoss, config: Config, admis
         const { files, usage } = admission(client); await usage.lock(owner);
         const job = await owned(client, owner, id, true);
         if (isActive(job.state)) {
-          await client.query(`UPDATE jobs SET state='cancelled',attempt=NULL WHERE id=$1`, [id]);
+          await client.query(`UPDATE jobs SET state='cancelled',attempt=NULL,finished_at=now() WHERE id=$1`, [id]);
           await usage.release(owner);
         }
         await client.query('DELETE FROM job_secrets WHERE job_id=$1', [id]);
