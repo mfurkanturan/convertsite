@@ -13,6 +13,7 @@ Değişiklik yapan isteklerin Origin değeri APP_ORIGIN ile eşleşmelidir; eksi
 | GET /api/capabilities | Etkin araçlar ve gerçek sınırlar | 200 |
 | GET /api/health/live | Süreç sağlığı | 200 |
 | GET /api/health/ready | DB, motor ve son 20 saniyede worker heartbeat'i | 200 / 503 |
+| GET /api/admin/stats | Yönetici özeti: `queue` (kuyruk sayıları, en eski bekleyen iş yaşı, son bir saatte başarı/hata) ve araç bazlı sayaçlar; `secret` veya `x-admin-key` gerekir | 200 / 401 |
 | POST /api/files | Multipart tek `file` alanı; türe özel gerçek doğrulama | 201 |
 | DELETE /api/files/:id | İşe bağlanmamış girdinin silme talebi | 204 |
 | POST /api/jobs | Araç, dosyalar ve seçeneklerle iş kabulü | 202 |
