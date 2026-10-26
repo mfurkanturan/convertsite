@@ -11,6 +11,7 @@ Bu repository, PDF ve ofis dosyası araçları sunan bir web uygulaması içindi
 - Dosya veya worker değişikliklerinde: [FILE-PROCESSING](docs/FILE-PROCESSING.md)
 - Arayüz değişikliklerinde: [USER-FLOWS](docs/USER-FLOWS.md) ve [DESIGN-SYSTEM](docs/DESIGN-SYSTEM.md)
 - Teknoloji ve aşama seçimlerinde: [TECH-STACK](docs/TECH-STACK.md) ve [ROADMAP](docs/ROADMAP.md)
+- Uzman rolleri ve sahiplik: [TEAM](docs/TEAM.md). Rol yönergeleri `.claude/agents/doctorconverter-*.md` dosyalarındadır; Claude Code bunları otomatik kullanır, diğer araçlar ilgili alandaki dosyayı açıp izler.
 
 ## Zorunlu sınırlar
 

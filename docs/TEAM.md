@@ -1,10 +1,20 @@
 # DoctorConverter uzman ekibi
 
-Bu dosya proje için önerilen uzmanlık dağılımını, sahiplik alanlarını ve çalışma anlaşmasını tanımlar. Uzmanlar ayrı kod sahipleri veya kalıcı sunucu süreçleri değildir; Codex görevlerinde kullanılacak rol yönergeleri yerel skill dosyalarında tutulur. Her görevde bütün rollerin çağrılması gerekmez.
+Bu dosya proje için önerilen uzmanlık dağılımını, sahiplik alanlarını ve çalışma anlaşmasını tanımlar. Uzmanlar ayrı kod sahipleri veya kalıcı sunucu süreçleri değildir; rol yönergeleri repository içinde `.claude/agents/` altında tutulur. Her görevde bütün rollerin çağrılması gerekmez.
 
 ## Koordinasyon
 
 Koordinatör kullanıcı isteğini kapsamlandırır, tek kaynak belgeleri kontrol eder, çakışan önerileri uzlaştırır, değişiklikleri uygular ve doğrulama durumunu raporlar. Uzman incelemeleri tavsiye üretir; kullanıcı kapsamı, repository talimatları ve mevcut uygulama kanıtı üstündür.
+
+## Çatışma sırası
+
+Roller çeliştiğinde sıra: (1) kullanıcı kapsamı ve `AGENTS.md`; (2) gizlilik, erişim kontrolü ve veri silme; (3) mimari sınırlar; (4) doğruluk (iddia, destek sınırı, test kanıtı); (5) kullanıcı deneyimi ve SEO; (6) kapsam kolaylığı. Çözülemeyen çatışma gerekçesiyle kullanıcıya götürülür; koordinatör sessizce seçmez.
+
+## Şiddet ölçeği
+
+- **Yüksek:** veri sızıntısı veya süre dolumu/erişim kontrolü ihlali, mimari sınır ihlali, kanıtsız destek iddiası, kullanıcıyı engelleyen akış hatası, geri alınamaz operasyon riski.
+- **Orta:** doğrulanmamış ama makul risk (kapasite, eksik test, erişilebilirlik sorunu), tutarsız içerik veya hreflang.
+- **Düşük:** okunabilirlik, tutarlılık, küçük içerik/stil sorunu.
 
 ## Roller
 
@@ -15,6 +25,9 @@ Koordinatör kullanıcı isteğini kapsamlandırır, tek kaynak belgeleri kontro
 | Frontend ve kullanıcı deneyimi | Astro/Svelte sayfa akışları, erişilebilirlik, dil, SEO bileşenlerinin arayüzle ilişkisi | `docs/USER-FLOWS.md`, `docs/DESIGN-SYSTEM.md` |
 | SEO ve analitik | Canonical/hreflang, içerik rotaları, Search Console ve izinli PostHog ölçümü | `docs/SEO.md`, `docs/POSTHOG.md`, `docs/CONTENT-SEO-CHECKLIST.md` |
 | Kalite ve operasyon | Test kanıtı, CI, dağıtım, kapasite, izleme, yedekleme ve geri yükleme | `docs/TESTING.md`, `docs/DEPLOYMENT.md`, `docs/ROADMAP.md` |
+| Koordinatör | Çok rollü görevleri kapsamlandırma, bulguları uzlaştırma, uygulama ve doğrulama raporu | Bu dosya, `AGENTS.md` |
+
+Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğruluğu sahibi SEO ve analitik rolüdür. Mimari ve kalite/operasyon rolleri salt incelemedir ve yazma aracı almaz (`.claude/agents` içindeki `tools`); düzeltmeyi koordinatör veya sahip rol yapar. Bulgu önemleri yukarıdaki ölçekle verilir.
 
 ## Çalışma anlaşması
 
@@ -28,7 +41,13 @@ Koordinatör kullanıcı isteğini kapsamlandırır, tek kaynak belgeleri kontro
 
 ## Skill yönergeleri
 
-Bu rollerin Codex'te yeniden keşfedilebilir yönergeleri `%USERPROFILE%/.codex/skills/doctorconverter-*` altındadır. Skill'ler aynı ürün kapsamı için yerel yardımcıdır; repository dosyaları ve AGENTS.md bağlayıcı proje kuralları olmaya devam eder.
+Rol yönergelerinin tek kaynağı `.claude/agents/doctorconverter-*.md` dosyalarıdır ve repository ile birlikte sürümlenir:
+
+- Claude Code bunları proje alt ajanı olarak otomatik keşfeder.
+- Codex ve diğer araçlar `AGENTS.md` üzerinden bu dosyaları okur; ilgili rol dosyasını açıp yönergeleri izler.
+- Kullanıcı klasöründeki `%USERPROFILE%/.codex/skills/doctorconverter-*` kopyaları eskidir. Rol değişikliği yalnızca `.claude/agents/` altında yapılır; kullanıcı klasörü istenirse oradan yeniden kopyalanır.
+
+Rol dosyaları aynı ürün kapsamı için yardımcıdır; repository dosyaları ve AGENTS.md bağlayıcı proje kuralları olmaya devam eder.
 
 ## İlk ortak değerlendirme
 
