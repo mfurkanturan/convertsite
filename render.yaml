@@ -37,6 +37,311 @@ services:
     runtime: static
     buildCommand: pnpm --filter @convertsite/web build
     staticPublishPath: ./apps/web/dist
+    routes:
+      # Legacy English-prefixed URLs use real HTTP 301s. Only equivalent current routes are mapped.
+      - type: redirect
+        source: /en
+        destination: /
+      - type: redirect
+        source: /en/
+        destination: /
+      - type: redirect
+        source: /en/about
+        destination: /about
+      - type: redirect
+        source: /en/contact
+        destination: /contact
+      - type: redirect
+        source: /en/privacy
+        destination: /privacy
+      - type: redirect
+        source: /en/security
+        destination: /security
+      - type: redirect
+        source: /en/terms
+        destination: /terms
+      - type: redirect
+        source: /en/use-cases
+        destination: /use-cases/
+      - type: redirect
+        source: /en/use-cases/:slug
+        destination: /use-cases/:slug
+      - type: redirect
+        source: /en/pdf-to-word
+        destination: /pdf-to-word
+      - type: redirect
+        source: /en/word-to-pdf
+        destination: /word-to-pdf
+      - type: redirect
+        source: /en/pdf-to-excel
+        destination: /pdf-to-excel
+      - type: redirect
+        source: /en/excel-to-pdf
+        destination: /excel-to-pdf
+      - type: redirect
+        source: /en/pdf-to-images
+        destination: /pdf-to-images
+      - type: redirect
+        source: /en/images-to-pdf
+        destination: /images-to-pdf
+      - type: redirect
+        source: /en/merge-pdf
+        destination: /merge-pdf
+      - type: redirect
+        source: /en/edit-pdf-pages
+        destination: /edit-pdf-pages
+      - type: redirect
+        source: /en/compress-pdf
+        destination: /compress-pdf
+      - type: redirect
+        source: /en/ocr
+        destination: /ocr
+      - type: redirect
+        source: /en/pdf-to-pdf-ocr
+        destination: /pdf-to-pdf-ocr
+      - type: redirect
+        source: /en/pptx-to-pdf
+        destination: /pptx-to-pdf
+      - type: redirect
+        source: /en/protect-pdf
+        destination: /protect-pdf
+      - type: redirect
+        source: /en/unlock-pdf
+        destination: /unlock-pdf
+      - type: redirect
+        source: /en/page-numbers
+        destination: /page-numbers
+      - type: redirect
+        source: /en/watermark-pdf
+        destination: /watermark-pdf
+      # These Turkish slugs were previously published without their /tr/ prefix.
+      - type: redirect
+        source: /hakkimizda
+        destination: /tr/hakkimizda
+      - type: redirect
+        source: /iletisim
+        destination: /tr/iletisim
+      - type: redirect
+        source: /gizlilik
+        destination: /tr/gizlilik
+      - type: redirect
+        source: /guvenlik
+        destination: /tr/guvenlik
+      - type: redirect
+        source: /kullanim-sartlari
+        destination: /tr/kullanim-sartlari
+      # Astro's directory-format URLs can also be requested with a trailing slash.
+      - type: redirect
+        source: /en/about/
+        destination: /about
+      - type: redirect
+        source: /en/contact/
+        destination: /contact
+      - type: redirect
+        source: /en/privacy/
+        destination: /privacy
+      - type: redirect
+        source: /en/security/
+        destination: /security
+      - type: redirect
+        source: /en/terms/
+        destination: /terms
+      - type: redirect
+        source: /en/use-cases/
+        destination: /use-cases/
+      - type: redirect
+        source: /en/use-cases/:slug/
+        destination: /use-cases/:slug
+      - type: redirect
+        source: /en/pdf-to-word/
+        destination: /pdf-to-word
+      - type: redirect
+        source: /en/word-to-pdf/
+        destination: /word-to-pdf
+      - type: redirect
+        source: /en/pdf-to-excel/
+        destination: /pdf-to-excel
+      - type: redirect
+        source: /en/excel-to-pdf/
+        destination: /excel-to-pdf
+      - type: redirect
+        source: /en/pdf-to-images/
+        destination: /pdf-to-images
+      - type: redirect
+        source: /en/images-to-pdf/
+        destination: /images-to-pdf
+      - type: redirect
+        source: /en/merge-pdf/
+        destination: /merge-pdf
+      - type: redirect
+        source: /en/edit-pdf-pages/
+        destination: /edit-pdf-pages
+      - type: redirect
+        source: /en/compress-pdf/
+        destination: /compress-pdf
+      - type: redirect
+        source: /en/ocr/
+        destination: /ocr
+      - type: redirect
+        source: /en/pdf-to-pdf-ocr/
+        destination: /pdf-to-pdf-ocr
+      - type: redirect
+        source: /en/pptx-to-pdf/
+        destination: /pptx-to-pdf
+      - type: redirect
+        source: /en/protect-pdf/
+        destination: /protect-pdf
+      - type: redirect
+        source: /en/unlock-pdf/
+        destination: /unlock-pdf
+      - type: redirect
+        source: /en/page-numbers/
+        destination: /page-numbers
+      - type: redirect
+        source: /en/watermark-pdf/
+        destination: /watermark-pdf
+      - type: redirect
+        source: /hakkimizda/
+        destination: /tr/hakkimizda
+      - type: redirect
+        source: /iletisim/
+        destination: /tr/iletisim
+      - type: redirect
+        source: /gizlilik/
+        destination: /tr/gizlilik
+      - type: redirect
+        source: /guvenlik/
+        destination: /tr/guvenlik
+      - type: redirect
+        source: /kullanim-sartlari/
+        destination: /tr/kullanim-sartlari
+      - type: redirect
+        source: /kullanim
+        destination: /tr/kullanim/
+      - type: redirect
+        source: /kullanim/
+        destination: /tr/kullanim/
+      # Legacy Turkish guide slugs moved under /tr/kullanim/.
+      - type: redirect
+        source: /kullanim/word-cv-pdf-yapma
+        destination: /tr/kullanim/word-cv-pdf-yapma
+      - type: redirect
+        source: /kullanim/taranmis-mahkeme-karari-metne-cevirme
+        destination: /tr/kullanim/taranmis-mahkeme-karari-metne-cevirme
+      - type: redirect
+        source: /kullanim/pdf-fatura-excel-aktarma
+        destination: /tr/kullanim/pdf-fatura-excel-aktarma
+      - type: redirect
+        source: /kullanim/banka-ekstresi-excel-aktarma
+        destination: /tr/kullanim/banka-ekstresi-excel-aktarma
+      - type: redirect
+        source: /kullanim/dilekce-delil-listesi-birlestirme
+        destination: /tr/kullanim/dilekce-delil-listesi-birlestirme
+      - type: redirect
+        source: /kullanim/cv-diploma-sertifika-tek-pdf
+        destination: /tr/kullanim/cv-diploma-sertifika-tek-pdf
+      - type: redirect
+        source: /kullanim/pdf-sayfalarini-jpg-yapma
+        destination: /tr/kullanim/pdf-sayfalarini-jpg-yapma
+      - type: redirect
+        source: /kullanim/vize-final-notlari-birlestirme
+        destination: /tr/kullanim/vize-final-notlari-birlestirme
+      - type: redirect
+        source: /kullanim/konsolosluk-dosya-boyutu-kucultme
+        destination: /tr/kullanim/konsolosluk-dosya-boyutu-kucultme
+      - type: redirect
+        source: /kullanim/odev-fotograflarini-pdf-yapma
+        destination: /tr/kullanim/odev-fotograflarini-pdf-yapma
+      - type: redirect
+        source: /kullanim/e-arsiv-faturalari-birlestirme
+        destination: /tr/kullanim/e-arsiv-faturalari-birlestirme
+      - type: redirect
+        source: /kullanim/e-devlet-belgelerini-birlestirme
+        destination: /tr/kullanim/e-devlet-belgelerini-birlestirme
+      - type: redirect
+        source: /kullanim/eski-cv-word-cevirme
+        destination: /tr/kullanim/eski-cv-word-cevirme
+      - type: redirect
+        source: /kullanim/ders-slayti-pdf-word-cevirme
+        destination: /tr/kullanim/ders-slayti-pdf-word-cevirme
+      - type: redirect
+        source: /kullanim/pdf-sayfa-ayirma-dondurme
+        destination: /tr/kullanim/pdf-sayfa-ayirma-dondurme
+      - type: redirect
+        source: /kullanim/excel-teklif-bordro-pdf-yapma
+        destination: /tr/kullanim/excel-teklif-bordro-pdf-yapma
+      - type: redirect
+        source: /kullanim/tez-makale-pdf-word-cevirme
+        destination: /tr/kullanim/tez-makale-pdf-word-cevirme
+      - type: redirect
+        source: /kullanim/uyap-pdf-boyutu-kucultme
+        destination: /tr/kullanim/uyap-pdf-boyutu-kucultme
+      - type: redirect
+        source: /kullanim/vize-evraklari-tek-pdf-birlestirme
+        destination: /tr/kullanim/vize-evraklari-tek-pdf-birlestirme
+      - type: redirect
+        source: /kullanim/cv-pdf-boyutu-kucultme
+        destination: /tr/kullanim/cv-pdf-boyutu-kucultme
+      - type: redirect
+        source: /kullanim/word-cv-pdf-yapma/
+        destination: /tr/kullanim/word-cv-pdf-yapma
+      - type: redirect
+        source: /kullanim/taranmis-mahkeme-karari-metne-cevirme/
+        destination: /tr/kullanim/taranmis-mahkeme-karari-metne-cevirme
+      - type: redirect
+        source: /kullanim/pdf-fatura-excel-aktarma/
+        destination: /tr/kullanim/pdf-fatura-excel-aktarma
+      - type: redirect
+        source: /kullanim/banka-ekstresi-excel-aktarma/
+        destination: /tr/kullanim/banka-ekstresi-excel-aktarma
+      - type: redirect
+        source: /kullanim/dilekce-delil-listesi-birlestirme/
+        destination: /tr/kullanim/dilekce-delil-listesi-birlestirme
+      - type: redirect
+        source: /kullanim/cv-diploma-sertifika-tek-pdf/
+        destination: /tr/kullanim/cv-diploma-sertifika-tek-pdf
+      - type: redirect
+        source: /kullanim/pdf-sayfalarini-jpg-yapma/
+        destination: /tr/kullanim/pdf-sayfalarini-jpg-yapma
+      - type: redirect
+        source: /kullanim/vize-final-notlari-birlestirme/
+        destination: /tr/kullanim/vize-final-notlari-birlestirme
+      - type: redirect
+        source: /kullanim/konsolosluk-dosya-boyutu-kucultme/
+        destination: /tr/kullanim/konsolosluk-dosya-boyutu-kucultme
+      - type: redirect
+        source: /kullanim/odev-fotograflarini-pdf-yapma/
+        destination: /tr/kullanim/odev-fotograflarini-pdf-yapma
+      - type: redirect
+        source: /kullanim/e-arsiv-faturalari-birlestirme/
+        destination: /tr/kullanim/e-arsiv-faturalari-birlestirme
+      - type: redirect
+        source: /kullanim/e-devlet-belgelerini-birlestirme/
+        destination: /tr/kullanim/e-devlet-belgelerini-birlestirme
+      - type: redirect
+        source: /kullanim/eski-cv-word-cevirme/
+        destination: /tr/kullanim/eski-cv-word-cevirme
+      - type: redirect
+        source: /kullanim/ders-slayti-pdf-word-cevirme/
+        destination: /tr/kullanim/ders-slayti-pdf-word-cevirme
+      - type: redirect
+        source: /kullanim/pdf-sayfa-ayirma-dondurme/
+        destination: /tr/kullanim/pdf-sayfa-ayirma-dondurme
+      - type: redirect
+        source: /kullanim/excel-teklif-bordro-pdf-yapma/
+        destination: /tr/kullanim/excel-teklif-bordro-pdf-yapma
+      - type: redirect
+        source: /kullanim/tez-makale-pdf-word-cevirme/
+        destination: /tr/kullanim/tez-makale-pdf-word-cevirme
+      - type: redirect
+        source: /kullanim/uyap-pdf-boyutu-kucultme/
+        destination: /tr/kullanim/uyap-pdf-boyutu-kucultme
+      - type: redirect
+        source: /kullanim/vize-evraklari-tek-pdf-birlestirme/
+        destination: /tr/kullanim/vize-evraklari-tek-pdf-birlestirme
+      - type: redirect
+        source: /kullanim/cv-pdf-boyutu-kucultme/
+        destination: /tr/kullanim/cv-pdf-boyutu-kucultme
     headers:
       # Content-hashed build assets never change; images change rarely.
       - path: /_astro/*

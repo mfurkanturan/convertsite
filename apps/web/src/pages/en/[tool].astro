@@ -1,9 +1,0 @@
----
-import { toolIds } from '@convertsite/contracts';
-
-export function getStaticPaths() {
-  return toolIds.map((tool) => ({ params: { tool } }));
-}
-const tool = Astro.params.tool;
-return Astro.redirect(`/${tool}`, 301);
----

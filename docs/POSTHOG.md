@@ -27,7 +27,7 @@ Autocapture, session replay, heatmap, otomatik exception/performans, survey, pro
 | `files_deleted` | Kullanıcının silme isteğinin kabulü; fiziksel silinme kanıtı değil |
 | `client_error` | Sabit istemci hata kategorisi; ham hata veya belge bilgisi yok |
 
-Özellikler: doğrulanmış tool ID, 1–20 file_count, sabit error_code, tr/en locale, development/production environment; SDK izin listesi ayrıca kodda tanımlıdır. API sonucu hatalarında ham backend hata metni alınmaz. Sonuç olayı aynı job için tarayıcı sekmesinde yerel olarak tekilleştirilir; job kimliği dışarı taşınmaz.
+Özellikler: doğrulanmış tool ID, 1–20 file_count, sabit error_code, en/tr/es/hi/fr locale, development/production environment; locale HTML `lang` değerinin dil alt kodundan belirlenir. SDK izin listesi ayrıca kodda tanımlıdır. API sonucu hatalarında ham backend hata metni alınmaz. Sonuç olayı aynı job için tarayıcı sekmesinde yerel olarak tekilleştirilir; job kimliği dışarı taşınmaz.
 
 Bu istemci ölçümü sekme kapalıyken biten işleri kaçırabilir. Restore edilen eski job sonucu o anda gözlemlenebilir. Reklam engelleyici/ağ kesintisi olay kaybına neden olabilir. İş sayısını ve başarı oranını kesin hesaplamak için backend jobs istatistiğini kullan; PostHog funnel tam bir muhasebe kaydı değildir. Worker'dan bağımsız completion yayını ve sunucuya rıza taşıma bu dilime dahil değildir.
 
@@ -50,17 +50,26 @@ Başlangıç dashboard'u: [DoctorConverter paneli](https://eu.posthog.com/projec
 
 Dashboard'daki başlangıç etkileşim hunisi `DoctorConverter — Dönüşüm akışı` olarak güncellendi ve kaydedildi: tool_viewed → upload_completed → conversion_requested → conversion_completed → download_clicked. Dönüşüm penceresi 30 dakika, sıralı adımlar ve anonim unique user sayımıdır; kesin tek job veya aynı araç işlemi eşleştirmesi değildir. Funnel'ın kendi kalıcı production filtresi de vardır. Diğer başlangıç template kartlarının bir kısmı (ör. referrer) kapalı toplama özelliklerine dayandığı için boş kalabilir; bunlar veri varmış gibi yorumlanmamalı.
 
+Kendi/test trafiği gerçek kullanıcıdan PostHog anonim kimliğiyle tek başına ayırt edilemez. Bu nedenle bilinmeyen bir kimliği iç trafik diye dışlama. `environment=development` filtresi yalnızca yerel geliştirme olaylarını ayırır; üretim alan adındaki site sahibi testlerini otomatik tanımaz. Dışlama veya IP tabanlı filtre ancak sahiplik ve kullanılan mekanizma doğrulandıktan sonra, veri minimizasyonu değerlendirilerek yapılmalıdır. Dashboard sayıları yalnızca analitik izni veren ve tarayıcı engeline takılmayan ziyaretçileri kapsar.
+
 Özel yerel sunucu: PowerShell'de `$env:PUBLIC_POSTHOG_LOCAL='true'; pnpm --filter @convertsite/web exec astro dev --host 127.0.0.1 --port 4325`.
 
-İkinci terminalde `$env:POSTHOG_E2E='1'; $env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:4325'; pnpm exec playwright test e2e/analytics.spec.ts`. Bu suite PostHog ağını yerelde intercept eder; sentetik denemeler dışarı gitmez. Reddetme/yenileme, izin/geri çekme, query ve unsafe property sızıntısı, DNT, API başarı/başarısızlık sonucu ve tekrar sonuç sayımını test eder. API dönüşüm sonuçları fixture'dır; gerçek motor E2E testinin yerine geçmez.
+İkinci terminalde `$env:POSTHOG_E2E='1'; $env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:4325'; pnpm exec playwright test e2e/analytics.spec.ts`. Bu suite PostHog ağını yerelde intercept eder; sentetik denemeler dışarı gitmez. Reddetme/yenileme, izin/geri çekme, query ve unsafe property sızıntısı, DNT/GPC, beş arayüz dilinde locale, API başarı/başarısızlık sonucu ve tekrar sonuç sayımını test eder. API dönüşüm sonuçları fixture'dır; gerçek motor E2E testinin yerine geçmez.
 
 Panelde production filtresiyle başlangıç dashboard'u:
 
 1. `$pageview` trendi, günlük toplam ve anonim distinct ID sayısı.
 2. Kaydedilmiş beş adımlı funnel; ihtiyaç oldukça tool kırılımı eklenebilir. Mevcut pencere 30 dakika; bu ayar tek oturum veya tek job garantisi değildir.
 3. `conversion_failed` sayısı tool kırılımı; client_error kategorileri ayrı grafikte.
-4. Mobil/masaüstü ve tr/en kırılımları. İlk sürüm referrer/UTM toplamadığı için kanal ilişkilendirmesi vaat edilmez.
+4. Mobil/masaüstü ve en/tr/es/hi/fr kırılımları. İlk sürüm referrer/UTM toplamadığı için kanal ilişkilendirmesi vaat edilmez.
 
 Gerçek PostHog doğrulamasında yalnızca sentetik development olayları gönder; ziyaretçi belgeleriyle test etme. Üretim dashboard'unda `environment = production` filtresini sabitle. Feature flag veya replay'i panelden seçmek, güvenlik nedeniyle kapalı SDK ayarlarını açmaz; yeni özellik ayrıca kod/test ve gizlilik değerlendirmesi ister.
+
+## Canlıya alma kontrolü — 26 Ekim 2026
+
+- Canlı panoda son 30 günde 1 anonim aktif kullanıcı, son 7 günde 7 oturum ve 52 sayfa görüntülemesi göründü. Bunlar yalnızca analitik izni veren ve engelleyiciye takılmayan ziyaretçilerdir; kesin toplam trafik veya dönüşüm sayısı değildir.
+- Son 7 günlük Activity akışında aynı anonim kimliğin kısa sürede Türkçe ve İspanyolca sayfaları dolaştığı görülüyor. Bu, site testi olabilir; kimlik anonim olduğu için sahibini kanıtlamaz. Activity ve Persons ekranlarındaki “Filter out internal and test users” anahtarı kapalıydı. `environment = production` filtresi yerel geliştirme olaylarını ayırır, canlı sitedeki manuel testleri ayırmaz. Sahipliği doğrulanmayan kimlikleri filtreleme ve IP tabanlı dışlama ekleme.
+- Canlı İspanyolca sayfa görüntülemesinde `/es/...` URL'si için `locale=en` görüldü. Bu, mevcut canlı build'in düzeltme öncesi olduğunu gösterir. Kaynaktaki locale düzeltmesi beş dil için yerel yakalamalı testte doğrulandı; dağıtımdan sonra her dilde yeni bir sayfa görüntüleme olayının `locale` değerini kontrol et. Eski olaylar geriye dönük düzeltilmez.
+- Canlıya alma öncesi geçişte test olayları PostHog'a gönderilmez. Dağıtım sonrası yalnızca yeni olayların dil özelliklerini kontrol et; dosya veya iş verisiyle test etme.
 
 Resmi kaynaklar: [Astro kurulumu](https://posthog.com/docs/libraries/astro), [SDK ayarları](https://posthog.com/docs/libraries/js/config), [funnel](https://posthog.com/docs/product-analytics/funnels), [ücretsiz kotalar](https://posthog.com/pricing).

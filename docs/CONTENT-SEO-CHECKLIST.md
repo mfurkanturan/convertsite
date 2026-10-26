@@ -18,7 +18,8 @@ Bu belge, arayüz, araç ve rehber sayfalarında yayımlanan içerik için ortak
 - Her indekslenebilir rotada benzersiz, sayfa içeriğiyle tutarlı `<title>` ve meta description bulunur.
 - Canonical URL, alan adı ve son rota biçimiyle eşleşir. Eşdeğer çeviriler karşılıklı `hreflang` üretir; eşdeğeri olmayan rotaya sahte alternatif eklenmez.
 - Open Graph başlık, açıklama, URL ve 1200×630 paylaşım görseli doğru dil/rota ile eşleşir; favicon yüklenebilir.
-- Sitemap yalnızca mevcut, kanonik, indekslenebilir sayfaları içerir ve dil alternatiflerini doğru eşler. `robots.txt` sitemap adresini gösterir.
+- Sitemap yalnızca mevcut, kanonik, indekslenebilir sayfaları içerir ve dil alternatiflerini doğru eşler. `lastmod` yalnızca sayfa bazında gerçek içerik değişiklik tarihi varsa eklenir; build tarihini tüm URL'lere kopyalama. `robots.txt` sitemap adresini gösterir.
+- Eski `/en/...` ve `/kullanim/...` URL'leri yalnızca güncel eşdeğer İngilizce/Türkçe sayfaya yönlendirilir; eşdeğeri olmayan, `/cdn-cgi/*` gibi sistem yolları ve API alan adı ana sayfaya yönlendirilmez.
 - 404 sayfası açıklayıcı H1 ve çalışan yerel ana sayfa bağlantıları verir; `noindex` kullanır. Sunucu 5xx hata sayfaları hosting katmanında ayrıca tanımlanır.
 - Her içerik rotasında bir H1, anlamlı başlık hiyerarşisi, etiketli gezinme alanları ve erişilebilir link adları bulunur.
 - Türkçe, İngilizce ve İspanyolca sayfalarda içerik, sayfa başlığı, dil değiştirici ve link hedefleri aynı işleve karşılık gelir; taşma mobil genişlikte kontrol edilir.

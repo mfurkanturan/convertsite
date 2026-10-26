@@ -118,3 +118,29 @@ Ana koşular toplam 154 başarılı test çalıştırması ve 28 açık atlama i
 Görsel incelemede ana sayfa, ayarsız araç, ayarlı araç, iki dosyalı birleştirme, sayfa düzenleyici, OCR, rehber hub’ı ve kurumsal sayfa durumları incelendi. Banka ekstresi rehberindeki uzun Excel formülünün mobil taşması metin kırılmasıyla giderildi. Önce/sonra ve seçili sentetik dosya ekranları `.qa/slop/` altındadır.
 
 Backend/motor kodu değişmediğinden Docker entegrasyon ve motor audit’i yeniden çalıştırılmadı. Sentetik API testleri gerçek dönüşüm, erişim izolasyonu veya fiziksel silme kanıtı olarak sunulmaz. Yerel önizleme normal analitik ayarlarıyla tekrar başlatıldı. Yayın yapılmadı.
+
+## SEO ve ölçüm yayına hazırlığı — 26 Ekim 2026
+
+### Search Console
+
+Son 7 günlük rapor 1 tıklama, 70 gösterim, %1,4 TO ve 46,7 ortalama konum gösteriyor. Grafik verisi 21–24 Ekim ile sınırlı; 28 günlük seçim de aynı aralığı gösterdi. En çok gösterim alan sorgular çoğunlukla 1–2 gösterimde kaldı. Sayfa kırılımında `word-to-pdf` 1 tıklama / 7 gösterim, `page-numbers` 0 / 7 ve `ocr` 0 / 5. Ülkelerde Hindistan 1 / 17, Türkiye 0 / 27; cihazlarda masaüstü 1 / 50, mobil 0 / 20. Bu örneklem belirli sayfaların içeriğini yeniden yazmak veya yeni dil eklemek için yeterli değil.
+
+Sayfa dizini raporu son olarak 23 Ekim'de güncellenmişti: 79 dizine eklenen, 76 eklenmeyen URL. Örneklerin sınıflandırması:
+
+| Search Console nedeni | Adet | Değerlendirme ve hazırlanan işlem |
+| --- | ---: | --- |
+| Bulunamadı (404) | 53 | 51 eski Türkçe/İngilizce adresin güncel eşdeğeri bulundu ve Render yönlendirmelerine eklendi. `/cdn-cgi/*` ve `api.doctorconverter.com/` sistem adresleri ana sayfaya yönlendirilmedi. |
+| `noindex` | 11 | Örneklerin tamamı eski `/en/` ana sayfa veya araç rotaları; eşdeğerlerine yönlendirme eklendi ve çakışan statik yönlendirme sayfaları kaldırıldı. |
+| Yönlendirmeli sayfa | 1 | `www.doctorconverter.com/` kök alan adına zaten yönleniyor; beklenen canonical davranış. |
+| Tarandı, dizine eklenmedi | 10 | 9 yasal/kurumsal sayfa 24 Ekim'de ilk kez taranmış; şimdilik yeni keşfedilmiş indexlenebilir sayfalar. `cdn-cgi/trace` Cloudflare sistem adresi. |
+| Google farklı canonical seçti | 1 | `/tr/kullanim/` için Google'ın seçtiği `/kullanim/` eski kök rota bulundu. `/kullanim` ve `/kullanim/` güncel Türkçe rehber merkezine yönlendirildi. |
+
+Sitemap Search Console'da başarılı okunmuş; canlı rapor 87 sayfa keşfetti. Mevcut yerel build 201 canonical URL üretiyor; sentetik `lastmod`, eski `/en/` ve `/cdn-cgi/` URL'si yok. Bu farkın canlı hizmette giderildiği ancak dağıtım ve sonrasında sitemap'in yeniden okunmasıyla kanıtlanabilir. “Düzeltmeyi doğrula” şu aşamada başlatılmadı.
+
+### Yayın öncesi doğrulama
+
+- 26 Ekim'de `pnpm check` ve `pnpm build` geçti; statik build 202 rota üretti.
+- `e2e/analytics.spec.ts` Chromium çalıştırması, yerel PostHog yakalama ayarıyla 13/13 geçti. Rıza reddi, DNT/GPC, izinli olayların allowlist'i, hassas veri sızıntısı, beş dil locale değeri ve başarılı/başarısız işlem olayları doğrulandı.
+- `e2e/content-consistency.spec.ts` içindeki mevcut rehber ve statik rotalar testi ile Render yönlendirme/sitemap testi geçti. Türkçe ve İngilizce rehber rotaları gerçek build'de bulundu.
+- Canlı PostHog olayında `/es/...` sayfası için `locale=en` görüldü; yerel düzeltme henüz canlıya çıkmamış. Dağıtım sonrası beş dilin her birinde yeni olayla locale değerini doğrula. Tarihsel olaylar kaynak değişikliğiyle geriye dönük düzelmez.
+- Canlı yayından sonra yönlendirmelerde HTTP 301 ve doğru hedefi, 201 URL'lik yeni sitemap'i ve Search Console'da sonraki tarama verisini kontrol et. Bu raporların güncellenmesi Google'ın zamanlamasına bağlıdır; yayın öncesi doğrulama başlatma.

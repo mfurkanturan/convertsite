@@ -11,7 +11,6 @@ const entries: { alternates: Alternates; priority: string }[] = [
 ];
 
 export const GET: APIRoute = () => {
-  const lastmod = new Date().toISOString().slice(0, 10);
   const seen = new Set<string>();
   const urls: string[] = [];
   for (const { alternates, priority } of entries) {
@@ -23,7 +22,8 @@ export const GET: APIRoute = () => {
       const alt = links.length > 1
         ? [...links.map(([lang, href]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${absoluteUrl(href)}"/>`), `<xhtml:link rel="alternate" hreflang="x-default" href="${absoluteUrl(xDefault!)}"/>`].join('')
         : '';
-      urls.push(`<url><loc>${absoluteUrl(path)}</loc><lastmod>${lastmod}</lastmod><priority>${priority}</priority>${alt}</url>`);
+      // Do not publish a build date as lastmod: this route table has no per-page edit timestamp.
+      urls.push(`<url><loc>${absoluteUrl(path)}</loc><priority>${priority}</priority>${alt}</url>`);
     }
   }
   const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`;

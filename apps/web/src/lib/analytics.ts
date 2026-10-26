@@ -1,5 +1,6 @@
 import type { PostHog } from 'posthog-js';
 import { consentKey, eventNames, safeProperties, type AnalyticsProperties } from './analytics-policy';
+import { locales, type Locale } from '../i18n/locales';
 
 // Project ingestion token is public, never a personal/API-management credential.
 const token = import.meta.env.PUBLIC_POSTHOG_KEY || 'phc_r8W8GxvHDjqQ8iSoQd7MajYos4Ch4FDsnyFvNgYEJeZz';
@@ -30,8 +31,10 @@ function permitted(): boolean {
 function pageContext() {
   const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
   const url = new URL(canonical || '/', 'https://doctorconverter.com');
+  const language = document.documentElement.lang.toLowerCase().split('-')[0];
+  const locale: Locale = locales.find((supported) => supported === language) ?? 'en';
   return { $current_url: `https://doctorconverter.com${url.pathname}`, $pathname: url.pathname,
-    $host: 'doctorconverter.com', locale: document.documentElement.lang === 'tr' ? 'tr' : 'en',
+    $host: 'doctorconverter.com', locale,
     environment: location.hostname.endsWith('doctorconverter.com') ? 'production' : 'development' };
 }
 

@@ -34,7 +34,7 @@ test('no PostHog requests before consent or after declining/reloading', async ({
   expect(capture.requests).toHaveLength(0);
   await page.getByRole('button', { name: 'Reddet', exact: true }).click();
   await page.reload();
-  await expect(page.getByRole('button', { name: 'Çerez tercihleri', exact: true })).toBeVisible();
+  await expect(page.locator('button[aria-controls="analytics-preferences"]')).toBeVisible();
   expect(capture.requests).toHaveLength(0);
 });
 
@@ -134,6 +134,31 @@ test('Do Not Track prevents collection even when consent was accepted', async ({
   expect(capture.requests).toHaveLength(0);
 });
 
+test('GPC prevents collection even when consent was accepted', async ({ page }) => {
+  const capture = await intercept(page);
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'globalPrivacyControl', { get: () => true });
+    localStorage.setItem('dc-analytics-consent-v1', 'accepted');
+  });
+  await page.goto('/es/pdf-to-word');
+  await expect(page.locator('button[aria-controls="analytics-preferences"]')).toBeVisible();
+  expect(capture.requests).toHaveLength(0);
+});
+
+for (const [locale, path] of [
+  ['en', '/pdf-to-word'], ['tr', '/tr/pdf-to-word'], ['es', '/es/pdf-to-word'],
+  ['hi', '/hi/pdf-to-word'], ['fr', '/fr/pdf-to-word'],
+] as const) {
+  test(`pageview reports ${locale} locale`, async ({ page }) => {
+    const capture = await intercept(page);
+    await page.addInitScript(() => localStorage.setItem('dc-analytics-consent-v1', 'accepted'));
+    await page.goto(path);
+    await expect.poll(() => capture.events.some(event => event.event === '$pageview')).toBe(true);
+    const pageview = capture.events.find(event => event.event === '$pageview')!;
+    expect(pageview.properties.locale).toBe(locale);
+  });
+}
+
 for (const state of ['succeeded', 'failed'] as const) {
   test(`real UI reports ${state} API result without filenames, errors or job identifiers`, async ({ page }) => {
     const capture = await intercept(page);
@@ -152,6 +177,7 @@ for (const state of ['succeeded', 'failed'] as const) {
     await page.goto('/tr/pdf-to-word', { waitUntil: 'domcontentloaded' });
     await page.getByRole('button', { name: 'Kabul et', exact: true }).click();
     await expect.poll(() => capture.events.some(e => e.event === '$pageview')).toBe(true);
+    await expect.poll(() => capture.events.some(e => e.event === 'tool_viewed')).toBe(true);
     await page.locator('input[type="file"]').setInputFiles({ name: 'PRIVATE_SENTINEL.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n%%EOF') });
     await page.getByRole('button', { name: 'Word’e dönüştür', exact: true }).click();
     const outcome = state === 'succeeded' ? 'conversion_completed' : 'conversion_failed';
@@ -160,6 +186,14 @@ for (const state of ['succeeded', 'failed'] as const) {
     await expect.poll(() => capture.events.filter(e => e.event === privacyOutcome).length).toBe(1);
     expect(capture.events.some(e => e.event === 'processing_started')).toBe(true);
     for (const event of ['upload_completed', 'conversion_requested']) expect(capture.events.some(e => e.event === event)).toBe(true);
+    if (state === 'succeeded') {
+      await page.getByRole('link', { name: 'Sonucu indir', exact: true }).evaluate(element => {
+        element.addEventListener('click', event => event.preventDefault(), { once: true });
+        (element as HTMLAnchorElement).click();
+      });
+      await expect.poll(() => capture.events.some(e => e.event === 'download_clicked')).toBe(true);
+      expect(capture.events.find(e => e.event === 'download_clicked')?.properties.tool).toBe('pdf-to-word');
+    }
     await page.reload({ waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('button', { name: 'Çerez tercihleri', exact: true })).toBeVisible();
     await expect.poll(() => capture.events.filter(e => e.event === '$pageview').length).toBe(2);

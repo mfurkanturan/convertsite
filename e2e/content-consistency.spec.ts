@@ -2,7 +2,8 @@ import { test, expect, type Page } from '@playwright/test';
 import { toolSeoMap } from '../apps/web/src/lib/tool-seo';
 import { toolSeoMapEn } from '../apps/web/src/lib/tool-seo-en';
 import { scenarios, scenarioPath, scenarioAlternates } from '../apps/web/src/lib/seo/scenarios';
-import { staticPairs } from '../apps/web/src/i18n/locales';
+import { locales, staticPairs } from '../apps/web/src/i18n/locales';
+import { readFileSync } from 'node:fs';
 
 const ids = Object.keys(toolSeoMap);
 const withSettings = new Set(['excel-to-pdf', 'pdf-to-images', 'images-to-pdf', 'edit-pdf-pages', 'page-numbers', 'watermark-pdf', 'protect-pdf', 'unlock-pdf', 'ocr', 'pdf-to-pdf-ocr']);
@@ -80,6 +81,53 @@ test('all guide and static routes preserve one heading, readable structure and l
       }
     }
   }
+});
+
+test('legacy routes map known equivalents in Render and sitemap avoids synthetic lastmod', async ({ page }, info) => {
+  test.skip(info.project.name !== 'chromium', 'Route and sitemap audit runs once.');
+  const render = readFileSync(`${process.cwd()}/render.yaml`, 'utf8');
+  const exactRedirects = [
+    ...ids.map(id => [`/en/${id}`, `/${id}`]),
+    ...staticPairs.flatMap(pair => pair.en && pair.en !== '/' ? [[`/en${pair.en.replace(/\/$/, '')}`, pair.en]] : []),
+    ['/en', '/'], ['/hakkimizda', '/tr/hakkimizda'], ['/kullanim', '/tr/kullanim/'], ['/kullanim/', '/tr/kullanim/'],
+  ];
+  const legacyTurkishGuideSlugs = [
+    'word-cv-pdf-yapma', 'taranmis-mahkeme-karari-metne-cevirme', 'pdf-fatura-excel-aktarma',
+    'banka-ekstresi-excel-aktarma', 'dilekce-delil-listesi-birlestirme', 'cv-diploma-sertifika-tek-pdf',
+    'pdf-sayfalarini-jpg-yapma', 'vize-final-notlari-birlestirme', 'konsolosluk-dosya-boyutu-kucultme',
+    'odev-fotograflarini-pdf-yapma', 'e-arsiv-faturalari-birlestirme', 'e-devlet-belgelerini-birlestirme',
+    'eski-cv-word-cevirme', 'ders-slayti-pdf-word-cevirme', 'pdf-sayfa-ayirma-dondurme',
+    'excel-teklif-bordro-pdf-yapma', 'tez-makale-pdf-word-cevirme', 'uyap-pdf-boyutu-kucultme',
+    'vize-evraklari-tek-pdf-birlestirme', 'cv-pdf-boyutu-kucultme',
+  ];
+  for (const slug of legacyTurkishGuideSlugs) {
+    expect(scenarios.tr.some(scenario => scenario.slug === slug), `missing current Turkish guide: ${slug}`).toBe(true);
+    exactRedirects.push([`/kullanim/${slug}`, `/tr/kullanim/${slug}`]);
+    exactRedirects.push([`/kullanim/${slug}/`, `/tr/kullanim/${slug}`]);
+  }
+  for (const [legacy, current] of exactRedirects) {
+    expect(render).toContain(`source: ${legacy}\n        destination: ${current}`);
+  }
+  expect(render).toContain('source: /en/use-cases/:slug\n        destination: /use-cases/:slug');
+  expect(render).toContain('source: /en/use-cases/:slug/\n        destination: /use-cases/:slug');
+  expect(render).not.toContain('source: /en/*');
+  expect(render).not.toContain('source: /cdn-cgi/*');
+  expect(render).not.toContain('source: /api.doctorconverter.com/*');
+  const response = await page.request.get('/sitemap.xml');
+  expect(response.status()).toBe(200);
+  const sitemap = await response.text();
+  expect(sitemap).not.toContain('<lastmod>');
+  expect(sitemap).not.toContain('/en/');
+  expect(sitemap).not.toContain('/cdn-cgi/');
+  const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
+  const expectedUrls = [
+    ...staticPairs.flatMap(pair => Object.values(pair).filter((path): path is string => Boolean(path))),
+    ...ids.flatMap(id => locales.map(locale => locale === 'en' ? `/${id}` : `/${locale}/${id}`)),
+    ...locales.flatMap(locale => scenarios[locale].map(scenario => scenarioPath(locale, scenario.slug))),
+  ].map(path => `https://doctorconverter.com${path}`);
+  expect(new Set(sitemapUrls).size).toBe(sitemapUrls.length);
+  expect(sitemapUrls).toHaveLength(expectedUrls.length);
+  expect(sitemapUrls).toEqual(expect.arrayContaining(expectedUrls));
 });
 
 test('unreachable API never presents fallback limits as active policy and retries with live values', async ({ page }) => {
