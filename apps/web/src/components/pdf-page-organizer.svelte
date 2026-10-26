@@ -108,7 +108,7 @@
 
 <svelte:window onkeydown={(e) => { if (e.key === 'Escape') zoomPage = null; }} />
 
-<div class="mt-4 rounded-panel border border-border bg-surface p-4 sm:p-5" role="region" aria-label="PDF Sayfa Düzenleyici">
+<div class="mt-4 rounded-panel border border-border bg-surface p-4 sm:p-5" role="region" aria-label={text.region}>
   <!-- Header Bar -->
   <div class="flex items-center justify-between pb-3.5 border-b border-border/80 flex-wrap gap-2.5">
     <div class="flex items-center gap-2 flex-wrap">
@@ -280,7 +280,7 @@
     role="dialog"
     aria-modal="true"
   >
-    <button type="button" class="fixed inset-0 cursor-default" aria-label="Kapat" onclick={() => zoomPage = null}></button>
+    <button type="button" class="fixed inset-0 cursor-default" aria-label={text.close} onclick={() => zoomPage = null}></button>
     <div class="relative z-10 flex max-h-[90vh] max-w-2xl flex-col rounded-2xl border border-border bg-surface shadow-2xl overflow-hidden p-4">
       <div class="flex items-center justify-between pb-3 border-b border-border mb-3">
         <strong class="text-sm font-semibold text-text">
