@@ -36,6 +36,8 @@ export interface CleanupMetric {
   // Expired files still waiting for physical removal.
   duePurge: number;
   oldestDueSeconds: number;
+  // Maintenance runs (expiry and file cleanup) that failed in a row; 0 after a successful run.
+  consecutiveFailures: number;
 }
 
 export interface AnalyticsSummary {
@@ -103,9 +105,11 @@ export function analyticsRepository(pool: pg.Pool) {
         WHERE NOT purged AND expires_at <= now()
       `);
       const cleanupRow = cleanupRes.rows[0];
+      const failuresRes = await pool.query<{ consecutive_failures: number }>(`SELECT consecutive_failures FROM worker_heartbeats WHERE name = 'document-worker'`);
       const cleanup: CleanupMetric = {
         duePurge: Number(cleanupRow?.due ?? 0),
         oldestDueSeconds: Math.round(Number(cleanupRow?.oldest_due_seconds ?? 0)),
+        consecutiveFailures: failuresRes.rows[0]?.consecutive_failures ?? 0,
       };
 
       const queueRow = queueRes.rows[0];
