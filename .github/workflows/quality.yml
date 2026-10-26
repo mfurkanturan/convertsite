@@ -34,5 +34,5 @@ jobs:
           path: |
             playwright-report/
             test-results/
-            .qa/uiux-sprint-7/screenshots/
+            .qa/uiux-sprint-8/screenshots/
           retention-days: 14
