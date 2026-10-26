@@ -21,7 +21,16 @@ export interface DailyTrend {
   succeeded: number;
 }
 
+export interface QueueMetric {
+  queued: number;
+  running: number;
+  oldestQueuedSeconds: number;
+  succeededLastHour: number;
+  failedLastHour: number;
+}
+
 export interface AnalyticsSummary {
+  queue: QueueMetric;
   totalJobs: number;
   totalUniqueUsers: number;
   successfulJobs: number;
@@ -58,6 +67,32 @@ export const toolEngineMap: Record<string, string> = {
 export function analyticsRepository(pool: pg.Pool) {
   return {
     async getSummary(): Promise<AnalyticsSummary> {
+      // 0. Queue health: backlog, oldest waiting job and recent outcomes. Only counts and ages; no file or owner data.
+      const queueRes = await pool.query<{
+        queued: string;
+        running: string;
+        oldest_queued_seconds: string;
+        succeeded_last_hour: string;
+        failed_last_hour: string;
+      }>(`
+        SELECT
+          COUNT(*) FILTER (WHERE state = 'queued')::text as queued,
+          COUNT(*) FILTER (WHERE state = 'running')::text as running,
+          COALESCE(EXTRACT(EPOCH FROM now() - MIN(created_at) FILTER (WHERE state = 'queued')), 0)::text as oldest_queued_seconds,
+          COUNT(*) FILTER (WHERE state = 'succeeded' AND created_at >= now() - INTERVAL '1 hour')::text as succeeded_last_hour,
+          COUNT(*) FILTER (WHERE state = 'failed' AND created_at >= now() - INTERVAL '1 hour')::text as failed_last_hour
+        FROM jobs
+        WHERE state IN ('queued', 'running') OR created_at >= now() - INTERVAL '1 hour'
+      `);
+      const queueRow = queueRes.rows[0];
+      const queue: QueueMetric = {
+        queued: Number(queueRow?.queued ?? 0),
+        running: Number(queueRow?.running ?? 0),
+        oldestQueuedSeconds: Math.round(Number(queueRow?.oldest_queued_seconds ?? 0)),
+        succeededLastHour: Number(queueRow?.succeeded_last_hour ?? 0),
+        failedLastHour: Number(queueRow?.failed_last_hour ?? 0),
+      };
+
       // 1. Overview counts
       const overviewRes = await pool.query<{
         total_jobs: string;
@@ -165,6 +200,7 @@ export function analyticsRepository(pool: pg.Pool) {
       }));
 
       return {
+        queue,
         totalJobs,
         totalUniqueUsers,
         successfulJobs,
