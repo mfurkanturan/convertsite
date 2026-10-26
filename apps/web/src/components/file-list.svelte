@@ -26,6 +26,7 @@
 
   // The dialog owns its own preview URL and releases it when closed.
   let previewFile: File | null = null;
+  let previewOpener: HTMLElement | null = null;
 
   // Thumbnail cache for images and rendered PDFs
   let imageThumbnails = new Map<File, string>();
@@ -62,7 +63,8 @@
     }
   }
 
-  function openPreview(file: File) {
+  function openPreview(file: File, event?: Event) {
+    previewOpener = event?.currentTarget instanceof HTMLElement ? event.currentTarget : null;
     previewFile = file;
   }
 
@@ -157,7 +159,7 @@
 
   {#if viewMode === 'grid'}
     <!-- VISUAL DRAG & DROP CARDS GRID -->
-    <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4" role="list">
       {#each files as file, index}
         {@const isImage = file.type.startsWith('image/')}
         {@const isPdf = file.name.toLowerCase().endsWith('.pdf')}
@@ -183,8 +185,9 @@
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
+                aria-label={`${controls.previewFile}: ${file.name}`}
                 title={controls.previewFile}
-                onclick={() => openPreview(file)}
+                onclick={(event) => openPreview(file, event)}
               >
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
@@ -193,6 +196,7 @@
               <button
                 type="button"
                 class="flex h-11 w-11 items-center justify-center rounded-md text-text-muted hover:bg-danger-soft hover:text-danger transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
+                aria-label={text.remove(file.name)}
                 title={text.remove(file.name)}
                 {disabled}
                 onclick={() => onremove(index)}
@@ -206,7 +210,8 @@
           <button
             type="button"
             class="relative flex h-28 sm:h-32 w-full items-center justify-center rounded-lg border border-border/50 bg-surface overflow-hidden cursor-pointer group-hover:border-accent/40 transition-colors"
-            onclick={() => openPreview(file)}
+            onclick={(event) => openPreview(file, event)}
+            aria-label={`${controls.preview}: ${file.name}`}
             title={controls.clickPreview}
           >
             {#if isImage && imageThumbnails.has(file)}
@@ -224,7 +229,7 @@
             {:else if isPdf}
               <!-- Realistic PDF page loading placeholder -->
               <div class="flex flex-col items-center justify-center text-center p-2">
-                <span class="rounded bg-rose-500/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-rose-600 mb-1.5">
+                <span class="rounded bg-danger-soft px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-danger mb-1.5">
                   PDF
                 </span>
                 <div class="w-12 space-y-1 opacity-40">
@@ -232,7 +237,7 @@
                   <div class="h-1 bg-text rounded-full w-4/5 mx-auto"></div>
                   <div class="h-1 bg-text rounded-full w-3/4 mx-auto"></div>
                 </div>
-                <span class="mt-2 text-[10px] text-text-muted font-medium">
+                <span class="mt-2 text-[11px] text-text-muted font-medium">
                   {controls.loading}
                 </span>
               </div>
@@ -240,14 +245,14 @@
               <!-- Document icon placeholder -->
               <div class="flex flex-col items-center justify-center p-2 text-text-muted">
                 <Icon name="file" size={26} />
-                <span class="mt-1 text-[10px] font-semibold uppercase">{file.name.split('.').pop()}</span>
+                <span class="mt-1 text-[11px] font-semibold uppercase">{file.name.split('.').pop()}</span>
               </div>
             {/if}
 
             <!-- Drag grip indicator on hover -->
             {#if reorder}
               <div class="absolute inset-x-0 bottom-0 py-1 bg-gradient-to-t from-black/20 to-transparent flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <span class="text-[9px] font-medium text-white/90 bg-black/50 px-1.5 py-0.5 rounded">
+                <span class="text-[11px] font-medium text-white/90 bg-black/50 px-1.5 py-0.5 rounded">
                   {controls.drag}
                 </span>
               </div>
@@ -287,7 +292,7 @@
           </div>
 
           <div class="min-w-0 flex-1">
-            <button type="button" class="block truncate text-sm font-medium text-text text-left hover:text-accent w-full" title={file.name} onclick={() => openPreview(file)}>
+            <button type="button" class="block truncate text-sm font-medium text-text text-left hover:text-accent w-full" title={file.name} onclick={(event) => openPreview(file, event)}>
               {file.name}
             </button>
             <span class="mt-0.5 block text-[12px] text-text-muted">{formatBytes(file.size)}</span>
@@ -297,14 +302,16 @@
           <button
             type="button"
               class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-muted hover:bg-accent-soft hover:text-accent transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus"
+            aria-label={`${controls.preview}: ${file.name}`}
             title={controls.preview}
-            onclick={() => openPreview(file)}
+            onclick={(event) => openPreview(file, event)}
           >
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
 
           {#if reorder}
             <button
+              type="button"
               class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-soft transition-colors hover:bg-accent-soft hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
               aria-label={text.up(file.name)}
               disabled={disabled || index === 0}
@@ -313,6 +320,7 @@
               <Icon name="up" size={15} />
             </button>
             <button
+              type="button"
               class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-soft transition-colors hover:bg-accent-soft hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
               aria-label={text.down(file.name)}
               disabled={disabled || index === files.length - 1}
@@ -323,6 +331,7 @@
           {/if}
 
           <button
+            type="button"
             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-danger-soft hover:text-danger focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus disabled:opacity-40"
             aria-label={text.remove(file.name)}
             {disabled}
@@ -338,5 +347,5 @@
 
 <!-- FULLSCREEN QUICK LOOK MODAL -->
 {#if previewFile}
-  <FilePreviewDialog file={previewFile} onclose={closePreview} />
+  <FilePreviewDialog file={previewFile} opener={previewOpener} onclose={closePreview} />
 {/if}
