@@ -32,7 +32,7 @@ export function getConfig() {
     engineUrl: process.env.ENGINE_URL ?? 'http://127.0.0.1:3002', engineToken, sessionSecret,
     // Deterministic key for encrypting transient job secrets (e.g. PDF passwords); derived from SESSION_SECRET, never stored in the DB.
     secretKey: createHash('sha256').update(`docly-job-secret:${sessionSecret}`).digest(),
-    adminSecret: process.env.ADMIN_SECRET || sessionSecret,
+    adminSecret: process.env.ADMIN_SECRET ?? '',
     // Number of reverse proxies in front of the API; 0 ignores X-Forwarded-For entirely.
     trustProxyHops: integer('TRUST_PROXY_HOPS', 0, 0, 5),
     // Header set by a trusted edge that clients cannot forge (e.g. cf-connecting-ip); empty uses hop counting.

@@ -365,10 +365,10 @@ export const trDeep: Record<string, Deep> = {
       "title": "Akademik PDF’ten Word’e geçiş: ne korunur, ne kontrol edilmeli?",
       "head": ["Öğe", "Sonuç", "Kontrol önerisi"],
       "rows": [
-        ["Paragraf ve başlıklar", "Korunur", "Başlık stillerini Word’de yeniden uygula"],
+        ["Paragraf ve başlıklar", "Düzenlenebilir metin olarak aktarılır", "Başlık stillerini Word’de yeniden uygula"],
         ["Tablolar", "Düzenlenebilir Word tablosu", "Birleştirilmiş hücreleri kontrol et"],
         ["Şekiller ve grafikler", "Görsel olarak aktarılır", "Konumlarını kontrol et"],
-        ["İki sütunlu düzen", "Sütun yapısı kurulur", "Sütun geçişlerini kontrol et"],
+        ["İki sütunlu düzen", "Kurulmaya çalışılır; okuma sırası ve konum farklı olabilir", "Sütun geçişlerini kontrol et"],
         ["Denklemler", "Görsel veya metin olarak", "Gerekirse Word denklem aracıyla yeniden yaz"],
         ["Kaynakça", "Düz metin", "Kaynak yönetim programına yeniden aktar"]
       ]
@@ -450,7 +450,7 @@ export const trDeep: Record<string, Deep> = {
   },
   "taranmis-mahkeme-karari-metne-cevirme": {
     "figures": [
-      { "src": "ocr-selected", "alt": "Metin çıkar (OCR) aracında taranmış karar ve dil seçimi", "caption": "Taranmış PDF’i seç ve belge dilini belirle; Türkçe varsayılandır." }
+      { "src": "ocr-selected", "alt": "Metin çıkar (OCR) aracında taranmış karar ve dil seçimi", "caption": "Taranmış PDF’i seç ve belge dilini belirle." }
     ],
     "comparison": {
       "title": "Taranmış belgeden metin almanın yolları",

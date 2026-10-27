@@ -19,7 +19,8 @@ function leaves(object: Record<string, unknown>, prefix = ''): Leaf[] {
 
 // Values that are intentionally identical in every language.
 const sharedValues = new Set(['OCR']);
-const sharedPaths = [/\.icon$/, /^workspace\.tips\.default$/, /^help\.titleB$/];
+// controls.organizer.pageLabel is "Page" in both English and French.
+const sharedPaths = [/\.icon$/, /^workspace\.tips\.default$/, /^help\.titleB$/, /^controls\.organizer\.pageLabel$/];
 // Turkish keeps the server's own Turkish error messages, so these codes stay empty in tr.
 const serverMessagePath = /^api\.codes\./;
 const turkishOnly = /[ğĞşŞıİ]/;
