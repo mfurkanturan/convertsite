@@ -102,7 +102,7 @@ Geçiş koşulu: Açık yayın engelleri kapalı, geri yükleme denenmiş, kriti
 | docs/DEPLOYMENT.md | İlk dağıtım öncesi | Yapılandırma, migration, yedekleme ve geri alma |
 | docs/decisions/NNNN-konu.md | Önemli teknik karar | Bağlam, seçenekler, karar, sonuç ve kabul durumu |
 
-README, API, DATA-MODEL, TESTING ve yerel DEPLOYMENT oluşturuldu. Üretilen OpenAPI ve karar kayıtları henüz yoktur. Üretim dağıtımı/yedekleme denendiği iddiasında bulunulmaz.
+README, API, DATA-MODEL, TESTING ve DEPLOYMENT belgeleri oluşturuldu. Üretilen OpenAPI ve karar kayıtları henüz yoktur. Web ve API Render'a dağıtılmıştır; bu, Aşama 6'daki kapasite, operasyon ve yedekleme kabul koşullarının tamamlandığı anlamına gelmez. Yerel yedek/geri yükleme denemesi vardır; otomatik üretim yedeklemesi ve üretim rollback otomasyonu yoktur.
 
 ## Değişiklik yönetimi
 

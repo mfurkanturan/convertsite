@@ -245,13 +245,13 @@ export const trScenarios: Scenario[] = [
         "heading": "OCR ne işe yarar?",
         "body": [
           "Taranmış belgeler aslında resimdir; içindeki yazı seçilemez ve aranamaz. OCR (optik karakter tanıma) bu görüntülerdeki yazıyı düz metne çevirir.",
-          "Türkçe, İngilizce veya iki dil birlikte seçilebilir. Çıktı düz metin (TXT) dosyasıdır; sayfa düzeni korunmaz ama metni istediğin yere yapıştırabilirsin."
+          "Listedeki dillerden bir veya iki tanesi seçilebilir. Çıktı düz metin (TXT) dosyasıdır; sayfa düzeni korunmaz ama metni istediğin yere yapıştırabilirsin."
         ]
       }
     ],
     "steps": [
       { "title": "Belgeyi yükle", "text": "Taranmış PDF’i veya fotoğrafı seç; güncel sayfa limitini panelden kontrol et." },
-      { "title": "Dili seç", "text": "Belge dilini Türkçe, İngilizce veya ikisi olarak belirle." },
+      { "title": "Dili seç", "text": "Belge dilini listeden seç; en fazla iki dil seçebilirsin." },
       { "title": "Metni al", "text": "TXT dosyasını indir, ilgili bölümü kopyala." }
     ],
     "tips": [
@@ -413,7 +413,7 @@ export const trScenarios: Scenario[] = [
     "sections": [
       {
         "heading": "Güncelle, sonra yine PDF yap",
-        "body": ["PDF → Word ile tablolu ve iki sütunlu CV düzenleri yeniden kurulur. Değişikliklerini yaptıktan sonra Word → PDF ile başvurulara hazır, düzgün bir PDF üret."]
+        "body": ["PDF → Word tabloları yeniden kurar, iki sütunlu CV düzenlerini kurmayı dener; sonuçta sütun sırasını ve konumları kontrol et. Değişikliklerini yaptıktan sonra Word → PDF ile başvurulara hazır, düzgün bir PDF üret."]
       }
     ],
     "steps": [

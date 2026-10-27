@@ -39,7 +39,7 @@ Dosyanın `expired` veya `deleted` olması işin geçmişteki başarı bilgisini
 - Çıktı boyutu, dosya adedi, türü ve temel açılabilirliği doğrulanır.
 - Geçerli lease ile sonuç kalıcılaştırılır; ardından başarılı durum yayımlanır.
 - Her bitiş yolunda geçici alanlar ve dosya lease'leri serbest bırakılır.
-- PDF parolası job options/kuyruk payload'ına konmaz; job modülünde şifreli ve expiry'li tutulur, worker'ın Python motor sürecine payload olarak `stdin` üzerinden aktarılır. QPDF parola gerektiren çağrılar parolayı argv yerine stdin/password-file kanalından alır.
+- PDF parolası job options/kuyruk payload'ına konmaz; job modülünde şifreli ve expiry'li tutulur, worker'ın Python motor sürecine payload olarak `stdin` üzerinden aktarılır. QPDF parola gerektiren çağrılar parolayı argv yerine stdin/password-file kanalından alır. Tek istisna `protect-pdf`: `qpdf --encrypt` stdin kanalı sunmadığından parola iş dizinindeki 0600 izinli geçici bir `@`-argüman dosyasına yazılır ve her bitiş yolunda silinir; süreç zorla sonlandırılırsa motorun iş dizini temizliği dosyayı kaldırır.
 
 İzolasyonun nasıl sağlandığı motor adaptörünün dağıtım tasarımında kanıtlanır. Basit child process çağrısı tek başına sandbox sayılmaz. Office/OCR gibi motorlar aynı host kaynaklarını kontrolsüz paylaşamaz.
 

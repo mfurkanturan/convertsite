@@ -121,7 +121,7 @@ export const enScenarios: Scenario[] = [
       {
         "heading": "What is preserved?",
         "body": [
-          "Headings, paragraphs, tables, figures and two-column journal layouts are rebuilt, so references and table contents survive.",
+          "Headings, paragraphs, tables and figures are rebuilt as editable Word content. Two-column pages are attempted, but reading order and positions can differ from the PDF, so check references and table contents.",
           "Equation-heavy pages and unusual fonts may differ; review those sections after converting."
         ]
       },
@@ -226,13 +226,13 @@ export const enScenarios: Scenario[] = [
         "heading": "What OCR does",
         "body": [
           "Scanned documents are pictures, so their words cannot be selected or searched. OCR (optical character recognition) reads those images and returns plain text.",
-          "Choose English, Turkish or both. The output is a TXT file; layout is not kept, but the text is ready to paste anywhere."
+          "Choose one or two of the available languages. The output is a TXT file; layout is not kept, but the text is ready to paste anywhere."
         ]
       }
     ],
     "steps": [
       { "title": "Upload", "text": "Choose a scanned PDF (up to 20 pages) or a photo." },
-      { "title": "Pick the language", "text": "English, Turkish or both." },
+      { "title": "Pick the language", "text": "One or two of the available languages." },
       { "title": "Get the text", "text": "Download the TXT file and copy what you need." }
     ],
     "tips": ["Extract only the pages you need with Edit PDF pages before running OCR.", "Skewed or low-resolution scans reduce accuracy; 300 DPI works best."],
@@ -379,7 +379,7 @@ export const enScenarios: Scenario[] = [
     "sections": [
       {
         "heading": "Update, then export again",
-        "body": ["PDF to Word rebuilds tables and two-column resume layouts. After editing, use Word to PDF to produce an application-ready PDF."]
+        "body": ["PDF to Word rebuilds tables and tries to rebuild two-column resume layouts; check the column order and positions in the result. After editing, use Word to PDF to produce an application-ready PDF."]
       }
     ],
     "steps": [

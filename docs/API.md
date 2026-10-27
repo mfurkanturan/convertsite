@@ -13,7 +13,7 @@ Değişiklik yapan isteklerin Origin değeri APP_ORIGIN ile eşleşmelidir; eksi
 | GET /api/capabilities | Etkin araçlar ve gerçek sınırlar | 200 |
 | GET /api/health/live | Süreç sağlığı | 200 |
 | GET /api/health/ready | DB, motor ve son 20 saniyede worker heartbeat'i | 200 / 503 |
-| GET /api/admin/stats | Yönetici özeti: `queue` (kuyruk sayıları, en eski bekleyen iş yaşı, son bir saatte başarı/hata) ve araç bazlı sayaçlar ve başarılı işlerin ortalama/p95 süresi (`avgSucceededSeconds`, `p95SucceededSeconds`); `cleanup` (süresi dolmuş ama fiziksel silinmemiş dosya sayısı ve en eski gecikme); `secret` veya `x-admin-key` gerekir | 200 / 401 |
+| GET /api/admin/stats | Yönetici özeti: `queue` (kuyruk sayıları, en eski bekleyen iş yaşı, son bir saatte başarı/hata) ve araç bazlı sayaçlar ve başarılı işlerin ortalama/p95 süresi (`avgSucceededSeconds`, `p95SucceededSeconds`); `cleanup` (süresi dolmuş ama fiziksel silinmemiş dosya sayısı ve en eski gecikme); yalnızca `x-admin-key` başlığı kabul edilir (sorgu parametresi kabul edilmez) ve `ADMIN_SECRET` tanımlı olmalıdır; tanımlı değilse uç nokta kapalıdır | 200 / 401 |
 | POST /api/files | Multipart tek `file` alanı; türe özel gerçek doğrulama | 201 |
 | DELETE /api/files/:id | İşe bağlanmamış girdinin silme talebi | 204 |
 | POST /api/jobs | Araç, dosyalar ve seçeneklerle iş kabulü | 202 |
@@ -22,7 +22,7 @@ Değişiklik yapan isteklerin Origin değeri APP_ORIGIN ile eşleşmelidir; eksi
 | GET /api/jobs/:id/download | Sahip olunan sonuç; doğru MIME ve dosya uzantısı | 200 |
 | DELETE /api/jobs/:id | Erişimi kes, işi/dosyaları silme için işaretle | 202 |
 
-Yükleme cevabı `id`, `size`, `pages`, `expiresAt`, `kind`. PDF/DOCX/XLSX/PPTX/JPG/JPEG/PNG kabul edilir. Uzantı, MIME ve imza eşleşmesi yanında izole yapısal kontrol gerekir. Şifreli PDF, parola verilmeden veya yanlış parola ile reddedilir. Yalnızca `unlock-pdf` akışında multipart yüklemeye isteğe bağlı `password` alanı eklenebilir; bu alan dosya metadata'sına kaydedilmez. Makrolu/dış bağlantılı/gömülü binary içeren Office, arşiv yol ihlalleri ve büyük görseller reddedilir. Office sayfa sayısı yüklemede gerçek slayt/çalışma sayfası adedi değildir; PDF çıktısı oluştuğunda sayfa sayısı belirlenir.
+Yükleme cevabı `id`, `size`, `pages`, `expiresAt`, `kind`. PDF/DOCX/XLSX/PPTX/JPG/JPEG/PNG kabul edilir. Uzantı, MIME ve imza eşleşmesi yanında izole yapısal kontrol gerekir. Şifreli PDF, parola verilmeden veya yanlış parola ile reddedilir. Multipart yüklemeye isteğe bağlı `password` alanı eklenebilir (asıl kullanım `unlock-pdf` akışıdır); route alanı dosya türüne bakmadan kabul eder, yalnızca şifreli PDF doğrulamasında kullanır ve dosya metadata'sına kaydetmez. Makrolu/dış bağlantılı/gömülü binary içeren Office, arşiv yol ihlalleri ve büyük görseller reddedilir. Office sayfa sayısı yüklemede gerçek slayt/çalışma sayfası adedi değildir; PDF çıktısı oluştuğunda sayfa sayısı belirlenir.
 
 İş oluşturma gövdesi:
 

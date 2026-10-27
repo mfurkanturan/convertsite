@@ -55,6 +55,18 @@ describe('real PostgreSQL + pg-boss + isolated QPDF', () => {
   async function pair(cookie: string) { return [(await upload(cookie, 300)).id, (await upload(cookie, 500)).id]; }
   function cleanFiles() { return fileCleanup(ctx.pool, ctx.storage, ctx.config.dataDir, (id) => ctx.jobs.usesFile(id, true))(); }
 
+  it('admin stats accepts only the x-admin-key header and stays disabled without ADMIN_SECRET', async () => {
+    const previous = ctx.config.adminSecret;
+    try {
+      ctx.config.adminSecret = '';
+      expect((await app.inject({ url: '/api/admin/stats', headers: { 'x-admin-key': 'anything' } })).statusCode).toBe(401);
+      ctx.config.adminSecret = 'integration-test-admin-key';
+      expect((await app.inject('/api/admin/stats?secret=integration-test-admin-key')).statusCode).toBe(401);
+      expect((await app.inject({ url: '/api/admin/stats', headers: { 'x-admin-key': 'wrong-key' } })).statusCode).toBe(401);
+      expect((await app.inject({ url: '/api/admin/stats', headers: { 'x-admin-key': 'integration-test-admin-key' } })).statusCode).toBe(200);
+    } finally { ctx.config.adminSecret = previous; }
+  });
+
   it('uploads, queues and merges pages in order; result survives a new API instance', async () => {
     const cookie = await session(); const ids = await pair(cookie);
     const response = await create(cookie, ids); expect(response.statusCode).toBe(202);
