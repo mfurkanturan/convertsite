@@ -37,7 +37,10 @@ Ortak kurallar ve devir için `docs/TEAM.md`. Önce `AGENTS.md`; sonra `ARCHITEC
 - Kısa timeout testinde beklenen `PROCESSING_TIMEOUT` yerine `ENGINE_UNAVAILABLE` dönüyor.
 - PyMuPDF AGPL/ticari lisansı için üretim öncesi karar gerekli.
 - Disk dolması fault injection, çoklu worker kapasitesi, backup/restore doğrulanmadı.
-- `jobs`/`files` metadata satırları süresiz kalıyor (saklama süresi kararı yok).
+- `jobs`/`files` metadata satırları süresiz kalıyor (saklama süresi kararı yok); kullanıcı yazdığı `watermarkText` `jobs.options`'ta, IP'nin anahtarlı HMAC'i `files.client`'ta süresiz duruyor.
+- Admin ucu: özel rate limit yok (yalnızca global 180/dk/IP); `ADMIN_SECRET` için uzunluk/ayrıklık doğrulaması yok; `render.yaml` ve `setup-local` bu değişkeni üretmiyor (üretimde uç kapalı); `redact` listesinde `x-admin-key` yok (istek loglaması kapalıyken sızmaz).
+- `SESSION_SECRET` rotasyonu bekleyen şifreli parolaları çözülemez yapar (iş `WRONG_PASSWORD` ile düşer); rotasyon öncesi bekleyen işleri boşalt.
+- `scripts/stats.js` (`pnpm stats`) admin ucunu kullanmaz, 15 girişli eski araç haritası taşır.
 - Render'da API, worker ve engine tek container'da; motorun salt okunur veri bağlama varsayımı canlıda geçerli olmayabilir (doğrulanmadı).
 - Araç sayısı: kodda 16 kayıtlı araç var; motor audit'i ilk 15 aracı kapsar.
 

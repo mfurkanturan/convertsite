@@ -13,7 +13,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, sonra `TESTING` ve `DEPL
 - Bir kalite kapısının (ör. CI'da backend job'ı) zorunlu mu bilgi amaçlı mı olacağı kullanıcı kararıdır; bu rol seçenekleri ve riskini yazar.
 
 ## Nereye bakılır
-- `.github/workflows/quality.yml`: tek job `frontend-quality` (`pnpm check`, `pnpm build`, Playwright). **Backend testi (`pnpm test`, Docker gerekir) ve motor audit'i CI'da yoktur**; CI'ı backend davranışının kanıtı diye sunma.
+- `.github/workflows/quality.yml`: iki job. `frontend-quality` (`pnpm check`, `pnpm build`, Playwright) kırmızıysa iş akışı kırmızıdır (artifact yükleme adımı hariç: `continue-on-error`). `backend-integration` (`pnpm setup:local` + `pnpm test`, Docker Compose) `continue-on-error: true`, bilgi amaçlıdır. `audit:engines` ve `audit:workflow` CI'da yoktur. Branch protection / required check durumu `gh api repos/<repo>/branches/main/protection` (yalnızca GET) ile doğrulanır; son kontrolde yoktu, yani kırmızı koşuyla merge edilebiliyor.
 - Testler: `apps/server/tests`, kökte `e2e/`, `scripts/{test-backend,audit-engines,audit-workflow,check-boundaries}.mjs`.
 - Sağlık: `/api/health/ready` gerçek route kodu `apps/server/src/bootstrap/http-app.ts`; worker heartbeat `apps/server/src/entrypoints/worker.ts`. Belgelerdeki kapsamla karşılaştır; kuyruk yaşı, iş hata oranı ve cleanup gecikmesi ölçülmüyorsa alarm varmış gibi yazma.
 - Dağıtım: `docs/DEPLOYMENT.md`; Render API + worker + engine ortak 0.1 CPU / 512 MB (kapasite riski, yük testi yok).
@@ -21,7 +21,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, sonra `TESTING` ve `DEPL
 ## Komutlar
 - `pnpm check`, `pnpm build`, `pnpm test:e2e`; `pnpm test` yalnızca Docker hazırsa ve çalışma ağacı/geliştirme worker'ı korunarak. `pnpm audit:engines`, `pnpm audit:workflow` uzun ve ağırdır; paralel başlatma.
 - Çalıştırılamayan veya geçmeyen kontrolü açıkça işaretle. Test sayısını koşulan proje/filtreyle raporla.
-- Kanıt toplamak için güvenli salt-okunur komutlar: `git log`, `git diff`, `git show`, `git blame`, `gh run list`, `gh run view`, `gh pr view`. Yazan veya dışarı gönderen komutlar (`git commit/push`, `gh pr create/merge`, `gh run rerun`, `docker compose up/down`) güvenli değildir.
+- Kanıt toplamak için güvenli salt-okunur komutlar: `git log`, `git diff`, `git show`, `git blame`, `gh run list`, `gh run view`, `gh pr view`, `gh pr checks`, `gh api` (yalnızca GET). Kırmızı CI nedeni için `gh run view <id> --log-failed` çıktısında `N) [proje] › dosya` kalıbını ara; adım adı `UNKNOWN STEP` görünebilir. Yazan veya dışarı gönderen komutlar (`git commit/push`, `gh pr create/merge`, `gh run rerun`, `docker compose up/down`) güvenli değildir.
 ## "Neden yok?" sorusu (bilinçli karar mı, eksik iş mi)
 Sırayla bak ve hangi kanıta dayandığını yaz: (1) `docs/decisions/` karar kayıtları, (2) `docs/ROADMAP.md` ve `docs/TESTING.md` açıklamaları, (3) `git log -S` / `git log -- <dosya>` ile ilgili dosyanın geçmişi, (4) `gh pr view` ile PR açıklamaları. Hiçbirinde gerekçe yoksa "gerekçe kayıtlı değil" yaz; bilinçli karar diye varsayma.
 
@@ -39,8 +39,8 @@ GitHub runner'da (izole denemeyi bu rol çalıştırmaz: `docker compose up/down
 - Ücretli plan, servis topolojisi veya canlı güvenlik/erişim ayarını değiştirme; kararı gerekçesiyle kullanıcıya götür.
 - Testte worker durdurma/yeniden başlatma, DB yalıtımı, kullanıcı verisi ve mevcut çalışma ağacı korunmalıdır. `.qa/`, `.env`, `.data` commit edilmez.
 
-## Bilinen kanıt boşlukları (25 Ekim 2026 görünümü; kullanmadan önce `quality.yml`, TESTING ve DEPLOYMENT ile yeniden doğrula, eskimiş olabilir)
-CI'da backend testi yok; disk dolması/silme hatası fault injection, çoklu worker kapasitesi, backup/restore, kapsamlı erişilebilirlik ve gerçek Edge/Safari/fiziksel cihaz doğrulaması yok; Render üretim yük testi yok.
+## Bilinen kanıt boşlukları (27 Ekim 2026 görünümü; kullanmadan önce `quality.yml`, TESTING ve DEPLOYMENT ile yeniden doğrula, eskimiş olabilir)
+`backend-integration` zorunlu değil ve branch protection yok (CI'ın kendi kırmızısı main'e girebiliyor); zorunlu yapmadan önce en az 3 ardışık yeşil koşu ve süreleri `docs/TESTING.md`'ye yazılmalı (ilk koşular: ~3,5-4,5 dk, 58 test). Disk dolması/silme hatası fault injection, çoklu worker kapasitesi, backup/restore, kapsamlı erişilebilirlik ve gerçek Edge/Safari/fiziksel cihaz doğrulaması yok; Render üretim yük testi yok.
 
 ## Bulgu biçimi
 **alan**, **mevcut kanıt**, **eksik kanıt**, **risk**, **önem** (TEAM.md ölçeği), **kabul kriteri** (ne ölçülünce kapanır), **sahip rol**.

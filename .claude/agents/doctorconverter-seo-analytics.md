@@ -21,6 +21,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, ardından `SEO`, `POSTHO
 ## Komutlar
 - `pnpm check` (`check:i18n` dahil), `pnpm build`, `pnpm test:e2e`. İçerik tutarlılığı `content-consistency.spec.ts` (16 araç × TR/EN, tek H1, görünür SSS = schema, hreflang yalnızca var olan eşdeğerler).
 - Analitik izin testleri varsayılan olarak atlanır. Tam yöntem `docs/POSTHOG.md`'de: `PUBLIC_POSTHOG_LOCAL=true` ile `astro dev --host 127.0.0.1 --port 4325` başlat, ikinci terminalde `POSTHOG_E2E=1` ve `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4325` ile `pnpm exec playwright test e2e/analytics.spec.ts` çalıştır. Atlanan testi geçti sayma.
+- OCR dil ve yerleşim iddiasının geçtiği yerler: `lib/tool-seo*.ts`, `lib/seo/scenarios-*.ts` ve **araç paneli metinleri `i18n/ui*.ts` (`ocr`, `pdf-to-pdf-ocr` anahtarları; 27 Ekim'de `ui-fr.ts`'te kalmış bir "Fransızca desteklenmiyor" iddiası böyle bulundu)**. `docs/ENGINE-AUDIT.md` başlangıç ölçümüdür; PPTX satırları (27, 59) eskidir, `ENGINE-SUPPORT.md` esastır.
 - ES/FR/HI içeriğinde metin doğruluğunu otomatik denetleyen test yoktur (yalnızca hreflang ve `check:i18n` anahtar eşleşmesi); bu dillerin iddia doğruluğunu elle denetle (özellikle OCR dil desteği, iki sütun/yerleşim ve görsel iddiaları).
 
 ## Çalışma kuralları
