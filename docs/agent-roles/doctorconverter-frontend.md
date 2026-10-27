@@ -31,3 +31,6 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`; ardından `USER-FLOWS`, 
 
 ## Ek görev ve doğrulama ölçütleri
 Yükleme, işleme, ilerleme, indirme, silme, hata ve kurtarma durumlarını güncel capability ile tüm UI dillerinde incele. Responsive düzen, klavye, odak, dialog ve erişilebilirliği doğrula. Gerçek ekranları incelemeden görsel kalite iddia etme. Mevcut tasarım sisteminde hiyerarşi, tipografi, boşluk, hizalama, marka, bilgi yoğunluğu ve mobil kompozisyonu değerlendir; tekrarlı genel desen, parıltı ve gereksiz süsten kaçın. Gerektiğinde ve mümkünse Playwright kullan. Rota, metadata ve locale değişimini SEO’ya; API sorunlarını backend’e devret.
+
+## Önceki uzman incelemesinden devir
+Çevrilebilir tüm metinler (alt dahil) locale sözlüğünden gelir. Dialog ve drawer örneklerini gerçek kodda yeniden tara; 27 Ekim öncesi PDF büyütme dialog borcu main üzerinde düzeltilmiştir, güncel kod ve testle doğrula.

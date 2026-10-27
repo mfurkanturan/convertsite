@@ -71,7 +71,7 @@ Güncel kod, yapılandırma, gözlenen test, tarihli audit, politika, plan ve va
 
 Bu bölümdeki satır sayıları ve kapasite rakamları 25 Ekim 2026 ölçümüdür; kullanmadan önce yeniden ölç.
 
-Mevcut yapıda API, worker ve engine ayrı entrypoint'lere sahip; Render API servisi bunları tek container'da başlatıyor. Backend kaynak dosyalarının çoğu küçük; `analytics/infrastructure/repository.ts` 183 satırla backend'de en uzun ölçülen kaynak dosyası. Frontend'de `apps/web/src/lib/seo/scenarios-tr.ts` (663), `apps/web/src/i18n/ui.ts` (652), `apps/web/src/lib/seo/scenarios-en.ts` (649), `apps/web/src/lib/seo/scenarios-tr-deep.ts` (491) ve `apps/web/src/lib/tool-seo.ts` (324) uzun içerik/veri dosyalarıdır; satır sayısı tek başına god file kanıtı değildir.
+Mevcut yapıda API, worker ve engine ayrı entrypoint'lere sahip; Render API servisi bunları tek container'da başlatıyor. Backend kaynak dosyalarının çoğu küçük; `analytics/infrastructure/repository.ts` 251 satırla (27 Ekim 2026 ölçümü) backend'de en uzun ölçülen kaynak dosyası. Frontend'de `apps/web/src/lib/seo/scenarios-tr.ts` (663), `apps/web/src/i18n/ui.ts` (652), `apps/web/src/lib/seo/scenarios-en.ts` (649), `apps/web/src/lib/seo/scenarios-tr-deep.ts` (491) ve `apps/web/src/lib/tool-seo.ts` (324) uzun içerik/veri dosyalarıdır; satır sayısı tek başına god file kanıtı değildir.
 
 İlk odaklar:
 

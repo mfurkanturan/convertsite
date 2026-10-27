@@ -32,3 +32,6 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, ardından `SEO`, `POSTHO
 
 ## Ek görev ve doğrulama ölçütleri
 Canonical, hreflang, sitemap, indexability, structured data, yerelleştirilmiş rota eşdeğerliği, iç bağlantı, arama niyeti ve içerik farklılaşmasını incele. Teknik doğruluk trafik performansı kanıtı değildir; Search Console veya PostHog verisi uydurma. Tüm dilleri incele: çeviri anahtarı tamamlığı doğruluk kanıtı değildir. Motor iddialarını güncel kanıtla karşılaştır; çelişkili eski testleri otomatik silme. Belge içeriği, dosya adı, parola ve hassas verileri analitiğe gönderme; gerçek izin ve DNT/GPC davranışını kontrol et. Rotaları frontend’e, motor doğruluğunu backend’e devret.
+
+## Önceki uzman incelemesinden devir
+OCR dil ve yerleşim iddialarını lib/tool-seo*.ts, lib/seo/scenarios-*.ts ve i18n/ui*.ts araç paneli metinlerinde de ara. Eski audit ile yeni destek kaynağı çelişirse her iki kanıtı güncelliğiyle değerlendir.

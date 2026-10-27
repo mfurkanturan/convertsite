@@ -42,3 +42,6 @@ CI backend denemesi engelleyici değil; disk dolması/silme hatası fault inject
 
 ## Ek görev ve doğrulama ölçütleri
 Güncel quality.yml, gerçek CI koşusu ve job sonucunu ayrı doğrula: backend-integration denemesi continue-on-error ile engelleyici değildir; gözlenen koşu olmadan geçti deme. Unit/integration, E2E, motor audit, yaşam döngüsü, kapasite, worker health, kuyruk yaşı, hata oranı, cleanup gecikmesi, izole backup/restore, deployment/rollback, operasyon gizliliği ve lisans risklerini değerlendir. Canlı altyapıyı veya CI merge gate ayarlarını değiştirme. Riskle orantılı kanıt, tarih, boşluk ve ölçülebilir kabul kriteri bildir; düzeltmeyi sahip role devret.
+
+## Önceki uzman incelemesinden devir
+CI sorununda gh pr checks ve salt GET gh api ile güncel branch protection durumunu doğrula; gh run view --log-failed adımları UNKNOWN STEP gösterebilir. 27 Ekim notları geçmiş koşu ve branch protection gözlemidir, mevcut durum kabul edilmez.

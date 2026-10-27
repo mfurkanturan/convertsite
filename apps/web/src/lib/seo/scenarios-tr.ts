@@ -260,7 +260,7 @@ export const trScenarios: Scenario[] = [
       "Alıntı yapmadan önce sayı ve tarihleri asıl belgeyle karşılaştır."
     ],
     "faqs": [
-      { "q": "Türkçe karakterleri tanır mı?", "a": "Evet, Türkçe dil paketi kullanılır; ç, ğ, ı, ş gibi harfler tanınır." },
+      { "q": "Türkçe karakterleri tanır mı?", "a": "Belge dili olarak Türkçeyi seçersen Türkçe dil modeli kullanılır; ç, ğ, ı, ş gibi harflerin doğru tanındığını sonuç metninde kontrol et." },
       { "q": "El yazısını okur mu?", "a": "OCR basılı metin için tasarlanmıştır; el yazısında doğruluk düşüktür." },
       { "q": "Kaç sayfa işlenir?", "a": "Güncel dosya, boyut ve sayfa limitleri araç panelinde sunucudan alınarak gösterilir. İşleme başlamadan önce bu değerleri kontrol et." }
     ]
@@ -423,7 +423,7 @@ export const trScenarios: Scenario[] = [
     ],
     "tips": ["Tasarım araçlarında hazırlanmış CV’lerde metin kutuları Word’de ayrı kutu olarak gelebilir; içerikleri kutu içinde düzenle."],
     "faqs": [
-      { "q": "Fotoğrafım korunur mu?", "a": "Evet, görseller Word belgesine aktarılır." },
+      { "q": "Fotoğrafım korunur mu?", "a": "Görseller çoğu durumda Word belgesine aktarılır; kırpılmış veya döndürülmüş görsellerin yerini ve görünümünü sonuçta kontrol et." },
       { "q": "Yazı tipim yoksa ne olur?", "a": "Bilgisayarında olmayan yazı tipleri benzer bir yazı tipiyle değiştirilebilir; dilersen Word’de tek tıkla değiştirebilirsin." }
     ]
   },
