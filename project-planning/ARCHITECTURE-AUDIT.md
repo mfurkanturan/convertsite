@@ -57,8 +57,9 @@ Sahip sütunu kişi değil, `docs/TEAM.md` içindeki rolü gösterir. Kişi atam
 | P0.1 Veritabanı sağlayıcısı, backup/PITR | Kalite ve operasyon | Açık | Sağlayıcı ekran görüntüsü veya yazılı ayar; saklama süresi; izole restore sonucu |
 | P0.2 Birleşik servis yük testi | Kalite ve operasyon | Açık | CPU/RAM/restart ölçümü; maliyet ve servis ayrımı karşılaştırması |
 | P0.3 Health izleme ve deploy bildirimi | Kalite ve operasyon | Açık | Dış izleme kaydı; Render bildirim ayarı |
-| P1.1–P1.2 Kuyruk yaşı, iş sonuç sayaçları | Backend ve belge işleme | Açık | Metrik kodu ve test; dosya adı/içerik sızmadığının doğrulanması |
-| P1.3 Cleanup gecikmesi ölçümü | Backend ve belge işleme | Açık | Bekleyen dosya sayısı ve en eski gecikme metriği |
+| P1.1 Kuyruk yaşı ve son saat sayaçları | Backend ve belge işleme | Tamamlandı (PR #5) | `/api/admin/stats` → `queue`; geçici PostgreSQL'de doğrulandı, tam test çalıştırıldı |
+| P1.2 Araç bazlı iş süresi | Backend ve belge işleme | Tamamlandı (PR #6) | `started_at`/`finished_at` (0007); ortalama ve p95 süre; 0007 öncesi işler dışarıda |
+| P1.3 Cleanup gecikmesi ve hata sayacı | Backend ve belge işleme | Tamamlandı (PR #6, #8 bekliyor) | Bekleyen dosya sayısı ve en eski gecikme (#6); ardışık hata sayacı (#8, 0008 migrasyonu) |
 | P1.4 Uyarı eşikleri | Kalite ve operasyon | Açık | Ölçülmüş taban verisine dayalı eşikler (P1.1–P1.3 bitmeden başlamaz) |
 | P2.1–P2.2 İçerik dosyaları bölme | Frontend ve UX, SEO ve analitik | Açık | Public export ve slug/canonical/hreflang eşleşmesinin korunduğu kontrol |
 | P2.3 UI sözlük ayrımı | Mimari, Frontend ve UX | Açık | Değerlendirme notu; satır sayısı tek başına gerekçe olmaz |
