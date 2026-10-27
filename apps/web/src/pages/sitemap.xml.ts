@@ -19,9 +19,11 @@ export const GET: APIRoute = () => {
     for (const [, path] of links) {
       if (seen.has(path)) continue;
       seen.add(path);
-      const alt = links.length > 1
-        ? [...links.map(([lang, href]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${absoluteUrl(href)}"/>`), `<xhtml:link rel="alternate" hreflang="x-default" href="${absoluteUrl(xDefault!)}"/>`].join('')
-        : '';
+      // Same rule as the page head: every page declares its own locale, x-default only when there are several.
+      const alt = [
+        ...links.map(([lang, href]) => `<xhtml:link rel="alternate" hreflang="${lang}" href="${absoluteUrl(href)}"/>`),
+        ...(links.length > 1 ? [`<xhtml:link rel="alternate" hreflang="x-default" href="${absoluteUrl(xDefault!)}"/>`] : []),
+      ].join('');
       // Do not publish a build date as lastmod: this route table has no per-page edit timestamp.
       urls.push(`<url><loc>${absoluteUrl(path)}</loc><priority>${priority}</priority>${alt}</url>`);
     }
