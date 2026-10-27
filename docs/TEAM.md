@@ -1,6 +1,6 @@
 # DoctorConverter uzman ekibi
 
-Bu dosya proje için önerilen uzmanlık dağılımını, sahiplik alanlarını ve çalışma anlaşmasını tanımlar. Uzmanlar ayrı kod sahipleri veya kalıcı sunucu süreçleri değildir; rol yönergeleri repository içinde `.claude/agents/` altında tutulur. Her görevde bütün rollerin çağrılması gerekmez.
+Bu dosya proje için önerilen uzmanlık dağılımını, sahiplik alanlarını ve çalışma anlaşmasını tanımlar. Uzmanlar ayrı kod sahipleri veya kalıcı sunucu süreçleri değildir; kanonik rol yönergeleri `docs/agent-roles/` altında tutulur. Her görevde bütün rollerin çağrılması gerekmez.
 
 ## Koordinasyon
 
@@ -27,7 +27,7 @@ Roller çeliştiğinde sıra: (1) kullanıcı kapsamı ve `AGENTS.md`; (2) gizli
 | Kalite ve operasyon | Test kanıtı, CI, dağıtım, kapasite, izleme, yedekleme ve geri yükleme | `docs/TESTING.md`, `docs/DEPLOYMENT.md`, `docs/ROADMAP.md` |
 | Koordinatör | Çok rollü görevleri kapsamlandırma, bulguları uzlaştırma, uygulama ve doğrulama raporu | Bu dosya, `AGENTS.md` |
 
-Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğruluğu sahibi SEO ve analitik rolüdür. Mimari ve kalite/operasyon rolleri salt incelemedir: `.claude/agents` içindeki `tools` listesinde Write/Edit yoktur. `Bash` kanıt toplamak için açıktır ve dosya yazabildiğinden "yazma" yasağı teknik olarak değil yönergeyle de zorlanır; düzeltmeyi koordinatör veya sahip rol yapar. Bulgu önemleri yukarıdaki ölçekle verilir.
+Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğruluğu sahibi SEO ve analitik rolüdür. Mimari ve kalite/operasyon rolleri salt incelemedir; düzeltmeyi koordinatör veya sahip rol yapar. Bu politika tek başına teknik erişim kısıtı değildir. Bulgu önemleri yukarıdaki ölçekle verilir.
 
 ## Rol adları ve çağrı
 
@@ -40,7 +40,7 @@ Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğrul
 | Kalite ve operasyon | `doctorconverter-quality-ops` |
 | Koordinatör | `doctorconverter-coordinator` |
 
-Koordinatör rolleri `Agent` aracıyla bu adlarla çağırır. Bağımsız bulgu toplamak için rolleri aynı anda (paralel) çağır, sonuçları görmeden birbirine aktarma; uzlaştırmayı sonra yap. Ajan listesi oturum başında yüklenir; oturum açıldıktan sonra eklenen veya değişen rol dosyaları yeni oturum gerektirir. Ad bulunamazsa ilgili rol dosyasını okuyup yönergeleri izleyen genel bir ajan kullan ve bunu raporda belirt.
+İş türüne göre rol seç: worker retry ve fiziksel silme backend; modül sınırı mimari; araç sayfası frontend; hreflang SEO; CI hatası kalite; çok modüllü özellik koordinatör ve ilgili sahipler. Devirlerde hedef, dosya kapsamı, bağımlılıklar, çıktı, kabul ölçütü ve doğrulama yöntemini belirt. Gereksiz delegasyon yapma. Bağımsız salt incelemeler paralel olabilir; bağımlı görevler ve ortak dosyalar sıralanır. Alt ajan desteklenmiyorsa ilgili kanonik rolü ana oturumda sırayla uygula; bağımsız yürütme iddia etme.
 
 ## Çalışma anlaşması
 
@@ -52,15 +52,20 @@ Koordinatör rolleri `Agent` aracıyla bu adlarla çağırır. Bağımsız bulgu
 6. Etkilenen kontrolleri çalıştır ve yalnızca gerçekten çalıştırılmış olanı geçti diye bildir. Canlı ortamda geri döndürülemez veya maliyetli değişiklik yapma; kullanıcı yetkisi ve güvenli işlem planı gerekir.
 7. Kalıcı mimari karar değişikliği ilgili tek kaynak belgeye yazılır; ekip kataloğu her ayrıntıyı kopyalamaz.
 
-## Skill yönergeleri
+## Platformlar ve izinler
 
-Rol yönergelerinin tek kaynağı `.claude/agents/doctorconverter-*.md` dosyalarıdır ve repository ile birlikte sürümlenir:
+Kanonik yönergeler yalnızca docs/agent-roles/doctorconverter-*.md altındadır. .claude/agents/, .codex/agents/ ve .gemini/agents/ yalnız ilgili rolü yüklemeyi isteyen ince adaptörlerdir. Diğer ortamlarda AGENTS.md, bu belge ve seçilen rolü açıkça okut. Kullanıcı klasöründeki eski doctorconverter skill kopyaları kanonik değildir.
 
-- Claude Code bunları proje alt ajanı olarak otomatik keşfeder.
-- Codex ve diğer araçlar `AGENTS.md` üzerinden bu dosyaları okur; ilgili rol dosyasını açıp yönergeleri izler.
-- Kullanıcı klasöründeki `%USERPROFILE%/.codex/skills/doctorconverter-*` kopyaları eskidir. Rol değişikliği yalnızca `.claude/agents/` altında yapılır; kullanıcı klasörü istenirse oradan yeniden kopyalanır.
+- Claude Code: proje ajanları; /agents ile kontrol et. Mimari ve kalite adaptörleri Read, Grep, Glob ile sınırlıdır; shell yoktur.
+- Codex: proje .codex/agents/*.toml tanımları desteklenen sürümlerde keşfedilir. Politika salt okuma için teknik garanti değildir; izinler üst oturumdan gelir.
+- Gemini CLI: GEMINI.md proje kurallarını içe alır; /agents ve /agents reload ile ajanları yönet. İnceleme rollerinde read_file, grep_search, glob listelenir. Alt ajanlar başka alt ajan çağıramaz; koordinasyonu ana oturum yapar.
+- Cursor kök AGENTS.md desteği sunar. GitHub Copilot agent desteği yüzeye göre değişir ve AGENTS.md okuyabilir. Cline ve Windsurf için sürüm ve yapılandırmaya göre proje yönergelerini doğrula; otomatik rol keşfi varsayma. Genel yöntem: AGENTS.md, TEAM ve ilgili rolü açıkça oku.
 
-Rol dosyaları aynı ürün kapsamı için yardımcıdır; repository dosyaları ve AGENTS.md bağlayıcı proje kuralları olmaya devam eder.
+Politika, araç kısıtı ve ortam/sandbox kısıtı farklıdır; hiçbir adaptör secret veya üretim izni vermez. Keşif, sözdizimi doğrulaması ve gerçek ajan çalışması farklı kanıtlardır. Sürüm ve yapılandırmayı kontrol et; erişilemeyen kaynakları ve doğrulanmamış yetenekleri raporla.
+
+## Kabul ve raporlama
+
+Güncel kod, yapılandırma, gözlenen test, tarihli audit, politika, plan ve varsayımı ayır. İş bitiminde uygulananlar, doğrulananlar, kısmen doğrulananlar, engeller, ertelenenler ve kullanıcı kararlarını bildir. Belge ile kod çelişkisini kanıtla; sessizce çözülmüş sayma.
 
 ## İlk ortak değerlendirme
 
