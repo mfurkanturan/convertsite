@@ -39,7 +39,7 @@ Playwright E2E suite `pnpm test:e2e` ile masaüstü Chromium, mobil Chromium, Fi
 
 `e2e/file-preview.spec.ts` önizleme penceresinin odağı pencereye taşıdığını, Tab'in pencerede kaldığını ve Escape sonrası odağın tetikleyiciye döndüğünü Chromium'da sınar. `e2e/locale-hreflang.spec.ts` ES/FR/HI rehber ve statik sayfalarında hreflang'ın yalnızca var olan eşdeğerlere verildiğini sınar; TR/EN için bu kontrol `content-consistency.spec.ts` içindedir. Bu testler ekran okuyucu veya fiziksel cihaz denemesi değildir.
 
-GitHub Actions kalite iş akışı `.github/workflows/quality.yml` pull request ve `main` push'larında `pnpm check`, `pnpm build` ve Playwright testlerini çalıştırır. Uzak CI Linux'ta Edge/Safari gerçek tarayıcılarını veya fiziksel telefonları doğrulamaz. Playwright raporu/test sonuçları artifact olarak yüklenir.
+GitHub Actions kalite iş akışı `.github/workflows/quality.yml` pull request ve `main` push'larında `pnpm check`, `pnpm build` ve Playwright testlerini çalıştırır. Uzak CI Linux'ta Edge/Safari gerçek tarayıcılarını veya fiziksel telefonları doğrulamaz. Ayrı `backend-integration` job'ı `pnpm test` (Docker Compose + gerçek PostgreSQL/pg-boss) ile backend entegrasyon testlerini deneme olarak çalıştırır; `continue-on-error` olduğu için henüz merge kapısı değildir. İlk yeşil koşu ve süresi buraya yazılmadan zorunlu yapılmaz. Playwright raporu/test sonuçları artifact olarak yüklenir.
 
 `pnpm audit:workflow` web/API → queue → gerçek worker → download/delete akışını ve lifecycle senaryolarını izole Docker ortamında denetler. Bu, araç başına kullanıcı akışının motor desteğini kanıtlamaz; sonuçlar ve motor sınırlılıkları ilgili audit raporlarında değerlendirilir.
 

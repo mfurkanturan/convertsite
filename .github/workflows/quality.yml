@@ -38,3 +38,30 @@ jobs:
             test-results/
             .qa/uiux-sprint-8/screenshots/
           retention-days: 14
+
+  # Trial job: proves that the Docker Compose backend stack builds and the integration suite runs on a
+  # GitHub runner. It must not block merges until a green run and its duration are recorded in docs/TESTING.md.
+  backend-integration:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm setup:local
+      # The containers write to ./.data/files as a non-runner user.
+      - run: chmod -R a+rwX .data
+      - run: docker compose version
+      - run: pnpm test
+      - name: Compose status and recent logs
+        if: failure()
+        run: |
+          docker compose ps -a
+          docker compose logs --no-color --tail=100 engine migrate api worker
