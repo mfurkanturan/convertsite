@@ -74,3 +74,34 @@ test.describe('Dosya önizleme penceresi', () => {
     await expect(dialog).toHaveCount(0);
   });
 });
+
+test.describe('PDF sayfa düzenleyici büyütme penceresi', () => {
+  test('odak pencereye taşınır, Tab pencerede kalır, Escape odağı büyüt düğmesine geri verir', async ({ page }) => {
+    await openWorkspace(page, 'edit-pdf-pages');
+    await page.locator('input[type="file"]').setInputFiles({ name: 'sayfalar.pdf', mimeType: 'application/pdf', buffer: minimalPdf() });
+
+    const organizer = page.getByRole('region', { name: 'PDF Sayfa Düzenleyici' });
+    const trigger = organizer.locator('button[aria-label^="Büyüt:"]').first();
+    await expect(trigger).toBeVisible({ timeout: 20000 });
+    await expect(trigger).toHaveAttribute('aria-label', 'Büyüt: Sayfa 1');
+    await trigger.focus();
+    await trigger.click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAttribute('aria-labelledby', 'page-zoom-title');
+    await expect(dialog.getByRole('img', { name: 'Sayfa 1' })).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Kapat' })).toBeFocused();
+
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('Tab');
+      expect(await insideDialog(page), `Tab ${i + 1}`).toBe(true);
+    }
+    await page.keyboard.press('Shift+Tab');
+    expect(await insideDialog(page)).toBe(true);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+});
