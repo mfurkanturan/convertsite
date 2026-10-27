@@ -42,6 +42,25 @@ Gizlilik/erişim/süre dolumu sahibi backend rolüdür; içerik ve iddia doğrul
 
 İş türüne göre rol seç: worker retry ve fiziksel silme backend; modül sınırı mimari; araç sayfası frontend; hreflang SEO; CI hatası kalite; çok modüllü özellik koordinatör ve ilgili sahipler. Devirlerde hedef, dosya kapsamı, bağımlılıklar, çıktı, kabul ölçütü ve doğrulama yöntemini belirt. Gereksiz delegasyon yapma. Bağımsız salt incelemeler paralel olabilir; bağımlı görevler ve ortak dosyalar sıralanır. Alt ajan desteklenmiyorsa ilgili kanonik rolü ana oturumda sırayla uygula; bağımsız yürütme iddia etme.
 
+## Uzmanları çağırma
+
+| Kısa ad | Ortak rol |
+|---|---|
+| team | doctorconverter-coordinator |
+| architecture | doctorconverter-architecture |
+| backend | doctorconverter-backend |
+| frontend | doctorconverter-frontend |
+| seo | doctorconverter-seo-analytics |
+| quality | doctorconverter-quality-ops |
+
+- Claude Code: `/backend worker retry akışını incele`, `/architecture modül sınırını incele` veya `/team özelliği koordine et`. Diğer kısayollar `/frontend`, `/seo`, `/quality`. Beş uzman skill'i eşleşen alt ajanla fork edilir; team ana oturumda çalışır. Oturum açıldıktan sonra eklenen ajanları görmek için yeni oturum gerekebilir.
+- Codex: `$backend worker retry akışını incele`, `$architecture modül sınırını incele` veya `$team özelliği koordine et`; diğerleri `$frontend`, `$seo`, `$quality`. Bunlar skill çağrısıdır; tek başına alt ajan oluşturmaz. Ortam tam ajan adını seçebiliyorsa ilgili alt ajana devret; aksi halde ana oturumda rolü uygula ve gerçek yürütmeyi bildir. `/subagents` mevcut alt ajanları inceler, yeni ajan başlatmaz. Skill görünmüyorsa yeni oturum aç.
+- Gemini CLI: `/backend worker retry akışını incele`, `/architecture modül sınırını incele`, `/team özelliği koordine et`; diğerleri `/frontend`, `/seo`, `/quality`. Komutlar ilgili alt ajana devri ister; gerçek devir çalışma zamanı tarafından belirlenir. `/commands reload` ve `/agents reload` ile yenile; team ana oturumda koordine eder.
+- GitHub Copilot: desteklenen CLI'da `/agent` veya IDE ajan seçicisiyle tablodaki tam `doctorconverter-*` adını seç. Sahte slash kısayolları yoktur.
+- Cursor, Cline, Windsurf veya başka istemci: otomatik keşif doğrulanmamışsa açıkça `AGENTS.md, docs/TEAM.md ve docs/agent-roles/doctorconverter-backend.md dosyalarını oku ve backend rolünü uygula: <görev>` iste; rol adını göreve göre değiştir.
+
+Ajan keşfi, skill/komut çalışması ve bağımsız alt ajan yürütmesi ayrı kanıtlardır. Mimari ve kalite salt inceleme rolleridir; Claude adaptörlerinde yazma/shell yoktur, Codex skill yönergesi tek başına sandbox değildir. Gemini ve Copilot araç listeleri desteklenen ortamlarda sınırlar; etkin izinleri doğrula. Kullanıcı görevi olmadan kısayol çağrılırsa gerekli hedefi iste.
+
 ## Çalışma anlaşması
 
 1. Önce kullanıcı isteğini ve ilgili tek kaynak belgeleri oku; hedefi uygulanmış gerçek gibi sunma.

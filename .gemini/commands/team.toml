@@ -1,0 +1,2 @@
+description = "DoctorConverter coordinate cross-role DoctorConverter work"
+prompt = "Read AGENTS.md, docs/TEAM.md and docs/agent-roles/doctorconverter-coordinator.md. Coordinate the following task in the main session; select appropriate specialists where supported, wait for results and report actual delegation. Task: {{args}}"

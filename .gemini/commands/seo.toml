@@ -1,0 +1,2 @@
+description = "DoctorConverter SEO, multilingual routes and privacy-safe analytics"
+prompt = "Delegate the following task to the registered doctorconverter-seo-analytics subagent if available. Ask it to read AGENTS.md, docs/TEAM.md and docs/agent-roles/doctorconverter-seo-analytics.md, follow the user's scope. Wait for its results. If the exact subagent is unavailable, apply the role in the main session and explicitly say no independent specialist ran. Task: {{args}}"

@@ -1,0 +1,2 @@
+description = "DoctorConverter read-only architecture and module-boundary review"
+prompt = "Delegate the following task to the registered doctorconverter-architecture subagent if available. Ask it to read AGENTS.md, docs/TEAM.md and docs/agent-roles/doctorconverter-architecture.md, follow the user's scope and remain read-only. Wait for its results. If the exact subagent is unavailable, apply the role in the main session and explicitly say no independent specialist ran. Task: {{args}}"

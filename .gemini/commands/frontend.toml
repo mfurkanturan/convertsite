@@ -1,0 +1,2 @@
+description = "DoctorConverter UI, accessibility and localized user flows"
+prompt = "Delegate the following task to the registered doctorconverter-frontend subagent if available. Ask it to read AGENTS.md, docs/TEAM.md and docs/agent-roles/doctorconverter-frontend.md, follow the user's scope. Wait for its results. If the exact subagent is unavailable, apply the role in the main session and explicitly say no independent specialist ran. Task: {{args}}"
