@@ -10,7 +10,11 @@ async function maintenance() {
   try {
     await ctx.pool.query(`INSERT INTO worker_heartbeats(name,seen_at) VALUES('document-worker',now()) ON CONFLICT(name) DO UPDATE SET seen_at=now()`);
     await ctx.jobs.expireStale(); await cleanFiles();
-  } catch { console.error('Worker maintenance failed.'); }
+    await ctx.pool.query(`UPDATE worker_heartbeats SET consecutive_failures=0 WHERE name='document-worker'`);
+  } catch {
+    console.error('Worker maintenance failed.');
+    await ctx.pool.query(`UPDATE worker_heartbeats SET consecutive_failures=consecutive_failures+1 WHERE name='document-worker'`).catch(() => {});
+  }
   finally { cleaning = false; }
 }
 await maintenance();
