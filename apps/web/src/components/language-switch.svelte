@@ -22,7 +22,7 @@
   </summary>
   <nav class="absolute right-0 top-full z-50 mt-2 min-w-40 rounded-lg border border-border bg-surface p-1.5 shadow-lg" aria-label={controls.available}>
     {#each locales as target}
-      <a href={alternates[target] ?? localePath(target, '/')} hreflang={target} lang={target} aria-current={target === locale ? 'page' : undefined} onclick={(event) => remember(event, target)} class="flex min-h-10 items-center justify-between rounded-md px-3 text-sm text-text-soft transition-colors hover:bg-bg hover:text-accent" class:font-semibold={target === locale}>
+      <a href={alternates[target] ?? localePath(target, '/')} hreflang={target} lang={target} aria-current={target === locale ? 'page' : undefined} onclick={(event) => remember(event, target)} class="flex min-h-11 items-center justify-between rounded-md px-3 text-sm text-text-soft transition-colors hover:bg-bg hover:text-accent" class:font-semibold={target === locale}>
         <span>{languageNames[target]}</span><span class="text-xs uppercase text-text-muted">{target}</span>
       </a>
     {/each}
