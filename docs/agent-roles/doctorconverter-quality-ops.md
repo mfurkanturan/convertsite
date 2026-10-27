@@ -14,7 +14,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, sonra `TESTING` ve `DEPL
 - Dağıtım: `docs/DEPLOYMENT.md`; Render API + worker + engine ortak 0.1 CPU / 512 MB (kapasite riski, yük testi yok).
 
 ## Komutlar
-- `pnpm check`, `pnpm build`, `pnpm test:e2e`; `pnpm test` yalnızca Docker hazırsa ve çalışma ağacı/geliştirme worker'ı korunarak. `pnpm audit:engines`, `pnpm audit:workflow` uzun ve ağırdır; paralel başlatma.
+- `pnpm check`, `pnpm build`, `pnpm test:e2e` ve Docker gerektiren `pnpm test` yazma veya çalışma zamanı etkileri oluşturabilir; salt inceleme rolü bunları çalıştırmaz. Koordinatör veya sahip role kapsam ve izolasyon koşullarıyla doğrulama öner. `pnpm audit:engines` ve `pnpm audit:workflow` uzun ve ağırdır; paralel başlatma.
 - Çalıştırılamayan veya geçmeyen kontrolü açıkça işaretle. Test sayısını koşulan proje/filtreyle raporla.
 - Kanıt toplamak için güvenli salt-okunur komutlar: `git log`, `git diff`, `git show`, `git blame`, `gh run list`, `gh run view`, `gh pr view`. Yazan veya dışarı gönderen komutlar (`git commit/push`, `gh pr create/merge`, `gh run rerun`, `docker compose up/down`) güvenli değildir.
 ## "Neden yok?" sorusu (bilinçli karar mı, eksik iş mi)
@@ -29,6 +29,7 @@ Sırayla bak ve hangi kanıta dayandığını yaz: (1) `docs/decisions/` karar k
 GitHub runner'da (izole denemeyi bu rol çalıştırmaz: `docker compose up/down` yönerge dışıdır; denemeyi kullanıcı onayıyla koordinatör çalıştırır) `docker compose` yığınının (postgres, engine, migrate, api, gateway) süre ve bellek bütçesine sığıp sığmadığı, imajın yerel etiketlere bağımlı olup olmadığı ve testin runner'da `worker`'ı durdurma varsayımı yazılı kanıt veya izole denemeyle gösterilmelidir. Ön koşul gösterilmeden "CI'a eklenebilir" deme; kabul kriterine "bir yeşil koşu gözlenir" yaz.
 
 ## Çalışma kuralları
+- Unit/integration, E2E, motor audit, yaşam döngüsü, kapasite, worker health, kuyruk ve cleanup metrikleri, izole backup/restore, deployment/rollback, operasyon gizliliği ve lisans risklerini göreve uygun kanıtla değerlendir; CI merge gate ayarlarını değiştirme.
 - Belge hedefi ≠ canlı kanıt. Plan, metrik, deploy durumu ve test çıktısını ayrı raporla.
 - Üretim DB sağlayıcısı ve backup politikası belirsizse canlı backup/restore başlatma; ilk restore izole DB/branch'e yapılır.
 - Ücretli plan, servis topolojisi veya canlı güvenlik/erişim ayarını değiştirme; kararı gerekçesiyle kullanıcıya götür.
@@ -40,8 +41,6 @@ CI backend denemesi engelleyici değil; disk dolması/silme hatası fault inject
 ## Bulgu biçimi
 **alan**, **mevcut kanıt**, **eksik kanıt**, **risk**, **önem** (TEAM.md ölçeği), **kabul kriteri** (ne ölçülünce kapanır), **sahip rol**.
 
-## Ek görev ve doğrulama ölçütleri
-Güncel quality.yml, gerçek CI koşusu ve job sonucunu ayrı doğrula: backend-integration denemesi continue-on-error ile engelleyici değildir; gözlenen koşu olmadan geçti deme. Unit/integration, E2E, motor audit, yaşam döngüsü, kapasite, worker health, kuyruk yaşı, hata oranı, cleanup gecikmesi, izole backup/restore, deployment/rollback, operasyon gizliliği ve lisans risklerini değerlendir. Canlı altyapıyı veya CI merge gate ayarlarını değiştirme. Riskle orantılı kanıt, tarih, boşluk ve ölçülebilir kabul kriteri bildir; düzeltmeyi sahip role devret.
 
 ## Önceki uzman incelemesinden devir
 CI sorununda gh pr checks ve salt GET gh api ile güncel branch protection durumunu doğrula; gh run view --log-failed adımları UNKNOWN STEP gösterebilir. 27 Ekim notları geçmiş koşu ve branch protection gözlemidir, mevcut durum kabul edilmez.

@@ -59,13 +59,13 @@ Kanonik yönergeler yalnızca docs/agent-roles/doctorconverter-*.md altındadır
 - Claude Code: proje ajanları; /agents ile kontrol et. Mimari ve kalite adaptörleri Read, Grep, Glob ile sınırlıdır; shell yoktur.
 - Codex: proje .codex/agents/*.toml tanımları desteklenen sürümlerde keşfedilir. Politika salt okuma için teknik garanti değildir; izinler üst oturumdan gelir.
 - Gemini CLI: GEMINI.md proje kurallarını içe alır; /agents ve /agents reload ile ajanları yönet. İnceleme rollerinde read_file, grep_search, glob listelenir. Alt ajanlar başka alt ajan çağıramaz; koordinasyonu ana oturum yapar.
-- Cursor kök AGENTS.md desteği sunar. GitHub Copilot agent desteği yüzeye göre değişir ve AGENTS.md okuyabilir. Cline ve Windsurf için sürüm ve yapılandırmaya göre proje yönergelerini doğrula; otomatik rol keşfi varsayma. Genel yöntem: AGENTS.md, TEAM ve ilgili rolü açıkça oku.
+- Cursor kök AGENTS.md desteği sunar. GitHub Copilot için .github/agents/ ince adaptörleri vardır; agent desteği yüzeye göre değişir. Copilot CLI alt ajanları proje kurallarını varsayılan olarak devralmayabilir, adaptör ilgili dosyaları okumayı ister; çalışma zamanı doğrulanmalıdır. Cline ve Windsurf için sürüm ve yapılandırmaya göre proje yönergelerini doğrula; otomatik rol keşfi varsayma. Genel yöntem: AGENTS.md, TEAM ve ilgili rolü açıkça oku.
 
 Politika, araç kısıtı ve ortam/sandbox kısıtı farklıdır; hiçbir adaptör secret veya üretim izni vermez. Keşif, sözdizimi doğrulaması ve gerçek ajan çalışması farklı kanıtlardır. Sürüm ve yapılandırmayı kontrol et; erişilemeyen kaynakları ve doğrulanmamış yetenekleri raporla.
 
 ## Kabul ve raporlama
 
-Güncel kod, yapılandırma, gözlenen test, tarihli audit, politika, plan ve varsayımı ayır. İş bitiminde uygulananlar, doğrulananlar, kısmen doğrulananlar, engeller, ertelenenler ve kullanıcı kararlarını bildir. Belge ile kod çelişkisini kanıtla; sessizce çözülmüş sayma.
+Güncel kod, yapılandırma, gözlenen test, tarihli audit, politika, plan ve varsayımı ayır. Anlamlı bulguda alan, önem, kanıt, etki, öneri, sahip, doğrulama ve durumu belirt; küçük görevlerde uzun rapor zorunlu değildir. İş bitiminde uygulananlar, doğrulananlar, kısmen doğrulananlar, engeller, ertelenenler ve kullanıcı kararlarını bildir. Belge ile kod çelişkisini kanıtla; sessizce çözülmüş sayma.
 
 ## İlk ortak değerlendirme
 
@@ -77,7 +77,7 @@ Mevcut yapıda API, worker ve engine ayrı entrypoint'lere sahip; Render API ser
 
 1. Uzun SEO/i18n veri kümelerinin üretim/yerelleştirme kaynak sınırlarını incele; davranış ve içerik doğrulamasını koruyarak gerekirse araç/kategori bazında böl.
 2. Live Render yerleşiminde API, worker ve engine'in ortak 0.1 CPU / 512 MB sınırını kapasite riski olarak kabul et; üretim yük testi ve ayrı kaynak bütçesi kararı olmadan başarı iddiası verme.
-3. Kuyruk yaşı, iş hata oranı ve fiziksel cleanup gecikmesi için gözlemlenebilirlik açığını kapatmayı planla; health readiness şu anda yalnızca DB, engine ve worker heartbeat sinyali sağlıyor.
+3. Kuyruk ve cleanup ölçümleri yönetici API’sinde bulunur; dashboard ve otomatik alarm kanıtını ayrıca doğrula. Health readiness DB, engine ve worker heartbeat kapsamındadır.
 4. Harici veritabanı sağlayıcısı/yedek kapsamı doğrulanmadan canlı yedek veya geri yükleme işlemi yapma.
 
 Bu değerlendirme başlangıç envanteridir; ürün kodunun bu adımda değiştirilmesi anlamına gelmez.

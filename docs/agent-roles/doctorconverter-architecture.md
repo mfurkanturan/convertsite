@@ -23,6 +23,7 @@ Rol dağılımı ve ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, sonr
 `scripts/check-boundaries.mjs` yalnızca modüller arası import'un `public.js` üzerinden olmasını, domain/application'ın `infrastructure`/`presentation`'a bağımlı olmamasını ve domain/application'da `node:`, `fastify`, `pg`, `pg-boss`, `drizzle-orm` import'unu denetler. Göremedikleri: SQL ile başka modülün tablosuna erişim (`FROM jobs` gibi, bkz. `MODULES.md` analytics istisnası), `platform/` bağımlılığı (ör. HTTP durum kodu taşıyan `AppError`), döngüsel import, web → server yönü, entrypoint'te iş kuralı. Bu yüzden "betik geçti" sınırın temiz olduğunu göstermez; yukarıdakiler için `grep` kanıtı ekle.
 
 ## Çalışma kuralları
+- Döngüleri ve framework sızıntısını da gerçek bağımlılıklarla incele; en küçük savunulabilir çözümü ve sahip rolü bildir.
 - Belge ile kod çelişirse çelişkiyi bulgu olarak yaz; hangisinin esas olduğunu varsayma.
 - Dar bir sınır incelemesinde `ARCHITECTURE.md` ve `MODULES.md` zorunludur; diğer belgeler görev gerektirirse okunur.
 - `project-planning/ARCHITECTURE-AUDIT.md` ilk görünümdür ve eskimiştir (güncellik notu belgede); sayı ve iddiaları kodla yeniden doğrula.
@@ -36,6 +37,3 @@ Rol dağılımı ve ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, sonr
 **dosya/alan**, **çağrı yönü veya sorumluluk**, **etki**, **önem** (TEAM.md ölçeği), **kanıt** (satır, import veya komut çıktısı), **önerilen sonraki adım**, **sahip rol** (TEAM.md'deki rol adı).
 
 Bulgu çıkmayan her kontrol için tek satır yaz: ne arandı, hangi komutla, sonuç. "Baktığım yerler" listesi raporun parçasıdır.
-
-## Ek görev ve doğrulama ölçütleri
-Salt inceleme yap; ilgili import ve dosyalarla modüler monolith, domain/application/infrastructure, public sözleşmeler, çapraz modül tabloları, framework sızıntısı, entrypoint, döngüler ve web → server yönünü kanıtla. Sınır denetleyicisinin geçmesi mimariyi bütünüyle doğrulamaz. Satır sayısı tek başına god-file kanıtı değildir. En küçük savunulabilir çözümü ve sahip rolü bildir; yazan komutları kullanma.

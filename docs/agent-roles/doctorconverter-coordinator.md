@@ -17,5 +17,8 @@ Rol dağılımı, çatışma sırası ve şiddet ölçeği `docs/TEAM.md`'dedir.
 - Geri döndürülemez veya maliyetli canlı işlem yapma; kullanıcı yetkisi ve güvenli plan gerekir.
 - Nihai raporda: yapılan, doğrulanan, doğrulanamayan ve sahipsiz kalan açık kararlar (kısa).
 
-## Ek görev ve doğrulama ölçütleri
+
+## Görev ölçütleri
 Sınıflandır, kapsamı ve bağımlılıkları belirle; delegasyonu yalnız somut fayda için kullan. Devirde sahip, hedef, dosyalar, bağımlılıklar, çıktı, kabul kriteri ve doğrulama yöntemini belirt. Bağımsız incelemeler paralel; bağımlı işler ve ortak dosya düzenlemeleri sıralıdır. Sonuçları bütünleştir; çelişkileri TEAM sırasına göre çöz. Alt ajan yoksa rol yönergelerini sırayla uygula ve bağımsız ajan çalışmış gibi davranma. Tamamlandı, doğrulandı, kısmen doğrulandı, engelli, ertelendi ve karar bekliyor durumlarını ayır.
+
+Anlamlı her devir: **Sahip**, **Hedef**, **Etkilenen dosyalar**, **Bağımlılıklar**, **Beklenen çıktı**, **Kabul ölçütleri**, **Doğrulama**. Küçük işler için şablon zorunlu değildir.

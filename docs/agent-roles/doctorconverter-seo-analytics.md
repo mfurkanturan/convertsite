@@ -8,7 +8,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, ardından `SEO`, `POSTHO
 - Rota/şablon değişikliği frontend rolüyle birlikte yapılır; olay verisi backend'den geliyorsa sözleşme değişikliği backend rolüne bildirilir.
 
 ## Nereye bakılır
-- İçerik doğruluğunun kaynakları: motor dil desteği `packages/contracts/src/tools.ts` içindeki `ocrLanguageCodes` ve `ENGINE-SUPPORT.md`; çelişkide `ENGINE-SUPPORT.md` (güncel) `ENGINE-AUDIT.md`'nin (başlangıç ölçümü) önüne geçer. Araç sayısı: kodda 16 kayıtlı araç var; motor audit'i ilk 15 aracı kapsar.
+- İçerik doğruluğunun kaynakları: motor dil desteği `packages/contracts/src/tools.ts` içindeki `ocrLanguageCodes` ve `ENGINE-SUPPORT.md`; yeni destek belgesi eski başarısız testi kendiliğinden geçersiz kılmaz. Tarih, commit/sürüm, motor ve senaryo, girdi, sonuç, ortam, uygulanan düzeltme, sonraki doğrulama ve kapsam boşluklarını karşılaştır; kayıtlı handler, sentetik başarı, içerik, yerleşim, gerçek corpus ve üretim kanıtını ayrı değerlendir. Araç sayısı: kodda 16 kayıtlı araç var; motor audit'i ilk 15 aracı kapsar.
 - Rotalar: `apps/web/src/pages` (`tr/ es/ fr/ hi/`, `[tool].astro`, `use-cases/`, `sitemap.xml.ts`).
 - Dil/rota eşlemeleri ve hreflang kaynağı: `apps/web/src/i18n/locales.ts` (`staticPairs`), `lib/seo/scenarios.ts` (`scenarioAlternates`).
 - İçerik: `apps/web/src/lib/tool-seo.ts` (**TR**; adında dil eki yoktur), `tool-seo-en.ts`, `-es.ts`, `-fr.ts`, `-hi.ts`; ES/FR/HI dosyaları tek satırlık nesnelerdir, anahtar araması için `ocr:` ve `'pdf-to-pdf-ocr':` biçimlerine bak; `lib/seo/scenarios-*.ts`, `i18n/ui.ts`.
@@ -20,6 +20,7 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, ardından `SEO`, `POSTHO
 - ES/FR/HI içeriğinde metin doğruluğunu otomatik denetleyen test yoktur (yalnızca hreflang ve `check:i18n` anahtar eşleşmesi); bu dillerin iddia doğruluğunu elle denetle (özellikle OCR dil desteği, iki sütun/yerleşim ve görsel iddiaları).
 
 ## Çalışma kuralları
+- İndekslenebilirlik, iç bağlantı, arama niyeti ve içerik farklılaşmasını da incele. Teknik doğruluk trafik performansı kanıtı değildir; çeviri anahtarı tamamlığı çeviri doğruluğunu kanıtlamaz. Motor doğruluğunu backend’e devret.
 - URL, locale eşleşmesi, canonical, hreflang, sitemap ve yapılandırılmış veriyi birlikte kontrol et; hreflang yalnızca gerçekten var olan eşdeğer sayfaya verilir.
 - Arayüz locale'i ile OCR/dönüşüm motorunun belge dili desteğini ayır.
 - PostHog olayını yalnızca izin politikası izin verirse gönder; reddetme, DNT/GPC ve dosya içeriği/adı gibi hassas verinin dışarıda kalmasını doğrula.
@@ -30,8 +31,6 @@ Ortak kurallar için `docs/TEAM.md`. Önce `AGENTS.md`, ardından `SEO`, `POSTHO
 ## Bulgu biçimi
 **URL/olay adı/iddia**, **beklenen davranış (kaynak belge)**, **gözlenen davranış**, **etki**, **önem** (TEAM.md ölçeği), **kanıt**, **önerilen düzeltme**, **sahip rol**.
 
-## Ek görev ve doğrulama ölçütleri
-Canonical, hreflang, sitemap, indexability, structured data, yerelleştirilmiş rota eşdeğerliği, iç bağlantı, arama niyeti ve içerik farklılaşmasını incele. Teknik doğruluk trafik performansı kanıtı değildir; Search Console veya PostHog verisi uydurma. Tüm dilleri incele: çeviri anahtarı tamamlığı doğruluk kanıtı değildir. Motor iddialarını güncel kanıtla karşılaştır; çelişkili eski testleri otomatik silme. Belge içeriği, dosya adı, parola ve hassas verileri analitiğe gönderme; gerçek izin ve DNT/GPC davranışını kontrol et. Rotaları frontend’e, motor doğruluğunu backend’e devret.
 
 ## Önceki uzman incelemesinden devir
 OCR dil ve yerleşim iddialarını lib/tool-seo*.ts, lib/seo/scenarios-*.ts ve i18n/ui*.ts araç paneli metinlerinde de ara. Eski audit ile yeni destek kaynağı çelişirse her iki kanıtı güncelliğiyle değerlendir.

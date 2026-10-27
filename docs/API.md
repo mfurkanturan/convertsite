@@ -13,7 +13,7 @@ Değişiklik yapan isteklerin Origin değeri APP_ORIGIN ile eşleşmelidir; eksi
 | GET /api/capabilities | Etkin araçlar ve gerçek sınırlar | 200 |
 | GET /api/health/live | Süreç sağlığı | 200 |
 | GET /api/health/ready | DB, motor ve son 20 saniyede worker heartbeat'i | 200 / 503 |
-| GET /api/admin/stats | Yönetici özeti: `queue` (kuyruk sayıları, en eski bekleyen iş yaşı, son bir saatte başarı/hata) ve araç bazlı sayaçlar ve başarılı işlerin ortalama/p95 süresi (`avgSucceededSeconds`, `p95SucceededSeconds`); `cleanup` (süresi dolmuş ama fiziksel silinmemiş dosya sayısı ve en eski gecikme); yalnızca `x-admin-key` başlığı kabul edilir (sorgu parametresi kabul edilmez) ve `ADMIN_SECRET` tanımlı olmalıdır; tanımlı değilse uç nokta kapalıdır | 200 / 401 |
+| GET /api/admin/stats | Yönetici özeti: `queue` (kuyruk sayıları, en eski bekleyen iş yaşı, son bir saatte başarı/hata) ve araç bazlı sayaçlar ve başarılı işlerin ortalama/p95 süresi (`avgSucceededSeconds`, `p95SucceededSeconds`); `cleanup` (süresi dolmuş ama fiziksel silinmemiş dosya sayısı, en eski gecikme ve ardışık bakım hatası sayısı); yalnızca `x-admin-key` başlığı kabul edilir (sorgu parametresi kabul edilmez) ve `ADMIN_SECRET` tanımlı olmalıdır; tanımlı değilse uç nokta kapalıdır | 200 / 401 |
 | POST /api/files | Multipart tek `file` alanı; türe özel gerçek doğrulama | 201 |
 | DELETE /api/files/:id | İşe bağlanmamış girdinin silme talebi | 204 |
 | POST /api/jobs | Araç, dosyalar ve seçeneklerle iş kabulü | 202 |

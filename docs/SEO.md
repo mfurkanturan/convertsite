@@ -12,7 +12,7 @@ Bu belge web uygulamasının arama motoru ve çok dilli yapısının tek kaynağ
 | Senaryo sayfaları | `/use-cases/<slug>` | `/es/casos-de-uso/<slug>` | `/tr/kullanim/<slug>` | `/fr/guides/<slug>` | `/hi/upayog/<slug>` |
 | Yasal sayfalar | `/privacy`, `/terms`, `/security`, `/contact`, `/about` | `/es/privacidad`, `/es/terminos`, `/es/seguridad`, `/es/contacto`, `/es/acerca-de` | `/tr/gizlilik`, `/tr/kullanim-sartlari`, `/tr/guvenlik`, `/tr/iletisim`, `/tr/hakkimizda` | `/fr/confidentialite`, `/fr/conditions`, `/fr/securite`, `/fr/contact`, `/fr/a-propos` | `/hi/gopaniyata`, `/hi/upayog-sharten`, `/hi/suraksha`, `/hi/sampark`, `/hi/hamare-bare-mein` |
 
-`/sitemap.xml` build sırasında aynı rota verisinden üretilir ve her URL için `hreflang` alternatiflerini içerir.
+`/sitemap.xml` build sırasında aynı rota verisinden üretilir ve iki veya daha fazla gerçek dil eşdeğeri olan sayfalar için `hreflang` alternatiflerini içerir. Tek dilli sayfalarda HTML ve sitemap hreflang yayınlamaz. Çok dilli gruplar kendisini ve mevcut eşdeğerleri karşılıklı listeler; uygun mevcut EN, ES veya TR sayfası varsa bu sırayla `x-default` seçilir. Canonical her zaman ilgili sayfanın mutlak URL’idir.
 
 ## İçerik kaynakları
 

@@ -20,6 +20,7 @@ Ortak kurallar ve devir için `docs/TEAM.md`. Önce `AGENTS.md`; sonra `ARCHITEC
 - Çalıştırılamayan kontrolü sebebiyle bildir; çalıştırmadan "geçti" deme.
 
 ## Çalışma kuralları
+- Oturum sahipliği ve yetkilendirme, süre dolumunda erişim kesilmesi, fiziksel temizlik ve silme hataları, parola ve sır yaşam döngüsü, belge/sırların DB, kuyruk, log ve analitiğe girmemesi, metadata saklama ve silme politikasını kontrol et. API → doğrulama → pg-boss → worker → engine → storage → yetkili indirme akışını kodla izle. İdempotency, lease, retry, iptal, çökme, timeout, disk dolması, kısmi çıktı, eşzamanlılık ve cleanup yarışlarını riskle orantılı değerlendir. Sabit executable ve doğrulanmış argümanlar kullan; belgelenmiş parola istisnalarını kontrol et. Güncel sözleşmeler ve /api/capabilities değerlerini kullan. Handler kaydı, sentetik başarı, ölçülmüş sadakat ve doğrulanmış üretim desteğini ayır. API değişimini frontend’e, destek iddiasını SEO’ya, sınır sorununu mimariye ve operasyon kanıtını kaliteye devret.
 - Domain/application katmanı framework/SQL/motor bağımlılığından uzak; başka modülün repository veya tablosuna erişme.
 - Dosya içeriğini DB, queue, log veya analytics'e koyma; kimlik ve metadata kullan.
 - Her araç için kendi handler'ı; sabit executable ve doğrulanmış argüman dizisi; kullanıcı girdisini shell'e ekleme. Secret'ları process argv ile geçirme (stdin / password-file kullanılıyor). Tek istisna `protect-pdf`: `qpdf --encrypt` stdin kanalı sunmadığından parola 0600 izinli geçici `@`-argüman dosyasına yazılır ve `finally` ile silinir (`FILE-PROCESSING.md`'de yazılı).
@@ -40,8 +41,6 @@ Ortak kurallar ve devir için `docs/TEAM.md`. Önce `AGENTS.md`; sonra `ARCHITEC
 ## Bulgu biçimi
 **dosya/alan**, **akış (istek → kuyruk → worker → motor)**, **etki**, **önem** (TEAM.md ölçeği), **kanıt** (kod satırı, komut/test çıktısı), **önerilen sonraki adım**.
 
-## Ek görev ve doğrulama ölçütleri
-Oturum sahipliği ve yetkilendirme, süre dolumunda erişim kesilmesi, fiziksel temizlik ve silme hataları, parola ve sır yaşam döngüsü, belge/sırların DB, kuyruk, log ve analitiğe girmemesi, metadata saklama ve silme politikasını kontrol et. API → doğrulama → pg-boss → worker → engine → storage → yetkili indirme akışını kodla izle. İdempotency, lease, retry, iptal, çökme, timeout, disk dolması, kısmi çıktı, eşzamanlılık ve cleanup yarışlarını riskle orantılı değerlendir. Sabit executable ve doğrulanmış argümanlar kullan; belgelenmiş parola istisnalarını kontrol et. Güncel sözleşmeler ve /api/capabilities değerlerini kullan. Handler kaydı, sentetik başarı, ölçülmüş sadakat ve doğrulanmış üretim desteğini ayır. API değişimini frontend’e, destek iddiasını SEO’ya, sınır sorununu mimariye ve operasyon kanıtını kaliteye devret.
 
 ## Önceki uzman incelemesinden devir
 27 Ekim 2026 inceleme notları, güncel kodla doğrula: metadata saklama süresi, watermarkText ve client HMAC tutulması; admin uç rate limit ve anahtar redaction; SESSION_SECRET rotasyonunda bekleyen şifreli işler; scripts/stats.js araç haritası. Bulguları kanıt olmadan güncel durum sayma.
