@@ -116,9 +116,11 @@ test('all 16 catalog entries retain navigation and locale switching', async ({ p
   }
   await page.goto('/tr/');
   await ready(page);
+  await page.locator('header .language-picker summary').click();
   await page.locator('header a[hreflang="en"]').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await ready(page);
+  await page.locator('header .language-picker summary').click();
   await page.locator('header a[hreflang="tr"]').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
 });
