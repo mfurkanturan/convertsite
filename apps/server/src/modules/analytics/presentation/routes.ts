@@ -1,18 +1,23 @@
+import { createHash, timingSafeEqual } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import type { analyticsRepository } from '../infrastructure/repository.js';
 import type { Config } from '../../../platform/config.js';
+
+const digest = (value: string) => createHash('sha256').update(value).digest();
+
+// The key is accepted only in the x-admin-key header: query strings end up in proxy and access logs.
+// With no ADMIN_SECRET configured the endpoint stays disabled instead of reusing SESSION_SECRET.
+function validKey(provided: unknown, secret: string): boolean {
+  if (!secret || typeof provided !== 'string' || !provided) return false;
+  return timingSafeEqual(digest(provided), digest(secret));
+}
 
 export async function adminRoutes(
   app: FastifyInstance,
   deps: { analytics: ReturnType<typeof analyticsRepository>; config: Config }
 ) {
   app.get('/api/admin/stats', async (request, reply) => {
-    const query = request.query as { secret?: string };
-    const headerKey = request.headers['x-admin-key'];
-    const secret = query.secret || (typeof headerKey === 'string' ? headerKey : undefined);
-
-    const validSecret = deps.config.adminSecret || deps.config.sessionSecret;
-    if (!secret || secret !== validSecret) {
+    if (!validKey(request.headers['x-admin-key'], deps.config.adminSecret)) {
       return reply.code(401).send({ error: 'UNAUTHORIZED' });
     }
 

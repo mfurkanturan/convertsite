@@ -50,4 +50,6 @@ Backend değişince `pnpm infra:up` ile yeniden build et. `infra:down` PostgreSQ
 
 [API](docs/API.md), [veri modeli](docs/DATA-MODEL.md), [testler](docs/TESTING.md), [işletim](docs/DEPLOYMENT.md).
 
+Ekip/ajan rol dağılımı için [DoctorConverter uzman ekibi](docs/TEAM.md), ilk yapısal bulgular için [mimari başlangıç denetimi](project-planning/ARCHITECTURE-AUDIT.md) belgesine bak.
+
 Görsel sayfa küçük resimleri/sürükleme editörü, karmaşık PDF yerleşimi koruma, üretim yük testi, metadata prune, shared rate limiting, CI workflow'ü ve üretim dağıtımı tamamlanmadı. Sayfa düzenleme aralık/sıra ve döndürme seçenekleriyle çalışır. Harici belge işleme sağlayıcısı kullanılmaz. Motor sınırları için [ENGINE-SUPPORT](docs/ENGINE-SUPPORT.md) dosyasına bak.

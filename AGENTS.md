@@ -11,6 +11,7 @@ Bu repository, PDF ve ofis dosyası araçları sunan bir web uygulaması içindi
 - Dosya veya worker değişikliklerinde: [FILE-PROCESSING](docs/FILE-PROCESSING.md)
 - Arayüz değişikliklerinde: [USER-FLOWS](docs/USER-FLOWS.md) ve [DESIGN-SYSTEM](docs/DESIGN-SYSTEM.md)
 - Teknoloji ve aşama seçimlerinde: [TECH-STACK](docs/TECH-STACK.md) ve [ROADMAP](docs/ROADMAP.md)
+- Uzman rolleri ve sahiplik: [TEAM](docs/TEAM.md). Kanonik rol yönergeleri `docs/agent-roles/doctorconverter-*.md` dosyalarındadır; platform adaptörleri ve rol seçimi TEAM içinde açıklanır.
 
 ## Zorunlu sınırlar
 
@@ -39,6 +40,6 @@ Yerel frontend önizlemesi `apps/web` altında kuruludur. Repository kökünde `
 
 Backend ilk dilimi apps/server altındadır. `pnpm setup:local`, `pnpm infra:up`, `pnpm test`, `pnpm infra:down` yerel Docker akışıdır. Backend değişince imajı yeniden build et. Test sırasında worker durur ve sonunda yeniden açılır; kullanıcı verilerini test verilerinden ayır.
 
-15 araç için yerel motor handler'ı kayıtlıdır; kayıt uçtan uca destek kanıtı değildir. Destek/kalite sınırları docs/ENGINE-SUPPORT.md, ölçülen bulgular docs/ENGINE-AUDIT.md içindedir. Gerçek yüklemede API politikasını esas al. Dosya türü ve seçenekler shared contracts üzerinden doğrulanır. PDF → Word/Excel için birebir yerleşim veya taranmış tablo desteği iddia etme. .env ve .data içeriğini commit etme veya loglama. API, DATA-MODEL, TESTING ve DEPLOYMENT belgelerini ilgili değişiklikte oku.
+16 araç için yerel motor handler'ı kayıtlıdır; kayıt uçtan uca destek kanıtı değildir. Destek/kalite sınırları docs/ENGINE-SUPPORT.md, ölçülen bulgular docs/ENGINE-AUDIT.md içindedir. Gerçek yüklemede API politikasını esas al. Dosya türü ve seçenekler shared contracts üzerinden doğrulanır. PDF → Word/Excel için birebir yerleşim veya taranmış tablo desteği iddia etme. .env ve .data içeriğini commit etme veya loglama. API, DATA-MODEL, TESTING ve DEPLOYMENT belgelerini ilgili değişiklikte oku.
 
 Ürün varsayımları ve açık kararlar PRODUCT içinde, teknik adaylar TECH-STACK içinde tutulur. Belgelerdeki hedefler, uygulanmış özellik kanıtı değildir.

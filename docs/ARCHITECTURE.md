@@ -35,16 +35,18 @@ Arayüzler onları tüketen katmanda tanımlanır. Kullanılmayan soyutlama, gen
 
 ## Önerilen kod yerleşimi
 
-Bu dizinler uygulama kurulurken oluşturulacaktır; şimdilik planı temsil eder.
+Dizinler uygulanmıştır; aşağıdaki ağaç özet yerleşimi gösterir (alt dizinlerin tamamı değildir).
 
 ```text
 apps/
   web/                         # Astro + Svelte arayüzü
   server/
     src/
-      entrypoints/             # API ve worker başlangıç noktaları
+      entrypoints/             # API, worker, engine ve migrate başlangıç noktaları
       bootstrap/               # Bağımlılık bağlama
+      engine/                  # Motor HTTP kapısı, kapasite sınırı, süreç grubu
       modules/
+        analytics/
         files/
         jobs/
         conversions/
@@ -89,6 +91,10 @@ API durum, indirme, önizleme, iptal ve silmede sahipliği doğrular. Depolama a
 - API liveness ve readiness ayrılır; worker'ın heartbeat ve kuyruğun bekleme süresi izlenir.
 - Kapanışta yeni iş alımı durur; devam eden işler süre sınırı içinde bitirilir veya lease mekanizmasıyla kurtarılır.
 - Aynı sürüm API/worker uyumu ve migration sırası dağıtım belgesinde tanımlanır.
+
+## Mevcut çalışma biçimi
+
+API, worker ve engine ayrı entrypoint'lere sahiptir. Yerel Compose bu süreçleri ayrı servislerde çalıştırır. Mevcut Render yerleşiminde web ve API ayrı servislerdir; API container'ı migration, engine ve worker süreçlerini birlikte başlatır. Render'da worker/engine için bağımsız ölçekleme veya ayrı kaynak bütçesi varsayılmamalıdır. Dağıtım ayrıntıları ve açık operasyon işleri [DEPLOYMENT](DEPLOYMENT.md) içindedir.
 
 ## Mimari kabul şartları
 

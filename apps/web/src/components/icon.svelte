@@ -37,14 +37,14 @@
     LockOpen,
     Stamp
   } from '@lucide/svelte';
-  import type { Component } from 'svelte';
+  import type { LucideIcon } from '@lucide/svelte';
 
   export let name = 'file';
   export let size = 20;
   export let stroke = 2;
   export let className = '';
 
-  const iconMap: Record<string, Component<any>> = {
+  const iconMap: Record<string, LucideIcon> = {
     // Navigation & General
     grid: LayoutGrid,
     arrows: ArrowLeftRight,

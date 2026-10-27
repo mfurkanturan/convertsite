@@ -1,5 +1,7 @@
 # Mimari ve kod sağlığı başlangıç denetimi
 
+> **Güncellik notu (27 Ekim 2026):** Bu belge ilk yapısal görünümdür. Sonradan kodda değişenler: `analytics/infrastructure/repository.ts` artık 251 satırdır ve kuyruk yaşı ile cleanup gecikmesi sorguları kodda mevcuttur. Güncel durum için kodu ve `docs/TEAM.md`'yi esas al.
+
 Tarih: 2026-10-26  
 Kapsam: repository yapısı, sahiplik/katman belgeleri, dosya boyutları ve dağıtım bilgisi. Bu bir statik ilk taramadır; tam dependency graph, runtime profiling veya tüm dosyaların satır satır incelemesi değildir.
 

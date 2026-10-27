@@ -65,10 +65,12 @@ test('all guide and static routes preserve one heading, readable structure and l
       await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.+/);
       const scenario = scenarios[locale].find(item => scenarioPath(locale, item.slug) === path);
       const alternates = scenario ? scenarioAlternates(locale, scenario) : staticPairs.find(pair => pair[locale] === path)!;
+      // A page with a single language version publishes no alternates at all (seo-head requires more than one link).
+      const published = locales.filter(language => alternates[language]).length > 1;
       for (const language of ['tr', 'en'] as const) {
         const alternate = page.locator(`link[rel="alternate"][hreflang="${language}"]`);
-        await expect(alternate).toHaveCount(alternates[language] ? 1 : 0);
-        if (alternates[language]) await expect(alternate).toHaveAttribute('href', `https://doctorconverter.com${alternates[language]}`);
+        await expect(alternate).toHaveCount(alternates[language] && published ? 1 : 0);
+        if (alternates[language] && published) await expect(alternate).toHaveAttribute('href', `https://doctorconverter.com${alternates[language]}`);
       }
       if (guidePaths.includes(path)) {
         const headings = await page.locator('article > section > h2').allTextContents();
@@ -85,7 +87,7 @@ test('all guide and static routes preserve one heading, readable structure and l
 
 test('legacy routes map known equivalents in Render and sitemap avoids synthetic lastmod', async ({ page }, info) => {
   test.skip(info.project.name !== 'chromium', 'Route and sitemap audit runs once.');
-  const render = readFileSync(`${process.cwd()}/render.yaml`, 'utf8');
+  const render = readFileSync(`${process.cwd()}/render.yaml`, 'utf8').replace(/\r\n/g, '\n');
   const exactRedirects = [
     ...ids.map(id => [`/en/${id}`, `/${id}`]),
     ...staticPairs.flatMap(pair => pair.en && pair.en !== '/' ? [[`/en${pair.en.replace(/\/$/, '')}`, pair.en]] : []),

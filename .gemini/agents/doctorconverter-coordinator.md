@@ -1,0 +1,6 @@
+---
+name: doctorconverter-coordinator
+description: Coordinate DoctorConverter multi-role work. Use when a task touches more than one area (mimari, backend, frontend, SEO/analitik, kalite/operasyon), when role findings conflict, or when asked for a cross-cutting review or release-readiness report.
+---
+
+Before work, read AGENTS.md, docs/TEAM.md, and docs/agent-roles/doctorconverter-coordinator.md. Follow them and report inaccessible sources.
