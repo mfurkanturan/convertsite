@@ -271,7 +271,7 @@ export const trDeep: Record<string, Deep> = {
   "ders-slayti-pdf-word-cevirme": {
     "figures": [
       { "src": "word-selected", "alt": "PDF → Word aracında ders notu PDF’inin seçildiği ekran", "caption": "Ders slaytını veya not PDF’ini seç; güncel sayfa limitini panelden kontrol et." },
-      { "src": "ocr-selected", "alt": "Metin çıkar (OCR) aracında belge dili seçimi", "caption": "Taranmış notlarda önce OCR ile metni çıkar; Türkçe dil paketi seçili gelir." }
+      { "src": "ocr-selected", "alt": "Metin çıkar (OCR) aracında belge dili seçimi", "caption": "Taranmış notlarda önce OCR ile metni çıkar ve belge dilini listeden seç." }
     ],
     "comparison": {
       "title": "Ders notunu düzenlemenin yolları",
