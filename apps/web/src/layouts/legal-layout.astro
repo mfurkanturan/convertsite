@@ -6,6 +6,7 @@ import Icon from '../components/icon.svelte';
 import LanguageSwitch from '../components/language-switch.svelte';
 import ThemeSwitch from '../components/theme-switch.svelte';
 import SeoHead from '../components/seo-head.astro';
+import DrOttoAssistant from '../components/dr-otto-assistant.svelte';
 import SiteFooter from '../components/site-footer.astro';
 import { brand } from '../lib/brand';
 import { ui } from '../i18n/ui';
@@ -57,5 +58,6 @@ const controls = text.controls;
     </main>
 
     <SiteFooter {locale} {alternates} />
+    <DrOttoAssistant client:load {locale} />
   </body>
 </html>

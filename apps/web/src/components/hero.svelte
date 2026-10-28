@@ -109,8 +109,8 @@
 
 <section class="border-b border-border" aria-labelledby="hero-title">
   <div class="hero-layout">
-    <div class="min-w-0">
-
+    <div class="hero-intro">
+      <div class="hero-copy">
       <h1 id="hero-title" class="hero-title">
         {text.titleA}<br />{text.titleB}
       </h1>
@@ -118,6 +118,8 @@
       <a href="#tools" class="hero-link">
         {text.cta}<Icon name="arrow" size={16} />
       </a>
+      </div>
+      <img class="hero-mascot" src="/mascot/tools/pdf-to-word.webp" alt="" aria-hidden="true" width="720" height="576" decoding="async" />
     </div>
 
     <div class="min-w-0">

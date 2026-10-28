@@ -3,6 +3,7 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/sora';
 import AppShell from '../components/app-shell.svelte';
 import SeoHead from '../components/seo-head.astro';
+import DrOttoAssistant from '../components/dr-otto-assistant.svelte';
 import SiteFooter from '../components/site-footer.astro';
 import { htmlLang, type Alternates, type Locale } from '../i18n/locales';
 import { ui } from '../i18n/ui';
@@ -34,5 +35,6 @@ const text = ui[locale].controls;
       <slot name="home" slot="home" />
     </AppShell>
     <SiteFooter {locale} alternates={alternates} />
+    <DrOttoAssistant client:load {locale} />
   </body>
 </html>

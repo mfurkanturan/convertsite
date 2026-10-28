@@ -2,6 +2,7 @@
 import '@fontsource-variable/inter';
 import '@fontsource-variable/sora';
 import SeoHead from '../components/seo-head.astro';
+import DrOttoAssistant from '../components/dr-otto-assistant.svelte';
 import SiteFooter from '../components/site-footer.astro';
 import Logo from '../components/logo.svelte';
 import LanguageSwitch from '../components/language-switch.svelte';
@@ -72,5 +73,6 @@ const title = locale === 'tr'
       })}
     </main>
     <SiteFooter {locale} {alternates} />
+    <DrOttoAssistant client:load {locale} />
   </body>
 </html>

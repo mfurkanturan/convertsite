@@ -41,7 +41,48 @@
   .brand-word { color: #132047; }
   .brand-accent { color: #1c7ccd; }
   .page-container { width: 100%; max-width: var(--spacing-content); margin-inline: auto; padding-inline: var(--page-gutter); }
+  .otto-assistant { position: fixed; z-index: 40; bottom: max(16px, env(safe-area-inset-bottom)); right: max(16px, env(safe-area-inset-right)); display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .otto-launcher { width: 88px; height: 72px; display: flex; align-items: end; justify-content: center; border-radius: 12px; transition: background-color var(--motion-duration); }
+  .otto-launcher:hover { background: var(--color-accent-soft); }
+  .otto-launcher img { width: 100%; height: auto; }
+  .otto-panel { display: flex; flex-direction: column; width: min(360px, calc(100vw - 48px)); max-height: min(70dvh, 600px); border: 1px solid var(--color-border-strong); border-radius: var(--radius-panel); background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-float); overflow: hidden; }
+  .otto-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 12px; border-bottom: 1px solid var(--color-border); }
+  .otto-panel-header h2 { font-size: 18px; font-weight: 700; }
+  .otto-panel-header p { color: var(--color-text-soft); font-size: 13px; }
+  .otto-icon-button { display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 8px; color: var(--color-text-soft); }
+  .otto-icon-button:hover, .otto-back:hover { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+  .otto-panel-content { overflow-y: auto; overscroll-behavior: contain; padding: 16px; }
+  .otto-panel-content h3 { font-size: 16px; font-weight: 700; }
+  .otto-welcome { font-size: 15px; line-height: 1.5; margin-bottom: 12px; }
+  .otto-actions, .otto-list { display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; }
+  .otto-actions button, .otto-list a { display: flex; width: 100%; min-height: 48px; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--color-border); border-radius: 8px; padding: 10px 12px; text-align: left; color: var(--color-text); font-size: 14px; font-weight: 600; }
+  .otto-actions button:hover, .otto-list a:hover { border-color: var(--color-accent); background: var(--color-accent-soft); }
+  .otto-list { margin-top: 12px; }
+  .otto-list small { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--color-text-muted); }
+  .otto-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin: -8px 0 8px -8px; padding: 0 8px; border-radius: 8px; color: var(--color-text-soft); font-size: 14px; }
+  .otto-note, .otto-paragraph, .otto-detail p { margin-top: 10px; color: var(--color-text-soft); font-size: 14px; line-height: 1.55; }
+  .otto-detail { border-bottom: 1px solid var(--color-border); padding: 10px 0; }
+  .otto-detail summary { min-height: 36px; cursor: pointer; font-size: 14px; font-weight: 600; }
+  .otto-detail p { margin-bottom: 4px; }
+  .otto-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; color: var(--color-accent-strong); font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 639px) { .otto-launcher { width: 64px; height: 56px; } .otto-panel { max-height: min(68dvh, 520px); } }
   .hero-layout { display: grid; align-items: center; gap: 32px; padding-block: 16px 32px; }
+  .hero-intro { position: relative; min-width: 0; }
+  .hero-copy { min-width: 0; }
+  .hero-intro .hero-description { max-width: min(320px, calc(100% - 220px)); }
+  .hero-mascot { position: absolute; right: 0; bottom: -4px; width: 220px; height: auto; }
+  .processing-mascot-row { display: flex; align-items: center; gap: 12px; }
+  .processing-mascot { width: 82px; height: auto; flex: 0 0 auto; }
+  .tool-drop-content { display: flex; align-items: center; justify-content: center; gap: clamp(16px, 4vw, 48px); width: 100%; }
+  .tool-drop-art { position: relative; width: min(38%, 220px); flex: 0 0 auto; }
+  .tool-drop-mascot { display: block; width: 100%; height: auto; }
+  .tool-drop-copy { display: flex; min-width: 0; flex-direction: column; align-items: center; }
+  @media (max-width: 480px) { .tool-drop-content { flex-direction: column; gap: 8px; } .tool-drop-art { width: 135px; max-width: 60%; } .tool-drop-copy > div:first-child { display: none; } }
+  @media (max-width: 650px) { .processing-mascot { width: 64px; } }
+  .result-mascot { float: right; width: 96px; height: auto; margin: 0 0 8px 12px; }
+  @media (max-width: 1023px) { .hero-intro .hero-description { max-width: calc(100% - 200px); } .hero-mascot { width: 190px; } }
+  @media (max-width: 639px) { .hero-intro { padding-bottom: 22px; } .hero-intro .hero-description { max-width: none; } .hero-intro .hero-link { max-width: calc(100% - 120px); } .hero-mascot { width: 112px; } .result-mascot { width: 70px; } }
+  @media (max-width: 380px) { .hero-intro .hero-link { max-width: calc(100% - 95px); } .hero-mascot { width: 90px; } }
   .hero-title { max-width: 15ch; font-family: var(--font-display); font-size: var(--text-hero); font-weight: 700; line-height: 1.12; letter-spacing: -0.035em; text-wrap: balance; }
   .hero-description { max-width: 43ch; margin-top: 20px; font-size: 16px; line-height: 1.65; color: var(--color-text-soft); }
   .hero-link { display: inline-flex; align-items: center; min-height: 44px; gap: 8px; margin-top: 20px; font-size: 14px; font-weight: 600; color: var(--color-accent-strong); }

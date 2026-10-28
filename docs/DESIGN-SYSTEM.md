@@ -173,3 +173,11 @@ Gerekçe ve sprint bazlı kanıtlar: [design-audit](../design-audit.md), [VISUAL
 ## Tema tercihi
 
 Yumuşak grafit koyu tema token'ları sayfa zemini için #181A1F, yüzey için #252830, ana metin için #F1F2F5 ve mavi vurgu için #8BB4FF kullanır. Durum ve araç renklerinin koyu yüzeyler için ayrı değerleri vardır; belge önizlemeleri beyaz kalır. Üst çubuktaki Açık/Koyu/Sistem seçimi dc-theme anahtarında tarayıcıya kaydedilir. Varsayılan Sistem cihaz tercihini izler; depolama kullanılamıyorsa sistem tercihi kullanılır.
+
+## Dr. Otto maskotu
+
+Dr. Otto, beyaz önlüklü ve turkuaz kıyafetli samur doktor olarak sunulur. Ana sayfada belge makinesiyle, başarılı sonuçta belge tutan sade pozuyla kullanılır. Görseller dekoratiftir; işlem durumu ve eylemler metinle sunulmaya devam eder. Şeffaf zemin açık ve koyu temada çalışır.
+
+Yükleme, kuyruk ve işleme aşamalarında ortak belge inceleme pozu kullanılır; animasyon veya görsel işlem yüzdesi ima etmez. Araçların dosya seçimi alanında her aracın girdi ve çıktısını gösteren özel Doc-O-Matic görseli bulunur; üçüncü taraf logoları kullanılmaz. İşlem sırasında ortak inceleme pozu kullanılır. Hata, iptal ve süresi dolmuş sonuçlarda başarı maskotu gösterilmez.
+
+Dr. Otto sağ altta klavyeyle erişilebilir yardım düğmesidir. Panel araç bulma, dönüşüm yardımı, gizlilik ve sorun giderme sunar; modal değildir ve Escape ile kapanır. Önizleme diyaloğu, mobil menü veya analitik tercihleri açıkken yardımcı kapanır ve bu katmanların altında kalır.

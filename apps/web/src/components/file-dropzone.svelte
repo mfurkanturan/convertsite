@@ -75,7 +75,12 @@
     </div>
     <Button id={buttonId || 'tool-file-picker'} variant="secondary" onclick={() => input.click()}><Icon name="plus" size={17} /> {tool?.multiple ? text.add : text.pick}</Button>
   {:else}
-    <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-panel bg-accent-soft text-accent"><Icon name="upload" size={30} /></div>
+    <div class="tool-drop-content">
+    <div class="tool-drop-art" aria-hidden="true">
+      <img class="tool-drop-mascot" src={`/mascot/tools/${tool?.id}.webp`} alt="" width="600" height="480" loading="lazy" decoding="async" />
+    </div>
+    <div class="tool-drop-copy">
+    <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-panel bg-accent-soft text-accent max-[480px]:hidden"><Icon name="upload" size={30} /></div>
     <h2 class="text-xl font-semibold tracking-[-0.01em] text-text">{tool?.multiple ? text.dropMany : text.dropOne}</h2>
     <p class="mt-1.5 text-[15px] text-text-soft">{text.orPick}</p>
     <Button id={buttonId || 'tool-file-picker'} className="mt-5" onclick={() => input.click()}><Icon name="plus" size={17} /> {tool?.multiple ? text.pickMany : text.pick}</Button>
@@ -83,6 +88,8 @@
       <span class="rounded bg-bg px-1.5 py-0.5 font-medium text-text-soft ring-1 ring-border">{tool?.inputLabel}</span>
       <span class="flex items-center gap-1"><Icon name="lock" size={14} /> {text.sentOnStart}</span>
     </p>
+    </div>
+    </div>
   {/if}
   <input class="visually-hidden" tabindex="-1" type="file" bind:this={input} accept={resolvedAccept} multiple={resolvedMultiple} aria-label={text.inputLabel(tool?.inputLabel ?? formatsLabel)} onchange={(event) => { selectFiles(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ''; }} />
 </div>
