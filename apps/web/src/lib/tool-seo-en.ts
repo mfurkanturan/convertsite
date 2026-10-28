@@ -97,6 +97,25 @@ export const toolSeoMapEn: Record<ToolId, ToolSeoData> = {
     ],
     "relatedTools": ["excel-to-pdf", "pdf-to-word", "ocr"]
   },
+  "pdf-to-md": {
+    "id": "pdf-to-md",
+    "title": "PDF to Markdown",
+    "metaTitle": "PDF to Markdown | DoctorConverter",
+    "metaDescription": "Convert a text-based PDF into Markdown with headings, lists, tables and links. Images are delivered as downsampled WebP in a ZIP.",
+    "h1": "PDF to Markdown",
+    "lead": "Convert a text-based PDF into a Markdown file.",
+    "keywords": ["pdf to markdown", "pdf to md", "convert pdf to markdown", "pdf to md converter"],
+    "steps": [
+      { "title": "Choose files", "description": "Choose a PDF file." },
+      { "title": "Start processing", "description": "Select Convert to Markdown." },
+      { "title": "Download the result", "description": "Download the ZIP and check document.md and the WebP images." }
+    ],
+    "resultCheck": "Open document.md and compare headings, tables and links with the source. Images are separate WebP files.",
+    "faqs": [
+      { "question": "Can I convert scanned PDFs to Markdown?", "answer": "This tool requires selectable text and does not include OCR. Use Extract text (OCR) for scanned pages." }
+    ],
+    "relatedTools": ["ocr", "pdf-to-word", "pdf-to-excel"]
+  },
   "excel-to-pdf": {
     "id": "excel-to-pdf",
     "title": "Excel to PDF",

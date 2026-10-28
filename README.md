@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <sub>16 registered document tools · 5 interface languages · No sign-up required</sub>
+  <sub>17 registered document tools · 5 interface languages · No sign-up required</sub>
 </p>
 
 ---
@@ -35,13 +35,13 @@
 DoctorConverter is a web application for everyday PDF and office-document tasks. It combines an approachable, multilingual interface with an asynchronous processing backend and self-hosted document engines. Files are handled through session-scoped access and temporary storage rather than a permanent document library.
 
 > [!NOTE]
-> **16 tools are registered in the application; registration does not guarantee full support or identical output quality for every document.** Formats, limits, and known engine caveats are documented in [Engine Support](docs/ENGINE-SUPPORT.md) and [Engine Audit](docs/ENGINE-AUDIT.md).
+> **17 tools are registered in the application; registration does not guarantee full support or identical output quality for every document.** Formats, limits, and known engine caveats are documented in [Engine Support](docs/ENGINE-SUPPORT.md) and [Engine Audit](docs/ENGINE-AUDIT.md).
 
 ## Features
 
 | Area | Tools |
 | --- | --- |
-| **Convert documents** | PDF → Word, Word → PDF, PDF → Excel, Excel → PDF, PowerPoint → PDF, PDF → JPG/PNG, JPG/PNG → PDF |
+| **Convert documents** | PDF → Word, Word → PDF, PDF → Excel, Excel → PDF, PDF → Markdown, PowerPoint → PDF, PDF → JPG/PNG, JPG/PNG → PDF |
 | **Work with PDFs** | Merge PDF, organize/split/rotate pages, compress PDF, add page numbers, add a watermark |
 | **Protect PDFs** | Password-protect a PDF, unlock a PDF with the correct password |
 | **Extract text** | OCR → TXT, create a searchable PDF with OCR |

@@ -162,6 +162,20 @@ describe('all ten real engines', () => {
     expect(artifact.cells).toContainEqual({ value: '=1+1', type: 's' });
     expect(artifact.cells.some((cell: {value:unknown}) => cell.value === 'Kalem')).toBe(true);
   });
+  it('converts a text PDF to Markdown with extracted WebP images in a ZIP', async () => {
+    const result = await execute('pdf-to-md', ['layout.pdf']);
+    expect(result.job.resultKind).toBe('zip');
+    expect(result.download.headers['content-type']).toContain('application/zip');
+    const artifact = await inspect('zip', result.download.rawPayload);
+    const md = artifact.members.find((member: { name: string }) => member.name === 'document.md');
+    expect(md).toBeDefined();
+    expect(md.text).toContain('Deniz');
+    expect(md.text).toContain('example.com');
+    expect(md.text).toContain('![](');
+    const images = artifact.members.filter((member: { name: string }) => member.name !== 'document.md');
+    expect(images.length).toBeGreaterThan(0);
+    expect(images.every((member: { format: string }) => member.format === 'WEBP' || member.format === 'PNG')).toBe(true);
+  });
   it('converts DOCX to a real PDF and preserves Turkish text', async () => {
     const result = await execute('word-to-pdf', ['document.docx']);
     expect((await PDFDocument.load(result.download.rawPayload)).getPageCount()).toBeGreaterThan(0);
@@ -263,6 +277,7 @@ describe('all ten real engines', () => {
   it('does not invent tables or text for unsupported PDF content', async () => {
     expect((await execute('pdf-to-excel', ['pages.pdf'], {}, 'failed')).job.error).toBe('NO_TABLES');
     expect((await execute('pdf-to-word', ['scanned.pdf'], {}, 'failed')).job.error).toBe('NO_TEXT');
+    expect((await execute('pdf-to-md', ['scanned.pdf'], {}, 'failed')).job.error).toBe('NO_TEXT');
     expect((await execute('edit-pdf-pages', ['pages.pdf'], { pages:'99' }, 'failed')).job.error).toBe('INVALID_OPTIONS');
   });
   it.each(['macro.docx','traversal.docx','external.xlsx','wide.png'])('rejects unsafe or oversized %s during inspection', async (name) => {

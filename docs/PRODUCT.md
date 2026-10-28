@@ -27,7 +27,7 @@ OCR (metin çıkar) aracı yalnızca düz metin üretir; aranabilir PDF için ay
 
 ## Güncel kayıtlı envanter
 
-Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `page-numbers`, `watermark-pdf` ve `pdf-to-pdf-ocr` handler'ları ve arayüz kayıtları eklenmiştir; toplam 16 araç kaydı vardır. Bu kayıtlar destek veya kalite onayı değildir. PPTX yükleme, şifreli girdi/çıktı doğrulaması ve Türkçe filigran gibi mevcut engeller [ENGINE-SUPPORT](ENGINE-SUPPORT.md) ve ölçüm sonuçları [ENGINE-AUDIT](ENGINE-AUDIT.md) içinde izlenir. İlk sürüm varsayımları geçmiş kapsamı anlatır; uygulanmış destek için API davranışı ve bu kanıtlar esas alınır.
+Yukarıdaki ilk 10 araca ek olarak `pptx-to-pdf`, `protect-pdf`, `unlock-pdf`, `page-numbers`, `watermark-pdf`, `pdf-to-pdf-ocr` ve `pdf-to-md` handler'ları ve arayüz kayıtları eklenmiştir; toplam 17 araç kaydı vardır. Bu kayıtlar destek veya kalite onayı değildir. PPTX yükleme, şifreli girdi/çıktı doğrulaması ve Türkçe filigran gibi mevcut engeller [ENGINE-SUPPORT](ENGINE-SUPPORT.md) ve ölçüm sonuçları [ENGINE-AUDIT](ENGINE-AUDIT.md) içinde izlenir. İlk sürüm varsayımları geçmiş kapsamı anlatır; uygulanmış destek için API davranışı ve bu kanıtlar esas alınır.
 
 ## İlk sürüm için çalışma varsayımları
 

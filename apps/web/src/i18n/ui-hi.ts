@@ -40,6 +40,7 @@ export function createHindiUi(en: UiDictionary): UiDictionary {
         organize: { label: 'पृष्ठ व्यवस्थित करें', desc: 'क्रम बदलें, घुमाएँ या विभाजित करें', icon: 'scissors' },
         merge: { label: 'PDF मर्ज करें', desc: 'कम से कम 2 PDF चाहिए', icon: 'merge' },
         text: { label: 'टेक्स्ट निकालें (OCR)', desc: 'सादा टेक्स्ट फ़ाइल बनाएँ', icon: 'scan' },
+        markdown: { label: 'Markdown में बदलें', desc: 'WebP चित्रों के साथ ZIP बनाएँ', icon: 'markdown' },
         searchable: { label: 'PDF खोज योग्य बनाएँ', desc: 'PDF में टेक्स्ट परत जोड़ें', icon: 'scan' },
         protect: { label: 'PDF सुरक्षित करें', desc: 'पासवर्ड सेट करें', icon: 'shield' },
         unlock: { label: 'PDF पासवर्ड हटाएँ', desc: 'आपको वर्तमान पासवर्ड चाहिए', icon: 'unlock' },
@@ -95,6 +96,7 @@ export function createHindiUi(en: UiDictionary): UiDictionary {
         'merge-pdf': 'कम से कम दो PDF चुनें। आउटपुट सूची में फ़ाइल क्रम का अनुसरण करता है।',
         'compress-pdf': 'छोटी फ़ाइल की गारंटी नहीं है। यदि ऑप्टिमाइज़ेशन आकार नहीं घटाता तो मूल फ़ाइल वापस की जाती है।',
         'pdf-to-excel': 'पता लगाई गई टेबल XLSX शीट बन जाती हैं। स्कैन की गई टेबल समर्थित नहीं हैं; सेल फ़ॉर्मूला के रूप में नहीं चलते।',
+        'pdf-to-md': 'टेक्स्ट वाले PDF को Markdown में बदलता है। चित्र ZIP में छोटे WebP के रूप में मिलते हैं; स्कैन किए PDF के लिए OCR उपयोग करें।',
         'excel-to-pdf': 'सभी वर्कशीट या केवल पहली निर्यात करें। स्रोत वर्कबुक की प्रिंट सेटिंग परिणाम को प्रभावित कर सकती है।',
         'pptx-to-pdf': 'PPTX स्वीकार करता है। फ़ॉन्ट और स्लाइड तत्व बदल सकते हैं; छिपी स्लाइड निर्यात नहीं हो सकती।',
         'pdf-to-images': 'एकल पृष्ठ छवि के रूप में डाउनलोड होता है; एकाधिक पृष्ठ ZIP फ़ाइल में डाउनलोड होते हैं।',
@@ -128,7 +130,7 @@ export function createHindiUi(en: UiDictionary): UiDictionary {
     job: {
       actions: {
         'pdf-to-word': 'Word में बदलें', 'word-to-pdf': 'PDF में बदलें', 'merge-pdf': 'PDF मर्ज करें',
-        'compress-pdf': 'PDF संपीड़ित करें', 'pdf-to-excel': 'Excel में निर्यात करें', 'excel-to-pdf': 'PDF में बदलें',
+        'compress-pdf': 'PDF संपीड़ित करें', 'pdf-to-excel': 'Excel में निर्यात करें', 'excel-to-pdf': 'PDF में बदलें', 'pdf-to-md': 'Markdown में बदलें',
         'pptx-to-pdf': 'PDF में बदलें', 'pdf-to-images': 'छवियाँ बनाएँ', 'images-to-pdf': 'PDF बनाएँ',
         'edit-pdf-pages': 'पृष्ठ सहेजें', 'page-numbers': 'पृष्ठ संख्या जोड़ें', 'watermark-pdf': 'वॉटरमार्क जोड़ें',
         'protect-pdf': 'PDF एन्क्रिप्ट करें', 'unlock-pdf': 'पासवर्ड हटाएँ', ocr: 'टेक्स्ट निकालें', 'pdf-to-pdf-ocr': 'खोज योग्य PDF बनाएँ',

@@ -40,6 +40,7 @@ export function createFrenchUi(en: UiDictionary): UiDictionary {
         organize: { label: 'Organiser les pages', desc: 'Réordonner, pivoter ou séparer', icon: 'scissors' },
         merge: { label: 'Fusionner des PDF', desc: '2 PDF minimum', icon: 'merge' },
         text: { label: 'Extraire le texte (OCR)', desc: 'Créer un fichier texte', icon: 'scan' },
+        markdown: { label: 'Convertir en Markdown', desc: 'Créer un ZIP avec des images WebP', icon: 'markdown' },
         searchable: { label: 'Rendre le PDF consultable', desc: 'Ajouter une couche de texte', icon: 'scan' },
         protect: { label: 'Protéger le PDF', desc: 'Définir un mot de passe', icon: 'shield' },
         unlock: { label: 'Retirer le mot de passe', desc: 'Le mot de passe actuel est requis', icon: 'unlock' },
@@ -95,6 +96,7 @@ export function createFrenchUi(en: UiDictionary): UiDictionary {
         'merge-pdf': 'Sélectionnez au moins deux PDF. Le résultat suit l’ordre de la liste.',
         'compress-pdf': 'La réduction de taille n’est pas garantie. Si l’optimisation ne réduit pas le fichier, l’original est renvoyé.',
         'pdf-to-excel': 'Les tableaux détectés sont exportés en feuilles XLSX. Les tableaux numérisés ne sont pas pris en charge ; les cellules ne sont pas exécutées comme formules.',
+        'pdf-to-md': 'Convertit un PDF contenant du texte en Markdown. Les images sont fournies en WebP réduites dans un ZIP ; utilisez l’OCR pour les PDF numérisés.',
         'excel-to-pdf': 'Exportez toutes les feuilles ou seulement la première. Les paramètres d’impression du classeur peuvent modifier le résultat.',
         'pptx-to-pdf': 'Les fichiers PPTX sont acceptés. Les polices et éléments de diapositives peuvent changer ; les diapositives masquées peuvent ne pas être exportées.',
         'pdf-to-images': 'Une page est téléchargée comme image ; plusieurs pages sont regroupées dans un fichier ZIP.',
@@ -128,7 +130,7 @@ export function createFrenchUi(en: UiDictionary): UiDictionary {
     job: {
       actions: {
         'pdf-to-word': 'Convertir en Word', 'word-to-pdf': 'Convertir en PDF', 'merge-pdf': 'Fusionner les PDF',
-        'compress-pdf': 'Compresser le PDF', 'pdf-to-excel': 'Exporter vers Excel', 'excel-to-pdf': 'Convertir en PDF',
+        'compress-pdf': 'Compresser le PDF', 'pdf-to-excel': 'Exporter vers Excel', 'excel-to-pdf': 'Convertir en PDF', 'pdf-to-md': 'Convertir en Markdown',
         'pptx-to-pdf': 'Convertir en PDF', 'pdf-to-images': 'Créer des images', 'images-to-pdf': 'Créer un PDF',
         'edit-pdf-pages': 'Enregistrer les pages', 'page-numbers': 'Ajouter des numéros de page', 'watermark-pdf': 'Ajouter un filigrane',
         'protect-pdf': 'Chiffrer le PDF', 'unlock-pdf': 'Retirer le mot de passe', ocr: 'Extraire le texte', 'pdf-to-pdf-ocr': 'Créer un PDF consultable',

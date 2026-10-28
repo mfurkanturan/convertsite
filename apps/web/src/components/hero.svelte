@@ -30,6 +30,7 @@
     { id: 'edit-pdf-pages', key: 'organize' },
     { id: 'merge-pdf', key: 'merge' },
     { id: 'ocr', key: 'text' },
+    { id: 'pdf-to-md', key: 'markdown' },
     { id: 'pdf-to-pdf-ocr', key: 'searchable' },
     { id: 'protect-pdf', key: 'protect' },
     { id: 'unlock-pdf', key: 'unlock' },

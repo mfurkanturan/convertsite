@@ -27,6 +27,7 @@ const options: Record<ToolId, TObject> = {
   'edit-pdf-pages': object({ pages, mode: Type.Optional(Type.Union([Type.Literal('pdf'), Type.Literal('zip')])), rotation: Type.Optional(Type.Union([Type.Literal(0), Type.Literal(90), Type.Literal(180), Type.Literal(270)])) }),
   'pdf-to-word': object(),
   'pdf-to-excel': object(),
+  'pdf-to-md': object(),
   'word-to-pdf': object(),
   'excel-to-pdf': object({ sheets: Type.Optional(Type.Union([Type.Literal('all'), Type.Literal('first')])) }),
   'pdf-to-images': object({ pages, format: Type.Optional(Type.Union([Type.Literal('jpg'), Type.Literal('png')])), dpi: Type.Optional(Type.Union([Type.Literal(100), Type.Literal(150)])) }),

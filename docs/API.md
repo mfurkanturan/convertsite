@@ -1,6 +1,6 @@
 # API — ilk backend dilimi
 
-Kod sözleşmesinin kaynağı `packages/contracts/src/index.ts` ve tools.ts. OpenAPI üretimi henüz eklenmedi. Tarayıcı aynı origin altındaki `/api` yolunu kullanır. 16 araç kimliği ve araca özel options şeması kayıtlıdır. Akış engelleri ve kalite sonuçları ENGINE-AUDIT içinde izlenir.
+Kod sözleşmesinin kaynağı `packages/contracts/src/index.ts` ve tools.ts. OpenAPI üretimi henüz eklenmedi. Tarayıcı aynı origin altındaki `/api` yolunu kullanır. 17 araç kimliği ve araca özel options şeması kayıtlıdır. Akış engelleri ve kalite sonuçları ENGINE-AUDIT içinde izlenir.
 
 ## Erişim ve hata modeli
 

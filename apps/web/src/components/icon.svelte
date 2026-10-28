@@ -25,6 +25,7 @@
     ScanText,
     FileImage,
     Images,
+    FileCode,
     Plus,
     X,
     Check,
@@ -86,6 +87,7 @@
     stamp: Stamp,
     image: FileImage,
     images: Images,
+    markdown: FileCode,
     scissors: SquareScissors,
     scan: ScanText,
   };

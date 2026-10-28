@@ -34,6 +34,8 @@ elif kind == "zip":
             if name.endswith(".pdf"):
                 with pdfplumber.open(io.BytesIO(data)) as pdf:
                     members.append({"name": name, "pages": len(pdf.pages), "width": pdf.pages[0].width})
+            elif name.endswith((".md", ".txt")):
+                members.append({"name": name, "text": data.decode("utf-8")})
             else:
                 with Image.open(io.BytesIO(data)) as image:
                     members.append({"name": name, "width": image.width, "height": image.height, "format": image.format})

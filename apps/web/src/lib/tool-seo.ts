@@ -112,6 +112,25 @@ export const toolSeoMap: Record<ToolId, ToolSeoData> = {
     ],
     "relatedTools": ["excel-to-pdf", "pdf-to-word", "ocr"]
   },
+  "pdf-to-md": {
+    "id": "pdf-to-md",
+    "title": "PDF → Markdown",
+    "metaTitle": "PDF → Markdown | DoctorConverter",
+    "metaDescription": "Metin içeren PDF’i Markdown dosyasına çevir; başlıkları, listeleri, tabloları ve linkleri koru. Görseller küçültülmüş WebP olarak ZIP içinde verilir.",
+    "h1": "PDF → Markdown",
+    "lead": "Metin içeren PDF’i Markdown dosyasına çevir.",
+    "keywords": ["pdf markdown dönüştürme", "pdf to md", "pdf to markdown", "pdf md çevir"],
+    "steps": [
+      { "title": "Dosyanı seç", "description": "PDF dosyanı seç." },
+      { "title": "İşlemi başlat", "description": "Markdown’a dönüştür düğmesiyle işlemi başlat." },
+      { "title": "Sonucu indir", "description": "ZIP’i indir; document.md ve küçültülmüş görselleri kontrol et." }
+    ],
+    "resultCheck": "ZIP’i aç; document.md içindeki başlık, tablo ve linkleri kaynakla karşılaştır. Görseller WebP olarak ayrı dosyalardadır.",
+    "faqs": [
+      { "question": "Taranmış PDF Markdown’a çevrilebilir mi?", "answer": "Bu araç seçilebilir metin gerektirir ve OCR içermez. Taranmış sayfalar için önce Metin çıkar (OCR) aracını kullan." }
+    ],
+    "relatedTools": ["ocr", "pdf-to-word", "pdf-to-excel"]
+  },
   "excel-to-pdf": {
     "id": "excel-to-pdf",
     "title": "Excel → PDF",

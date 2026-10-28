@@ -10,6 +10,7 @@ from pdf_operations import (
 from image_conversions import pdf_to_images, images_to_pdf
 from text_conversions import pdf_to_excel
 from word_conversion import pdf_to_word
+from markdown_conversion import pdf_to_markdown
 from office_conversions import office_to_pdf
 from ocr_operation import extract_text, make_searchable_pdf
 
@@ -21,6 +22,7 @@ OPERATIONS = {
     "images-to-pdf": images_to_pdf,
     "pdf-to-word": pdf_to_word,
     "pdf-to-excel": pdf_to_excel,
+    "pdf-to-md": pdf_to_markdown,
     "word-to-pdf": office_to_pdf,
     "excel-to-pdf": office_to_pdf,
     "pptx-to-pdf": office_to_pdf,

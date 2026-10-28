@@ -1,6 +1,6 @@
 # Yerel motor desteği
 
-Durum: Kodda 16 araç kaydı vardır; kayıtlı olması aracın uçtan uca kullanılabilir veya kaliteli olduğunu kanıtlamaz. Tekrarlanabilir 120 senaryolu inceleme ve araç bazlı bulgular [ENGINE-AUDIT](ENGINE-AUDIT.md) içindedir. Geniş belge corpus'u, üretim kapasite testi ve tüm bozuk dosya çeşitleri için garanti verilmez. Harici API/AI dönüşüm servisi kullanılmaz.
+Durum: Kodda 17 araç kaydı vardır; kayıtlı olması aracın uçtan uca kullanılabilir veya kaliteli olduğunu kanıtlamaz. Tekrarlanabilir 120 senaryolu inceleme ve araç bazlı bulgular [ENGINE-AUDIT](ENGINE-AUDIT.md) içindedir. Geniş belge corpus'u, üretim kapasite testi ve tüm bozuk dosya çeşitleri için garanti verilmez. Harici API/AI dönüşüm servisi kullanılmaz.
 
 Dil kapsamı motor türüne bağlıdır: OCR araçları seçili Tesseract dil modelini kullanır; diğer araçlar dil seçimi istemeyen, metin kodlaması/yerleşimi/glyph'leri işleyen dönüşüm veya PDF işlemleridir. Bu, 14 aracın her yazı sistemi için görsel doğrulama aldığı anlamına gelmez. Motor imajında Noto Core ve Noto CJK yedek fontları bulunur; yine de sonuç kaynak PDF'nin metin katmanına, fontlara ve dosya biçimi motorunun Unicode/font desteğine bağlıdır. OCR için Debian Bookworm `tesseract-ocr-all` paketinin sağladığı **123 dil modeli** (ve ayrı script modelleri) sunulur; her belge ve model için tanıma kalitesi ayrıca ölçülmelidir. Yeni dil modelleri paket güncellendiğinde dil listesi de güncellenmelidir.
 
@@ -9,6 +9,7 @@ Dil kapsamı motor türüne bağlıdır: OCR araçları seçili Tesseract dil mo
 | PDF → Word | pdf2docx + PyMuPDF + python-docx | Düzenlenebilir metin, font boyutu/biçimi, görseller, tablo ve sütun yerleşimi yeniden kurulur; en fazla 50 sayfa. Karmaşık tasarım, eksik font ve taşan metinlerde birebir sonuç garantisi yoktur. OCR içermez; metinsiz tarama NO_TEXT verir. |
 | Word → PDF | LibreOffice Writer | DOCX; font/yerleşim farkları olabilir. Makro/gömülü binary/dış bağlantı kabul edilmez. |
 | PDF → Excel | pdfplumber + openpyxl | Çizgili tablolar; en az üç düzenli hizalı satırı olan çizgisiz tablolar; tanınan yatay birleştirmeler. Her tablo ayrı çalışma sayfasına; 50 sayfa. Tablosuz/taranmış tablo NO_TABLES. Hücreler formül çalıştırmayan metin olarak yazılır; 32767 karakteri aşan hücre açık limit hatası verir. Bu sınıflar sentetik audit fixture'larında üç tekrarla doğrulandı; geniş gerçek belge corpus'u değildir. |
+| PDF → Markdown | PyMuPDF + Pillow | Metin içeren PDF'ten Markdown; başlık, liste, tablo ve linkler korunur. Gömülü görseller küçültülmüş WebP olarak ayrıca çıkarılır ve `document.md` ile birlikte ZIP olarak verilir. En fazla 50 sayfa. OCR içermez; metinsiz tarama NO_TEXT verir. Satır içi görsel yerleşimi birebir korunmaz. |
 | Excel → PDF | LibreOffice Calc | XLSX; tüm veya ilk çalışma sayfası. Baskı ayarları ve fontlar sonucu etkileyebilir. |
 | PDF → JPG/PNG | Poppler | En fazla 30 sayfalık PDF; sayfa seçimi/sırası, 100/150 DPI, uzun kenar en fazla 3000 px. Çoklu çıktı ZIP. |
 | JPG/PNG → PDF | Pillow + ReportLab | En fazla 20 görsel; A4 yön veya görsele göre sayfa. EXIF yönü uygulanır, şeffaflık beyaza basılır. |
