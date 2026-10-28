@@ -4,6 +4,7 @@ import '@fontsource-variable/sora';
 import Logo from '../components/logo.svelte';
 import Icon from '../components/icon.svelte';
 import LanguageSwitch from '../components/language-switch.svelte';
+import ThemeSwitch from '../components/theme-switch.svelte';
 import SeoHead from '../components/seo-head.astro';
 import SiteFooter from '../components/site-footer.astro';
 import { brand } from '../lib/brand';
@@ -35,6 +36,7 @@ const controls = text.controls;
     <header class="document-header"><div class="document-header-inner">
       <Logo href={localePath(locale, '/')} {locale} />
       <div class="flex items-center gap-2">
+        <ThemeSwitch client:load {locale} />
         <LanguageSwitch {alternates} {locale} />
         <a href={localePath(locale, '/')} class="inline-flex h-10 items-center gap-1.5 rounded-lg border border-border bg-bg px-3.5 text-xs font-semibold text-text-soft transition-colors hover:border-accent hover:text-accent">
           <Icon name="back" size={14} />

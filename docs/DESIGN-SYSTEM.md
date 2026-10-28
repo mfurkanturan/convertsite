@@ -169,3 +169,7 @@ Gerekçe ve sprint bazlı kanıtlar: [design-audit](../design-audit.md), [VISUAL
 - Logo işareti, kullanıcı tarafından sağlanan yeni DoctorConverter tasarımına göre belge köşesi ve dönüşüm yönünü birleştirir. Yatay wordmark aynı marka adını ve mavi/lacivert ayrımını korur; ortak Logo bileşeni header ve footer'da kullanılır.
 
 - Footer zemini marka laciverti (#132047), başlıklar beyaz, bağlantılar #CBD5E1 ve vurgu #60A5FA kullanır. Koyu zeminde ortak logonun beyaz/mavi varyantı gösterilir; analitik tercih panelinin açık yüzeyi korunur.
+
+## Tema tercihi
+
+Yumuşak grafit koyu tema token'ları sayfa zemini için #181A1F, yüzey için #252830, ana metin için #F1F2F5 ve mavi vurgu için #8BB4FF kullanır. Durum ve araç renklerinin koyu yüzeyler için ayrı değerleri vardır; belge önizlemeleri beyaz kalır. Üst çubuktaki Açık/Koyu/Sistem seçimi dc-theme anahtarında tarayıcıya kaydedilir. Varsayılan Sistem cihaz tercihini izler; depolama kullanılamıyorsa sistem tercihi kullanılır.

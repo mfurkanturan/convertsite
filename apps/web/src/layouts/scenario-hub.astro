@@ -5,6 +5,7 @@ import SeoHead from '../components/seo-head.astro';
 import SiteFooter from '../components/site-footer.astro';
 import Logo from '../components/logo.svelte';
 import LanguageSwitch from '../components/language-switch.svelte';
+import ThemeSwitch from '../components/theme-switch.svelte';
 import { ui } from '../i18n/ui';
 import { htmlLang, localePath, type Locale } from '../i18n/locales';
 import { brand } from '../lib/brand';
@@ -38,7 +39,8 @@ const title = locale === 'tr'
     <a class="skip-link" href="#main-content">{controls.skipToContent}</a>
     <header class="document-header"><div class="document-header-inner">
       <Logo href={localePath(locale, '/')} {locale} />
-      <LanguageSwitch {alternates} {locale} />
+      <ThemeSwitch client:load {locale} />
+        <LanguageSwitch {alternates} {locale} />
     </div></header>
     <main id="main-content" class="page-container py-12 max-sm:py-8">
       <nav aria-label={controls.breadcrumb} class="mb-6 flex items-center gap-2 text-xs text-text-muted">

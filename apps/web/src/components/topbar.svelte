@@ -1,5 +1,6 @@
 <script lang="ts">
   import Icon from './icon.svelte';
+  import ThemeSwitch from './theme-switch.svelte';
   import Logo from './logo.svelte';
   import LanguageSwitch from './language-switch.svelte';
   import ToolSearch from './tool-search.svelte';
@@ -40,6 +41,7 @@
 
     <div class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3 lg:ml-0 lg:flex-initial">
       <ToolSearch {query} onsearch={onsearch} ontool={ontool} />
+      <ThemeSwitch {locale} />
       <LanguageSwitch alternates={switchAlternates} {locale} />
       <button
         class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border text-text-soft transition-colors hover:bg-accent-soft hover:text-accent lg:hidden"

@@ -37,6 +37,9 @@
 }
 
 @layer components {
+  .theme-switch select { min-height: 44px; max-width: 94px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface); color: var(--color-text); padding: 0 4px; font-size: 13px; }
+  .brand-word { color: #132047; }
+  .brand-accent { color: #1c7ccd; }
   .page-container { width: 100%; max-width: var(--spacing-content); margin-inline: auto; padding-inline: var(--page-gutter); }
   .hero-layout { display: grid; align-items: center; gap: 32px; padding-block: 16px 32px; }
   .hero-title { max-width: 15ch; font-family: var(--font-display); font-size: var(--text-hero); font-weight: 700; line-height: 1.12; letter-spacing: -0.035em; text-wrap: balance; }

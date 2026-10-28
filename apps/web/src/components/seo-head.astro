@@ -26,6 +26,18 @@ const imageAlt = locale === 'tr' ? `${brand.name} – PDF ve belge araçları, t
 const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
 const validAdsenseClient = /^ca-pub-\d+$/.test(adsenseClient ?? '');
 ---
+<script is:inline>
+(function () {
+  var preference = 'system';
+  try { var saved = localStorage.getItem('dc-theme'); if (saved === 'light' || saved === 'dark' || saved === 'system') preference = saved; } catch (e) {}
+  var media = window.matchMedia('(prefers-color-scheme: dark)');
+  function apply() { document.documentElement.dataset.theme = preference === 'system' ? (media.matches ? 'dark' : 'light') : preference; document.documentElement.dataset.themePreference = preference; }
+  apply();
+  media.addEventListener('change', function () { if (preference === 'system') apply(); });
+  window.addEventListener('dc-theme-change', function (event) { preference = event.detail; apply(); try { localStorage.setItem('dc-theme', preference); } catch (e) {} });
+  window.addEventListener('storage', function (event) { if (event.key === 'dc-theme') { preference = event.newValue === 'light' || event.newValue === 'dark' ? event.newValue : 'system'; apply(); window.dispatchEvent(new Event('dc-theme-sync')); } });
+})();
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{title}</title>
