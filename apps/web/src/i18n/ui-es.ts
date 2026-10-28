@@ -124,7 +124,7 @@ export function createSpanishUi(en: UiDictionary): UiDictionary {
     },
     selection: {
       wrongType: (label) => `Esta herramienta necesita un archivo ${label}.`, empty: 'No se pueden elegir archivos vacíos.',
-      tooBig: 'Cada archivo puede pesar como máximo 10 MB.', single: 'Esta herramienta admite un solo archivo.',
+      tooBig: 'Cada archivo puede pesar como máximo 20 MB.', single: 'Esta herramienta admite un solo archivo.',
       tooMany: 'Puedes seleccionar hasta 20 archivos.',
     },
     job: {
@@ -139,8 +139,8 @@ export function createSpanishUi(en: UiDictionary): UiDictionary {
       maxFiles: (n) => `Hasta ${n} ${n === 1 ? 'archivo' : 'archivos'}`, pages: (n) => `${n} páginas`,
       selectedTotal: (size) => `Total seleccionado: ${size}`, totalLimit: (size) => `Límite total: ${size}`,
       retention: (n) => `Se conserva durante ${n} minutos`,
-      policyPending: 'Consultando los límites actuales. No se puede iniciar el proceso hasta conectar con el servidor.',
-      backendDown: 'No se puede conectar con el servidor. No se ha enviado ningún archivo.',
+      policyPending: 'Preparando la herramienta…', policySlow: 'La herramienta tarda más de lo esperado. Espera un poco más.',
+      backendDown: 'La herramienta no está disponible ahora. Inténtalo de nuevo.',
       statusFailed: 'No se pudo cargar el estado. Puedes volver a comprobarlo.',
       serverLimit: 'La cantidad o el tamaño de los archivos supera el límite del servidor.',
       uploading: (i, n) => `Subiendo y comprobando el archivo ${i}/${n}…`, queueing: 'Añadiendo el trabajo a la cola…',
@@ -155,7 +155,7 @@ export function createSpanishUi(en: UiDictionary): UiDictionary {
       retryFailed: 'No se pudo reintentar el trabajo. Vuelve a intentarlo en un momento.', expired: 'El resultado ha caducado.',
       newJob: 'Puedes iniciar un nuevo trabajo.', recheck: 'Volver a comprobar el estado',
       removed: 'Se ha cerrado el acceso a los archivos. La eliminación física se completa en segundo plano después de un periodo de espera de 2 minutos.',
-      cancel: 'Cancelar', checkConnection: 'Comprobar conexión', needTwo: 'Selecciona al menos 2 archivos para continuar.',
+      cancel: 'Cancelar', checkConnection: 'Intentar de nuevo', needTwo: 'Selecciona al menos 2 archivos para continuar.',
       needOne: 'Selecciona un archivo para continuar.', filesReady: 'Los archivos están listos.',
       footnote: 'Si el servidor acepta el trabajo, seguirá ejecutándose aunque cierres la página.',
       jobErrors: {

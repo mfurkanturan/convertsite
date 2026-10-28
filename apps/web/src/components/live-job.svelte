@@ -34,6 +34,9 @@
   let controller = new AbortController();
   let removed = false;
   let disposed = false;
+  let policyLoading = false;
+  let policySlow = false;
+  let policyController: AbortController | undefined;
   $: key = `docly.job.${tool.id}`;
   $: minimum = tool.id === 'merge-pdf' ? 2 : 1;
   $: totalInputBytes = files.reduce((total, file) => total + file.size, 0);
@@ -42,8 +45,15 @@
   $: limits = policy?.tools?.[tool.id] ?? { maxFiles: toolSpecs[tool.id].max, maxPages: toolSpecs[tool.id].maxPages, note: toolSpecs[tool.id].note };
 
   async function capabilities() {
-    try { policy = await api.capabilities(); error = ''; }
-    catch { error = text.backendDown; }
+    if (policyLoading) return;
+    policyLoading = true; policySlow = false; error = '';
+    const request = new AbortController();
+    policyController = request;
+    const slowTimer = setTimeout(() => { policySlow = true; }, 5000);
+    const timeout = setTimeout(() => request.abort(), 30000);
+    try { policy = await api.capabilities(request.signal); }
+    catch { if (!disposed) error = text.backendDown; }
+    finally { clearTimeout(slowTimer); clearTimeout(timeout); policyLoading = false; }
   }
   async function poll(id: string) {
     busy = true;
@@ -126,7 +136,7 @@
     const saved = sessionStorage.getItem(key) ?? (tool.id === 'merge-pdf' ? sessionStorage.getItem('docly.merge-job') : null);
     if (saved && /^[0-9a-f-]{36}$/.test(saved)) void poll(saved);
   });
-  onDestroy(() => { disposed = true; controller.abort(); });
+  onDestroy(() => { disposed = true; controller.abort(); policyController?.abort(); });
 </script>
 
 <section class="rounded-panel border border-border bg-surface p-6 max-[650px]:p-5" aria-labelledby="job-title" aria-busy={busy}>
@@ -140,7 +150,7 @@
     {#if policy}<li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.totalLimit(formatBytes(policy.maxTotalBytes))}</li>{/if}
     <li class="rounded-md bg-bg px-2.5 py-1 ring-1 ring-border">{text.retention(policy.retentionMinutes)}</li>
   </ul>
-  {:else if !error}<p class="mt-3 text-sm text-text-muted" role="status">{text.policyPending}</p>{/if}
+  {:else if policyLoading}<p class="mt-3 flex items-center gap-2 text-sm text-text-muted" role="status"><span class="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-border border-t-accent" aria-hidden="true"></span>{policySlow ? text.policySlow : text.policyPending}</p>{/if}
   <p class="mt-4 text-sm leading-relaxed text-text-soft">{supportNote}</p>
   {#if error}<div class="mt-4"><InlineNotice variant="danger" role="alert">{error}</InlineNotice></div>{/if}
   {#if phase}
@@ -161,7 +171,7 @@
   <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
     {#if busy}<Button variant="secondary" onclick={cancel}>{text.cancel}</Button>
     {:else if policy && policy.enabledTools.includes(tool.id)}<Button className="job-start max-[480px]:w-full" disabled={files.length < minimum || startDisabled} onclick={start}>{text.actions[tool.id]} <Icon name="arrow" size={18} /></Button>
-    {:else if !policy}<Button variant="secondary" onclick={capabilities}>{text.checkConnection}</Button>{/if}
+    {:else if !policy && !policyLoading && error}<Button variant="secondary" onclick={capabilities}>{text.checkConnection}</Button>{/if}
     {#if !busy && policy}<span class="text-sm text-text-muted">{files.length < minimum ? (minimum === 2 ? text.needTwo : text.needOne) : text.filesReady}</span>{/if}
   </div>
   <p class="mt-5 border-t border-border pt-4 text-[13px] leading-relaxed text-text-muted">{text.footnote}</p>

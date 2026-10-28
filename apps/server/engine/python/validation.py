@@ -85,7 +85,7 @@ def pptx_slides(archive, names):
 
 def inspect_input(item, password=None, encrypted_ok=False):
     path = input_path(item)
-    if path.stat().st_size <= 0 or path.stat().st_size > 10 * 1024 * 1024:
+    if path.stat().st_size <= 0 or path.stat().st_size > 20 * 1024 * 1024:
         raise EngineError("LIMIT_EXCEEDED")
     kind = item["kind"]
     inspectors = {"pdf": lambda: pdf_pages(path, password, encrypted_ok), "jpg": lambda: inspect_image(path, kind),

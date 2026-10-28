@@ -124,7 +124,7 @@ export function createFrenchUi(en: UiDictionary): UiDictionary {
     },
     selection: {
       wrongType: (label) => `Cet outil nécessite un fichier ${label}.`, empty: 'Les fichiers vides ne peuvent pas être sélectionnés.',
-      tooBig: 'Chaque fichier peut peser jusqu’à 10 Mo.', single: 'Sélectionnez un seul fichier pour cet outil.',
+      tooBig: 'Chaque fichier peut peser jusqu’à 20 Mo.', single: 'Sélectionnez un seul fichier pour cet outil.',
       tooMany: 'Vous pouvez sélectionner jusqu’à 20 fichiers.',
     },
     job: {
@@ -139,8 +139,8 @@ export function createFrenchUi(en: UiDictionary): UiDictionary {
       maxFiles: (n) => `${n} fichier${n > 1 ? 's' : ''} maximum`, pages: (n) => `${n} pages`,
       selectedTotal: (size) => `Total sélectionné : ${size}`, totalLimit: (size) => `Limite totale : ${size}`,
       retention: (n) => `Conservé pendant ${n} minutes`,
-      policyPending: 'Récupération des limites actuelles. Le traitement ne peut pas démarrer sans connexion au serveur.',
-      backendDown: 'Le serveur est injoignable. Aucun fichier n’a été envoyé.',
+      policyPending: 'Préparation de l’outil…', policySlow: 'La préparation prend plus de temps que prévu. Patientez encore un peu.',
+      backendDown: 'L’outil est indisponible pour le moment. Réessayez.',
       statusFailed: 'Impossible de charger l’état. Vous pouvez réessayer.',
       serverLimit: 'Le nombre ou la taille des fichiers dépasse la limite du serveur.',
       uploading: (i, n) => `Envoi et vérification du fichier ${i}/${n}…`, queueing: 'Ajout du traitement à la file d’attente…',
@@ -155,7 +155,7 @@ export function createFrenchUi(en: UiDictionary): UiDictionary {
       retryFailed: 'Impossible de relancer le traitement. Réessayez dans un instant.', expired: 'Le résultat a expiré.',
       newJob: 'Vous pouvez lancer un nouveau traitement.', recheck: 'Vérifier à nouveau l’état',
       removed: 'L’accès aux fichiers est fermé. Leur suppression physique s’effectue en arrière-plan après un délai de deux minutes.',
-      cancel: 'Annuler', checkConnection: 'Vérifier la connexion', needTwo: 'Sélectionnez au moins deux fichiers pour démarrer.',
+      cancel: 'Annuler', checkConnection: 'Réessayer', needTwo: 'Sélectionnez au moins deux fichiers pour démarrer.',
       needOne: 'Sélectionnez un fichier pour démarrer.', filesReady: 'Vos fichiers sont prêts.',
       footnote: 'Un traitement accepté par le serveur continue même si vous fermez la page.',
       jobErrors: {

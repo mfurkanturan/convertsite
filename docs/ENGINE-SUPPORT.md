@@ -24,7 +24,7 @@ Dil kapsamı motor türüne bağlıdır: OCR araçları seçili Tesseract dil mo
 | Sayfa numarası | PyMuPDF | Üç konum, `sayfa / toplam` metni; döndürülmüş sayfalarda görünür konum ayrıca incelenmeli. |
 | Filigran | PyMuPDF | Gömülü DejaVuSans-Bold, 35° çapraz ve görünür alan ortalaması; sığmayan metin veya fontta olmayan glyph açıkça reddedilir. Sayfa aralığı seçimi yok; bağımsız piksel fark incelemesi eksik. |
 
-Her girdi en fazla 10 MiB, toplam 40 MiB; görseller en fazla 25 milyon piksel ve kenar başına 10000 px. Her çıktı en fazla 40 MiB. DOCX/XLSX ZIP açılımı 40 MiB / 2000 entry ile sınırlandırılır; symlink, traversal, şifreleme ve dış ilişkiler reddedilir. Native iş 90 saniyede sonlandırılır.
+Her girdi en fazla 20 MiB, toplam 40 MiB; görseller en fazla 25 milyon piksel ve kenar başına 10000 px. Her çıktı en fazla 40 MiB. DOCX/XLSX ZIP açılımı 40 MiB / 2000 entry ile sınırlandırılır; symlink, traversal, şifreleme ve dış ilişkiler reddedilir. Native iş 90 saniyede sonlandırılır.
 
 ## Kaynak yerleşimi
 

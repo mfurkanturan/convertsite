@@ -27,7 +27,7 @@ Görseller: `marketing/assets/`
 - **Kategori:** Productivity / PDF tools / Document converter
 - **Rakipler (alternatif olarak eklenecekler):** iLovePDF, Smallpdf, PDF24 Tools, Sejda PDF, PDF Candy, Adobe Acrobat online
 - **10 araç:** Merge PDF, Compress PDF, Edit PDF pages (split/reorder/rotate), PDF to Word, Word to PDF, PDF to Excel, Excel to PDF, PDF to JPG/PNG, JPG/PNG to PDF, OCR (English & Turkish)
-- **Gerçek sınırlar (abartma):** 10 MB/dosya, birleştirmede 20 dosya ve 300 sayfa; dosyalar 60 dakika sonra otomatik silinir; şifreli PDF desteklenmez; PDF → Excel yalnızca dijital (taranmamış) PDF’lerde çalışır.
+- **Gerçek sınırlar (abartma):** 20 MB/dosya, birleştirmede 20 dosya ve 300 sayfa; dosyalar 60 dakika sonra otomatik silinir; şifreli PDF desteklenmez; PDF → Excel yalnızca dijital (taranmamış) PDF’lerde çalışır.
 - **Teknoloji (güven için):** Kendi sunucularımızda, açık kaynak motorlarla (QPDF, Poppler, LibreOffice, Tesseract). Harici belge işleme servisine gönderilmez.
 
 **Kısa tanıtım (EN, 1 cümle):**
@@ -89,7 +89,7 @@ Yol: Hesap aç (kişisel profil, kendi adınla) → “Submit” → “Launch a
 > • Files are processed on our own servers with open-source engines and deleted automatically (or right away with one click)
 > • Step-by-step guides for real tasks, in English and Turkish
 >
-> Honest limits: 10 MB per file, password-protected PDFs aren’t supported, and PDF→Excel works on digital (not scanned) PDFs.
+> Honest limits: 20 MB per file, password-protected PDFs aren’t supported, and PDF→Excel works on digital (not scanned) PDFs.
 >
 > I’d love your feedback: which tool or workflow should I add next?
 

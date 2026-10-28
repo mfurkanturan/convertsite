@@ -2,7 +2,7 @@ import type { Tool } from './tools';
 import type { UiDictionary } from '../i18n/ui';
 
 // Local interface guard only; production policy must come from the API.
-export const selectionMaxBytes = 10 * 1024 * 1024;
+export const selectionMaxBytes = 20 * 1024 * 1024;
 export const selectionMaxFiles = 20;
 
 export function validateSelection(incoming: File[], current: File[], tool: Tool, text: UiDictionary['selection']): { files: File[]; error: string } {

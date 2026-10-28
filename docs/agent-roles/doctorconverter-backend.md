@@ -24,7 +24,7 @@ Ortak kurallar ve devir için `docs/TEAM.md`. Önce `AGENTS.md`; sonra `ARCHITEC
 - Domain/application katmanı framework/SQL/motor bağımlılığından uzak; başka modülün repository veya tablosuna erişme.
 - Dosya içeriğini DB, queue, log veya analytics'e koyma; kimlik ve metadata kullan.
 - Her araç için kendi handler'ı; sabit executable ve doğrulanmış argüman dizisi; kullanıcı girdisini shell'e ekleme. Secret'ları process argv ile geçirme (stdin / password-file kullanılıyor). Tek istisna `protect-pdf`: `qpdf --encrypt` stdin kanalı sunmadığından parola 0600 izinli geçici `@`-argüman dosyasına yazılır ve `finally` ile silinir (`FILE-PROCESSING.md`'de yazılı).
-- Sahiplik, idempotency, lease, retry, cancel, expiry, fiziksel cleanup ve kaynak sınırlarını (girdi 10 MiB, toplam 40 MiB, çıktı 40 MiB, native iş 90 sn) değişiklikle birlikte değerlendir.
+- Sahiplik, idempotency, lease, retry, cancel, expiry, fiziksel cleanup ve kaynak sınırlarını (girdi 20 MiB, toplam 40 MiB, çıktı 40 MiB, native iş 90 sn) değişiklikle birlikte değerlendir.
 - Sentetik, kişisel veri içermeyen fixture; `.env` ve `.data` içeriğini commit etme veya loglama.
 - Handler kaydı ≠ uçtan uca destek. Destek iddiası için `ENGINE-SUPPORT` ve `ENGINE-AUDIT` kanıtı gerekir. PDF → Word/Excel için birebir yerleşim veya taranmış tablo desteği iddia etme.
 

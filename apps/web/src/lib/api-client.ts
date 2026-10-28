@@ -31,7 +31,7 @@ export function apiFor(locale: Locale) {
     return response.json() as Promise<T>;
   }
   return {
-    capabilities: () => request<Capabilities>('/capabilities'),
+    capabilities: (signal?: AbortSignal) => request<Capabilities>('/capabilities', { signal }),
     createJob: (body: CreateJob) => request<JobView>('/jobs', { method: 'POST', body: JSON.stringify(body) }),
     job: (id: string, signal?: AbortSignal) => request<JobView>(`/jobs/${id}`, { signal }),
     cancel: (id: string) => request<JobView>(`/jobs/${id}/cancel`, { method: 'POST' }),

@@ -17,10 +17,12 @@ Kapsamın kaynağı: [PRODUCT](PRODUCT.md). Görsel kurallar: [DESIGN-SYSTEM](DE
 
 İlk sürümde durum sorgulama aralıklı HTTP istekleriyle yapılır; aralık sunucu tarafından yönlendirilebilir. Görünmeyen sekmelerde istek sıklığı azaltılır. İstemci bağlantısının kopması otomatik olarak iş iptali sayılmaz.
 
+Araç hazırlanırken bekleme mesajı gösterilir; beş saniye sonra gecikme açıklanır. Sunucuya 30 saniyede ulaşılamazsa veya istek başarısız olursa yeniden deneme sunulur. Sunucu limitleri alınana kadar işlem başlatılmaz.
+
 ## Ana sayfadan hızlı dosya başlangıcı
 
 - Hero dosya seçme alanı klavye ile kullanılabilen bir düğme ve sürükle-bırak bölgesidir. Ana sayfadan tek dosya alır: PDF, DOCX, XLSX, PPTX, JPG/JPEG veya PNG. Birden fazla dosya gerekiyorsa dosyayı aldıktan sonra uygun aracı açıp ek girdileri araç ekranında seçersin; ana sayfaya birden fazla dosya bırakılırsa dosyalar gönderilmez ve açıklayıcı hata gösterilir.
-- Dosya başına sınır `GET /api/capabilities` cevabındaki `maxFileBytes` değerinden gösterilir. API erişilemiyorsa istemcinin 10 MB üst sınırı yalnızca yerel ön kontrol olarak kalır; iş başlatılamaz.
+- Dosya başına sınır `GET /api/capabilities` cevabındaki `maxFileBytes` değerinden gösterilir. API erişilemiyorsa istemcinin 20 MB üst sınırı yalnızca yerel ön kontrol olarak kalır; iş başlatılamaz.
 - Tarayıcı, dosyayı araca yönlendirmeden önce uzantıyı, sıfır bayt durumunu ve bilinen boyut sınırını kontrol eder. Geçersiz/çoklu dosya seçimi hata mesajı verir; dosya yüklenmez.
 - PDF seçilince yalnızca API'nin `enabledTools` listesinde bulunan PDF eylemleri önerilir. Birleştirme seçeneği ikinci PDF gerektiğini açıkça belirtir; kullanıcı ikinci dosyayı araç ekranında ekler.
 - DOCX, XLSX, PPTX ve görsel girdileri uzantılarına göre ilgili araca taşınır. Araç ekranı dosya adını, türünü, boyutunu ve kaldırma/yeni dosya seçme yolunu gösterir. Araca geçiş dosya baytlarını göndermez.

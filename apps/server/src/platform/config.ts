@@ -37,7 +37,7 @@ export function getConfig() {
     trustProxyHops: integer('TRUST_PROXY_HOPS', 0, 0, 5),
     // Header set by a trusted edge that clients cannot forge (e.g. cf-connecting-ip); empty uses hop counting.
     clientIpHeader: clientIpHeader(),
-    maxFileBytes: integer('MAX_FILE_BYTES', 10 * 1024 * 1024, 1, 10 * 1024 * 1024),
+    maxFileBytes: integer('MAX_FILE_BYTES', 20 * 1024 * 1024, 1, 20 * 1024 * 1024),
     maxTotalBytes: integer('MAX_TOTAL_BYTES', 40 * 1024 * 1024, 1, 40 * 1024 * 1024),
     maxFiles: integer('MAX_FILES', 20, 2, 20), maxTotalPages: integer('MAX_TOTAL_PAGES', 300, 1, 300),
     retentionMinutes: integer('RETENTION_MINUTES', 60, 5, 1440),

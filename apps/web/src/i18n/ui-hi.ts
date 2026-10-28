@@ -29,7 +29,7 @@ export function createHindiUi(en: UiDictionary): UiDictionary {
       oneFile: 'होम पेज एक फ़ाइल स्वीकार करता है। मर्ज जैसे कार्यों के लिए टूल खोलें और वहाँ अन्य फ़ाइलें जोड़ें।',
       fileSelected: 'फ़ाइल चुनी गई', choosePdfAction: 'इस PDF के साथ क्या करना चाहते हैं?',
       checkingActions: 'जाँच की जा रही है कि कौन से PDF टूल उपलब्ध हैं…',
-      actionsUnavailable: 'टूल उपलब्धता जाँची नहीं जा सकी। कनेक्शन जाँचें और पुनः प्रयास करें।',
+      actionsUnavailable: 'टूल उपलब्धता जाँची नहीं जा सकी। फिर से प्रयास करें और पुनः प्रयास करें।',
       noAvailableActions: 'इस PDF के लिए अभी कोई टूल उपलब्ध नहीं है।',
       checkAgain: 'फिर जाँचें', changeFile: 'दूसरी फ़ाइल चुनें', removeFile: 'फ़ाइल हटाएँ', dragActive: 'जारी रखने के लिए फ़ाइल छोड़ें।',
       pdfActions: {
@@ -124,7 +124,7 @@ export function createHindiUi(en: UiDictionary): UiDictionary {
     },
     selection: {
       wrongType: (label) => `इस टूल को ${label} फ़ाइल चाहिए।`, empty: 'खाली फ़ाइलें नहीं चुनी जा सकतीं।',
-      tooBig: 'प्रत्येक फ़ाइल अधिकतम 10 MB हो सकती है।', single: 'इस टूल के लिए एक फ़ाइल चुनें।',
+      tooBig: 'प्रत्येक फ़ाइल अधिकतम 20 MB हो सकती है।', single: 'इस टूल के लिए एक फ़ाइल चुनें।',
       tooMany: 'आप अधिकतम 20 फ़ाइलें चुन सकते हैं।',
     },
     job: {
@@ -139,8 +139,8 @@ export function createHindiUi(en: UiDictionary): UiDictionary {
       maxFiles: (n) => `अधिकतम ${n} ${n === 1 ? 'फ़ाइल' : 'फ़ाइलें'}`, pages: (n) => `${n} पृष्ठ`,
       selectedTotal: (size) => `चुना गया कुल: ${size}`, totalLimit: (size) => `कुल सीमा ${size}`,
       retention: (n) => `${n} मिनट के लिए रखा गया`,
-      policyPending: 'वर्तमान सीमाएँ प्राप्त की जा रही हैं। सर्वर कनेक्ट होने तक प्रोसेसिंग उपलब्ध नहीं है।',
-      backendDown: 'सर्वर तक नहीं पहुँचा जा सका। कोई फ़ाइल नहीं भेजी गई।',
+      policyPending: 'टूल तैयार हो रहा है…', policySlow: 'टूल तैयार होने में अपेक्षा से अधिक समय लग रहा है। थोड़ा और इंतज़ार करें।',
+      backendDown: 'टूल अभी उपलब्ध नहीं है। कृपया फिर से प्रयास करें।',
       statusFailed: 'स्थिति लोड नहीं हो सकी। आप फिर जाँच सकते हैं।',
       serverLimit: 'फ़ाइलों की संख्या या आकार सर्वर सीमा से अधिक है।',
       uploading: (i, n) => `फ़ाइल ${i}/${n} अपलोड और जाँच की जा रही है…`, queueing: 'आपका काम कतार में डाला जा रहा है…',

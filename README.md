@@ -94,7 +94,7 @@ DoctorConverter is designed for temporary, session-owned document processing:
 
 Document conversion is format-dependent. In particular, PDF → Word can produce editable DOCX content but does **not** guarantee identical page layout; PDF → Excel is oriented toward detectable tables rather than scanned-table reconstruction. OCR accuracy depends on image quality and the selected language models.
 
-For exact tool and file constraints, consult the current [API documentation](docs/API.md), [Engine Support](docs/ENGINE-SUPPORT.md), and the application's live capabilities response. Documented development defaults include **10 MiB per input file** and **40 MiB combined input**, with additional tool-specific limits; these are not verified production-capacity guarantees.
+For exact tool and file constraints, consult the current [API documentation](docs/API.md), [Engine Support](docs/ENGINE-SUPPORT.md), and the application's live capabilities response. Documented development defaults include **20 MiB per input file** and **40 MiB combined input**, with additional tool-specific limits; these are not verified production-capacity guarantees.
 
 ## Technology
 
